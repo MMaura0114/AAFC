@@ -276,11 +276,31 @@
             border-bottom: none;
         }
         
+        .months-container {
+            margin-top: 20px;
+        }
+        
+        .year-section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .year-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        
         .months-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
             gap: 10px;
-            margin-top: 15px;
         }
         
         .month-item {
@@ -289,16 +309,44 @@
             padding: 10px;
             text-align: center;
             transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .month-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         .month-item.pago {
             background-color: #d4edda;
             border-color: #c3e6cb;
+            color: #155724;
         }
         
         .month-item.pendente {
             background-color: #f8d7da;
             border-color: #f5c6cb;
+            color: #721c24;
+        }
+        
+        .month-item.futuro {
+            background-color: #e8f4fd;
+            border-color: #b6e0fe;
+            color: #0c5460;
+        }
+        
+        .month-item.atual {
+            border: 2px solid var(--warning-color);
+            font-weight: 600;
+        }
+        
+        .month-item .mes-nome {
+            font-weight: 600;
+        }
+        
+        .month-item .status-info {
+            font-size: 12px;
+            margin-top: 5px;
         }
         
         .modal {
@@ -400,6 +448,185 @@
             to { transform: rotate(360deg); }
         }
         
+        .enviar-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .enviar-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #f9f9f9;
+        }
+        
+        .enviar-option:hover {
+            background-color: #f0f0f0;
+            border-color: var(--secondary-color);
+        }
+        
+        .enviar-option input[type="radio"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .enviar-info {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            font-size: 14px;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .enviar-info h4 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .enviar-info ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .enviar-info li {
+            margin-bottom: 5px;
+        }
+        
+        .copy-btn {
+            background-color: var(--warning-color);
+            margin-top: 10px;
+        }
+        
+        .copy-btn:hover {
+            background-color: #e67e22;
+        }
+        
+        .numeros-container {
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .numeros-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .numero-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .numero-item:last-child {
+            border-bottom: none;
+        }
+        
+        .progress-container {
+            margin: 20px 0;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            padding: 10px;
+            display: none;
+        }
+        
+        .progress-bar {
+            height: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+        
+        .contador-envio {
+            background-color: var(--warning-color);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        .mensagens-agendadas {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        
+        .mensagem-agendada {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            background-color: white;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+        
+        .mensagem-agendada:last-child {
+            border-bottom: none;
+        }
+        
+        .resumo-status {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .resumo-status h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .status-detalhes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .status-item {
+            text-align: center;
+            padding: 10px;
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .status-valor {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .status-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -444,6 +671,14 @@
             
             .export-options {
                 flex-direction: column;
+            }
+            
+            .enviar-options {
+                flex-direction: column;
+            }
+            
+            .status-detalhes {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -543,13 +778,22 @@
             <div class="tab-content associado-only" id="minhas-contribuicoes-tab">
                 <div class="card">
                     <h2>Minhas Contribuições</h2>
+                    
+                    <!-- Resumo do Status -->
+                    <div class="resumo-status" id="resumo-status">
+                        <h3>Resumo do Status</h3>
+                        <div class="status-detalhes" id="status-detalhes">
+                            <!-- Detalhes do status serão carregados aqui -->
+                        </div>
+                    </div>
+                    
                     <div class="payment-history" id="minhas-contribuicoes-list">
                         <!-- Histórico de contribuições será carregado aqui -->
                     </div>
                     
-                    <h3 style="margin-top: 20px;">Status por Mês</h3>
-                    <div class="months-grid" id="months-grid">
-                        <!-- Grade de meses será preenchida aqui -->
+                    <h3 style="margin-top: 20px;">Status por Mês (Todos os Anos)</h3>
+                    <div class="months-container" id="months-container">
+                        <!-- Seções por ano serão preenchidas aqui -->
                     </div>
                 </div>
             </div>
@@ -700,8 +944,9 @@
                     <div class="form-group">
                         <label for="mensagem-template">Modelo de Mensagem</label>
                         <textarea id="mensagem-template" rows="4" style="width: 100%; padding: 12px; border-radius: 4px; border: 1px solid #ddd;">
-Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por favor, realize o pagamento até o final deste mês. Obrigado! Esta é uma mensagem automatica enviada pelo sistema de gerenciamento, para mas informações acesse o link de mensalidade: 
+Olá [NOME], este é um lembrete amigável da sua mensalidade pendente. Por favor, realize o pagamento até o final deste mês. Obrigado! Esta é uma mensagem automática enviada pelo sistema de gerenciamento da Associação de Agricultores/as Familiares de Cacimba.
                         </textarea>
+                        <small>Use [NOME] para inserir o nome do associado automaticamente.</small>
                     </div>
                     
                     <div class="form-group">
@@ -710,12 +955,88 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                         <small>Deixe em branco para enviar imediatamente</small>
                     </div>
                     
+                    <div class="enviar-options">
+                        <label class="enviar-option">
+                            <input type="radio" name="tipo-envio" value="manual" checked> 
+                            <div>
+                                <strong>Envio Manual</strong>
+                                <p style="font-size: 14px; margin-top: 5px; color: #666;">Copie os números e cole no WhatsApp Web/Desktop manualmente</p>
+                            </div>
+                        </label>
+                        <label class="enviar-option">
+                            <input type="radio" name="tipo-envio" value="automatico"> 
+                            <div>
+                                <strong>Envio Automático (Beta)</strong>
+                                <p style="font-size: 14px; margin-top: 5px; color: #666;">Envia automaticamente uma por uma com intervalos (abre várias janelas)</p>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div class="enviar-info" style="display: none;" id="info-manual">
+                        <h4>Como usar o envio manual:</h4>
+                        <ol>
+                            <li>Clique no botão "Gerar Lista de Números"</li>
+                            <li>Copie os números que aparecerão abaixo</li>
+                            <li>Abra o WhatsApp Web ou WhatsApp Desktop</li>
+                            <li>Clique em "Nova conversa" ou "Nova mensagem"</li>
+                            <li>Cole os números no campo de busca (um por vez)</li>
+                            <li>Envie a mensagem para cada contato</li>
+                        </ol>
+                        <p><strong>Obs:</strong> Para uma experiência melhor, recomenda-se usar no computador com WhatsApp Web/Desktop aberto.</p>
+                    </div>
+                    
+                    <div class="enviar-info" style="display: none;" id="info-automatico">
+                        <h4>Como funciona o envio automático:</h4>
+                        <ol>
+                            <li>O sistema abrirá uma nova janela do WhatsApp Web para cada número</li>
+                            <li>A mensagem já virá pré-preenchida</li>
+                            <li>Você precisará clicar em "Enviar" manualmente em cada janela</li>
+                            <li>Haverá um intervalo de 5 segundos entre cada janela</li>
+                            <li>Mantenha o foco na janela do navegador durante o envio</li>
+                        </ol>
+                        <p><strong>Atenção:</strong> Esta funcionalidade pode não funcionar bem em todos os navegadores devido a bloqueios de pop-up.</p>
+                    </div>
+                    
+                    <!-- Mensagens Agendadas -->
+                    <div class="mensagens-agendadas" id="mensagens-agendadas-container" style="display: none;">
+                        <h3>Mensagens Agendadas</h3>
+                        <div id="lista-mensagens-agendadas">
+                            <!-- Lista de mensagens agendadas será preenchida aqui -->
+                        </div>
+                    </div>
+                    
                     <div id="pendentes-list">
                         <!-- Lista de associados com pagamentos pendentes -->
                     </div>
                     
+                    <!-- Contador para envio automático -->
+                    <div class="contador-envio" id="contador-envio">
+                        <div id="contador-texto">Preparando envio...</div>
+                    </div>
+                    
+                    <!-- Barra de progresso -->
+                    <div class="progress-container" id="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                        <div class="progress-text" id="progress-text">0%</div>
+                    </div>
+                    
+                    <!-- Container para exibir números -->
+                    <div class="numeros-container" id="numeros-container" style="display: none;">
+                        <h3>Números para Envio Manual</h3>
+                        <div class="numeros-list" id="numeros-list">
+                            <!-- Números serão listados aqui -->
+                        </div>
+                        <button class="copy-btn" id="copiar-numeros-btn">Copiar Números</button>
+                        <button class="whatsapp-btn" id="abrir-whatsapp-btn" style="margin-left: 10px;">Abrir WhatsApp Web</button>
+                    </div>
+                    
+                    <button id="gerar-lista-btn" class="btn-success" style="margin-top: 20px; margin-right: 10px;">
+                        <span>Gerar Lista de Números</span>
+                    </button>
+                    
                     <button id="enviar-todos-btn" class="whatsapp-btn" style="margin-top: 20px;">
-                        <span>Enviar para Todos os Pendentes</span>
+                        <span id="enviar-texto">Enviar Mensagens</span>
+                        <span id="enviar-loading" class="loading" style="display: none; margin-left: 5px;"></span>
                     </button>
                 </div>
             </div>
@@ -875,8 +1196,8 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
 
     <script>
         // Configuração do JSONBin.io
-        const JSONBIN_API_KEY = '$2a$10$8yB70Rb7oLrLXy0Ge3JuzOA1xxB56R1tJZS4NDJ0m.CRg4mADoB0m'; // Substitua pela sua chave
-        const JSONBIN_BIN_ID = '691d1701ae596e708f61d4c6'; // Substitua pelo seu Bin ID
+        const JSONBIN_API_KEY = '$2a$10$8yB70Rb7oLrLXy0Ge3JuzOA1xxB56R1tJZS4NDJ0m.CRg4mADoB0m';
+        const JSONBIN_BIN_ID = '691d1701ae596e708f61d4c6';
         const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`; 
 
         // Variáveis globais
@@ -889,6 +1210,11 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
         let associadoEditando = null;
         let currentTabIndex = 0;
         let scheduledMessages = [];
+        let associadosPendentes = [];
+        let envioEmAndamento = false;
+        let indiceEnvioAtual = 0;
+        let intervaloEnvio = null;
+        let intervaloVerificacao = null;
         
         // Elementos DOM
         const loginScreen = document.getElementById('login-screen');
@@ -916,7 +1242,7 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
         const associadoInfo = document.getElementById('associado-info');
         const contribuicaoForm = document.getElementById('contribuicao-form');
         const paymentHistory = document.getElementById('payment-history');
-        const monthsGrid = document.getElementById('months-grid');
+        const monthsContainer = document.getElementById('months-container');
         const dataProgramada = document.getElementById('data-programada');
         
         // Elementos para as novas funcionalidades
@@ -937,6 +1263,24 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
         const associadosAtivos = document.getElementById('associados-ativos');
         const pagamentosMes = document.getElementById('pagamentos-mes');
         const relatorioFormasPagamentoBody = document.getElementById('relatorio-formas-pagamento-body');
+        
+        // Elementos para envio de mensagens
+        const gerarListaBtn = document.getElementById('gerar-lista-btn');
+        const copiarNumerosBtn = document.getElementById('copiar-numeros-btn');
+        const abrirWhatsappBtn = document.getElementById('abrir-whatsapp-btn');
+        const numerosContainer = document.getElementById('numeros-container');
+        const numerosList = document.getElementById('numeros-list');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const contadorEnvio = document.getElementById('contador-envio');
+        const contadorTexto = document.getElementById('contador-texto');
+        const enviarTexto = document.getElementById('enviar-texto');
+        const enviarLoading = document.getElementById('enviar-loading');
+        const mensagensAgendadasContainer = document.getElementById('mensagens-agendadas-container');
+        const listaMensagensAgendadas = document.getElementById('lista-mensagens-agendadas');
+        const resumoStatus = document.getElementById('resumo-status');
+        const statusDetalhes = document.getElementById('status-detalhes');
         
         // Funções para JSONBin.io
         async function carregarDados() {
@@ -1045,9 +1389,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 showMainSystem();
             }
             
-            // Verificar e processar mensagens agendadas
-            verificarMensagensAgendadas();
-            
             // Configurar data de cadastro para hoje
             if (document.getElementById('data-cadastro')) {
                 document.getElementById('data-cadastro').valueAsDate = new Date();
@@ -1057,7 +1398,7 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             if (dataProgramada) {
                 const amanha = new Date();
                 amanha.setDate(amanha.getDate() + 1);
-                amanha.setHours(9, 0, 0, 0); // 9:00 AM
+                amanha.setHours(9, 0, 0, 0);
                 dataProgramada.value = amanha.toISOString().slice(0, 16);
             }
             
@@ -1103,34 +1444,28 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             const tabs = document.querySelectorAll('.tab');
             tabs.forEach((tab, index) => {
                 tab.addEventListener('click', function() {
-                    // Não fazer nada se já estiver ativa
                     if (this.classList.contains('active')) return;
                     
-                    // Remover classe active de todas as tabs
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                     
-                    // Adicionar classe active à tab clicada
                     this.classList.add('active');
-                    
-                    // Mostrar o conteúdo correspondente
                     const tabId = this.getAttribute('data-tab') + '-tab';
                     document.getElementById(tabId).classList.add('active');
                     
-                    // Atualizar listas específicas quando necessário
                     if (this.getAttribute('data-tab') === 'contribuicoes') {
                         atualizarSeletorAssociados();
                     } else if (this.getAttribute('data-tab') === 'consulta') {
                         atualizarListaAssociados();
                     } else if (this.getAttribute('data-tab') === 'mensagens') {
                         atualizarListaPendentes();
+                        atualizarListaMensagensAgendadas();
                     } else if (this.getAttribute('data-tab') === 'minhas-contribuicoes' && currentUser) {
-                        atualizarGradeMeses(currentUser);
+                        loadAssociadoData();
                     } else if (this.getAttribute('data-tab') === 'relatorios') {
                         atualizarRelatorios();
                     }
                     
-                    // Atualizar índice da tab atual
                     currentTabIndex = index;
                 });
             });
@@ -1143,10 +1478,7 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                     const targetTab = document.querySelector(`.tab[data-tab="${targetId.replace('-tab', '')}"]`);
                     
                     if (targetTab) {
-                        // Ativar a aba correspondente
                         targetTab.click();
-                        
-                        // Rolagem suave para a seção
                         setTimeout(() => {
                             document.querySelector(targetId).scrollIntoView({ 
                                 behavior: 'smooth',
@@ -1166,8 +1498,12 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 searchInput.addEventListener('input', atualizarListaAssociados);
             }
             
+            if (gerarListaBtn) {
+                gerarListaBtn.addEventListener('click', gerarListaNumeros);
+            }
+            
             if (enviarTodosBtn) {
-                enviarTodosBtn.addEventListener('click', enviarMensagensPendentes);
+                enviarTodosBtn.addEventListener('click', iniciarEnvioMensagens);
             }
             
             if (associadoSelect) {
@@ -1215,33 +1551,46 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 mesRelatorio.addEventListener('change', atualizarRelatorios);
             }
             
-            // Adicionar event listeners para o Enter em formulários
-            document.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    // Verificar se o elemento ativo é um input
-                    const activeElement = document.activeElement;
-                    if (activeElement.tagName === 'INPUT' || activeElement.tagName === 'SELECT') {
-                        // Encontrar o formulário mais próximo
-                        const form = activeElement.closest('form');
-                        if (form) {
-                            // Impedir o comportamento padrão
-                            e.preventDefault();
-                            // Simular o envio do formulário
-                            const submitEvent = new Event('submit', { cancelable: true });
-                            form.dispatchEvent(submitEvent);
-                        }
+            // Configurar opções de envio
+            const enviarOptions = document.querySelectorAll('input[name="tipo-envio"]');
+            const infoManual = document.getElementById('info-manual');
+            const infoAutomatico = document.getElementById('info-automatico');
+            
+            enviarOptions.forEach(option => {
+                option.addEventListener('change', function() {
+                    if (this.value === 'manual') {
+                        infoManual.style.display = 'block';
+                        infoAutomatico.style.display = 'none';
+                        enviarTodosBtn.textContent = 'Enviar Mensagens';
+                    } else {
+                        infoManual.style.display = 'none';
+                        infoAutomatico.style.display = 'block';
+                        enviarTodosBtn.textContent = 'Iniciar Envio Automático';
                     }
-                }
+                });
             });
             
-            // Navegação por teclado entre abas (apenas setas)
+            // Mostrar info manual por padrão
+            infoManual.style.display = 'block';
+            
+            // Copiar números para área de transferência
+            if (copiarNumerosBtn) {
+                copiarNumerosBtn.addEventListener('click', copiarNumeros);
+            }
+            
+            // Abrir WhatsApp Web
+            if (abrirWhatsappBtn) {
+                abrirWhatsappBtn.addEventListener('click', function() {
+                    window.open('https://web.whatsapp.com', '_blank');
+                });
+            }
+            
+            // Navegação por teclado entre abas
             document.addEventListener('keydown', function(e) {
-                // Só permitir navegação por teclado se estiver no sistema principal
                 if (mainSystem.style.display === 'none') return;
                 
                 const tabs = document.querySelectorAll('.tab:not([style*="display: none"])');
                 
-                // Navegação com setas esquerda/direita
                 if (e.key === 'ArrowLeft') {
                     e.preventDefault();
                     currentTabIndex = (currentTabIndex - 1 + tabs.length) % tabs.length;
@@ -1252,15 +1601,28 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                     tabs[currentTabIndex].click();
                 }
             });
+            
+            // Iniciar verificação periódica de mensagens agendadas
+            iniciarVerificacaoMensagensAgendadas();
+            
+            // Verificar mensagens agendadas imediatamente ao carregar
+            verificarMensagensAgendadas();
         });
+        
+        // Função para iniciar verificação periódica de mensagens agendadas
+        function iniciarVerificacaoMensagensAgendadas() {
+            if (intervaloVerificacao) {
+                clearInterval(intervaloVerificacao);
+            }
+            
+            intervaloVerificacao = setInterval(verificarMensagensAgendadas, 30000);
+        }
         
         // Função de login para associados
         async function loginAssociadoSubmit(e) {
             e.preventDefault();
             
             showLoading('login-associado');
-            
-            // Recarregar dados do JSONBin para garantir que temos os dados mais recentes
             const carregou = await carregarDados();
             if (!carregou) {
                 hideLoading('login-associado');
@@ -1291,8 +1653,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             e.preventDefault();
             
             showLoading('login-admin');
-            
-            // Recarregar dados do JSONBin para garantir que temos os dados mais recentes
             const carregou = await carregarDados();
             if (!carregou) {
                 hideLoading('login-admin');
@@ -1301,7 +1661,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             
             const senha = document.getElementById('senha-admin').value;
             
-            // Senha fixa para demonstração - em produção usar sistema seguro
             if (senha === 'associacao2024') {
                 currentUser = { nome: 'Administrador' };
                 isAdmin = true;
@@ -1319,7 +1678,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             loginScreen.style.display = 'none';
             mainSystem.style.display = 'block';
             
-            // Salvar estado de login
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             localStorage.setItem('isAdmin', isAdmin.toString());
             
@@ -1327,39 +1685,30 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 userType.textContent = 'Modo Administrador';
                 userWelcome.textContent = `Bem-vindo, Administrador`;
                 
-                // Mostrar apenas conteúdo do admin
                 document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
                 document.querySelectorAll('.associado-only').forEach(el => el.style.display = 'none');
                 
-                // Mostrar navegação rápida
                 quickNavAdmin.style.display = 'flex';
-                
-                // Ativar primeira aba do admin
                 document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                 
                 document.querySelector('.tab.admin-only').classList.add('active');
                 document.getElementById('cadastro-tab').classList.add('active');
                 
-                // Inicializar funcionalidades do admin
                 atualizarSeletorAssociados();
                 atualizarListaAssociados();
                 atualizarListaPendentes();
+                atualizarListaMensagensAgendadas();
                 
-                // Atualizar índice da tab atual
                 currentTabIndex = 0;
             } else {
                 userType.textContent = 'Área do Associado';
                 userWelcome.textContent = `Bem-vindo, ${currentUser.nome}`;
                 
-                // Mostrar apenas conteúdo do associado
                 document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
                 document.querySelectorAll('.associado-only').forEach(el => el.style.display = 'block');
                 
-                // Carregar dados do associado
                 loadAssociadoData();
-                
-                // Atualizar índice da tab atual
                 currentTabIndex = 0;
             }
         }
@@ -1375,17 +1724,28 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 <p><strong>Forma de Pagamento Preferencial:</strong> ${currentUser.formaPagamento}</p>
             `;
             
+            // Calcular e mostrar status detalhado
+            const status = calcularStatusPagamentoDetalhado(currentUser);
+            document.getElementById('associado-info-detail').innerHTML += `
+                <p><strong>Status Geral:</strong> <span class="${status.classe}">${status.texto}</span></p>
+            `;
+            
+            // Atualizar resumo do status
+            atualizarResumoStatus(currentUser);
+            
             // Carregar contribuições
             const contribuicoesHTML = currentUser.contribuicoes && currentUser.contribuicoes.length > 0 ? 
-                currentUser.contribuicoes.map(contrib => `
+                currentUser.contribuicoes.sort((a, b) => new Date(b.mesReferencia) - new Date(a.mesReferencia))
+                .map(contrib => `
                     <div class="payment-item">
                         <div>
                             <strong>${formatarMesAno(contrib.mesReferencia)}</strong><br>
-                            <small>Pago em: ${formatarData(contrib.dataPagamento)}</small>
+                            <small>Pago em: ${formatarData(contrib.dataPagamento)}</small><br>
+                            <small>Forma: ${contrib.formaPagamento}</small>
                         </div>
                         <div style="text-align: right;">
                             <strong>R$ ${contrib.valor.toFixed(2)}</strong><br>
-                            <small>${contrib.formaPagamento}</small>
+                            <small>${contrib.observacoes || ''}</small>
                         </div>
                     </div>
                 `).join('') : 
@@ -1393,64 +1753,277 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             
             document.getElementById('minhas-contribuicoes-list').innerHTML = contribuicoesHTML;
             
-            // Calcular e mostrar status
-            const status = calcularStatusPagamento(currentUser);
-            document.getElementById('associado-info-detail').innerHTML += `
-                <p><strong>Status:</strong> <span class="${status.classe}">${status.texto}</span></p>
-            `;
-            
-            // Atualizar grade de meses
-            atualizarGradeMeses(currentUser);
+            // Atualizar grade de meses completa (todos os anos)
+            atualizarGradeMesesCompleta(currentUser);
         }
         
-        // Função para atualizar a grade de meses
-        function atualizarGradeMeses(associado) {
-            if (!monthsGrid) return;
-            
-            monthsGrid.innerHTML = '';
-            
-            const meses = [
-                'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-            ];
+        // Função para atualizar o resumo do status
+        function atualizarResumoStatus(associado) {
+            if (!statusDetalhes) return;
             
             const hoje = new Date();
             const anoAtual = hoje.getFullYear();
-            const mesAtual = hoje.getMonth() + 1; // Janeiro = 1
+            const mesAtual = hoje.getMonth() + 1;
             
-            // Obter meses pagos no ano atual
-            const mesesPagos = associado.contribuicoes ? 
-                associado.contribuicoes
-                    .filter(c => {
-                        const [ano, mes] = c.mesReferencia.split('-').map(Number);
-                        return ano === anoAtual;
-                    })
-                    .map(c => {
-                        const [ano, mes] = c.mesReferencia.split('-').map(Number);
-                        return mes;
-                    }) : [];
+            // Calcular totais
+            let totalMeses = 0;
+            let mesesPagos = 0;
+            let mesesPendentes = 0;
+            let mesesFuturos = 0;
+            let valorTotal = 0;
             
-            // Gerar grade de meses
-            meses.forEach((mesNome, index) => {
-                const mesNumero = index + 1;
-                const div = document.createElement('div');
-                div.className = 'month-item';
+            // Obter data de cadastro
+            const dataCadastro = new Date(associado.dataCadastro);
+            const anoCadastro = dataCadastro.getFullYear();
+            const mesCadastro = dataCadastro.getMonth() + 1;
+            
+            // Calcular meses desde o cadastro até o final do próximo ano
+            const anoFinal = anoAtual + 1;
+            
+            for (let ano = anoCadastro; ano <= anoFinal; ano++) {
+                for (let mes = 1; mes <= 12; mes++) {
+                    // Se for o ano de cadastro, só considerar a partir do mês de cadastro
+                    if (ano === anoCadastro && mes < mesCadastro) continue;
+                    
+                    totalMeses++;
+                    
+                    const mesAno = `${ano}-${mes.toString().padStart(2, '0')}`;
+                    const contrib = associado.contribuicoes?.find(c => c.mesReferencia === mesAno);
+                    
+                    if (contrib) {
+                        mesesPagos++;
+                        valorTotal += contrib.valor || 0;
+                    } else if (ano > anoAtual || (ano === anoAtual && mes > mesAtual)) {
+                        mesesFuturos++;
+                    } else {
+                        mesesPendentes++;
+                    }
+                }
+            }
+            
+            // Calcular percentuais
+            const percentualPago = totalMeses > 0 ? Math.round((mesesPagos / totalMeses) * 100) : 0;
+            const percentualPendente = totalMeses > 0 ? Math.round((mesesPendentes / totalMeses) * 100) : 0;
+            
+            statusDetalhes.innerHTML = `
+                <div class="status-item">
+                    <div class="status-valor">${totalMeses}</div>
+                    <div class="status-label">Total de Meses</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-valor" style="color: var(--success-color);">${mesesPagos}</div>
+                    <div class="status-label">Meses Pagos (${percentualPago}%)</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-valor" style="color: var(--danger-color);">${mesesPendentes}</div>
+                    <div class="status-label">Meses Pendentes (${percentualPendente}%)</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-valor">${mesesFuturos}</div>
+                    <div class="status-label">Meses Futuros</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-valor" style="color: var(--primary-color);">R$ ${valorTotal.toFixed(2)}</div>
+                    <div class="status-label">Valor Total Pago</div>
+                </div>
+            `;
+        }
+        
+        // Função para atualizar a grade de meses completa (todos os anos)
+        function atualizarGradeMesesCompleta(associado) {
+            if (!monthsContainer) return;
+            
+            monthsContainer.innerHTML = '';
+            
+            const hoje = new Date();
+            const anoAtual = hoje.getFullYear();
+            const mesAtual = hoje.getMonth() + 1;
+            
+            // Obter data de cadastro
+            const dataCadastro = new Date(associado.dataCadastro);
+            const anoCadastro = dataCadastro.getFullYear();
+            const mesCadastro = dataCadastro.getMonth() + 1;
+            
+            // Mostrar do ano de cadastro até o próximo ano
+            const anoFinal = anoAtual + 1;
+            
+            // Criar array de anos para mostrar (do mais recente para o mais antigo)
+            const anos = [];
+            for (let ano = anoFinal; ano >= anoCadastro; ano--) {
+                anos.push(ano);
+            }
+            
+            // Para cada ano, criar uma seção
+            anos.forEach(ano => {
+                const yearSection = document.createElement('div');
+                yearSection.className = 'year-section';
                 
-                // Verificar se o mês está pago
-                const estaPago = mesesPagos.includes(mesNumero);
+                const yearTitle = document.createElement('div');
+                yearTitle.className = 'year-title';
+                yearTitle.textContent = ano === anoAtual ? `Ano ${ano} (Atual)` : ano > anoAtual ? `Ano ${ano} (Futuro)` : `Ano ${ano}`;
+                yearSection.appendChild(yearTitle);
                 
-                if (estaPago) {
-                    div.classList.add('pago');
-                    div.textContent = `${mesNumero} - ${mesNome}`;
-                } else if (mesNumero <= mesAtual) {
-                    div.classList.add('pendente');
-                    div.textContent = `${mesNumero} - ${mesNome}`;
-                } else {
-                    div.textContent = `${mesNumero} - ${mesNome}`;
+                const monthsGrid = document.createElement('div');
+                monthsGrid.className = 'months-grid';
+                
+                // Nomes dos meses
+                const meses = [
+                    'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+                    'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+                ];
+                
+                // Para cada mês do ano
+                for (let mes = 1; mes <= 12; mes++) {
+                    // Se for o ano de cadastro e mês anterior ao cadastro, pular
+                    if (ano === anoCadastro && mes < mesCadastro) {
+                        continue;
+                    }
+                    
+                    const mesAno = `${ano}-${mes.toString().padStart(2, '0')}`;
+                    const contrib = associado.contribuicoes?.find(c => c.mesReferencia === mesAno);
+                    
+                    const monthDiv = document.createElement('div');
+                    monthDiv.className = 'month-item';
+                    
+                    // Verificar se é o mês atual
+                    const isMesAtual = ano === anoAtual && mes === mesAtual;
+                    if (isMesAtual) {
+                        monthDiv.classList.add('atual');
+                    }
+                    
+                    // Determinar status
+                    let status = '';
+                    let statusText = '';
+                    let tooltip = '';
+                    
+                    if (contrib) {
+                        status = 'pago';
+                        statusText = 'Pago';
+                        tooltip = `Pago em ${formatarData(contrib.dataPagamento)}\nValor: R$ ${contrib.valor?.toFixed(2) || '0,00'}\nForma: ${contrib.formaPagamento}`;
+                        if (contrib.observacoes) {
+                            tooltip += `\nObs: ${contrib.observacoes}`;
+                        }
+                    } else if (ano > anoAtual || (ano === anoAtual && mes > mesAtual)) {
+                        status = 'futuro';
+                        statusText = 'Futuro';
+                        tooltip = 'Mês futuro - pagamento pendente';
+                    } else {
+                        status = 'pendente';
+                        statusText = 'Pendente';
+                        tooltip = 'Pagamento em atraso';
+                    }
+                    
+                    monthDiv.classList.add(status);
+                    
+                    // Adicionar conteúdo
+                    monthDiv.innerHTML = `
+                        <div class="mes-nome">${meses[mes-1]}</div>
+                        <div class="status-info">${statusText}</div>
+                    `;
+                    
+                    // Adicionar tooltip
+                    if (tooltip) {
+                        monthDiv.title = tooltip;
+                    }
+                    
+                    monthsGrid.appendChild(monthDiv);
                 }
                 
-                monthsGrid.appendChild(div);
+                yearSection.appendChild(monthsGrid);
+                monthsContainer.appendChild(yearSection);
             });
+            
+            // Adicionar legenda
+            const legendSection = document.createElement('div');
+            legendSection.className = 'year-section';
+            legendSection.innerHTML = `
+                <div class="year-title">Legenda</div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 20px; height: 20px; background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px;"></div>
+                        <span>Pago</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 20px; height: 20px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px;"></div>
+                        <span>Pendente/Atrasado</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 20px; height: 20px; background-color: #e8f4fd; border: 1px solid #b6e0fe; border-radius: 4px;"></div>
+                        <span>Futuro</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 20px; height: 20px; border: 2px solid var(--warning-color); border-radius: 4px; background-color: transparent;"></div>
+                        <span>Mês Atual</span>
+                    </div>
+                </div>
+            `;
+            monthsContainer.appendChild(legendSection);
+        }
+        
+        // Função para calcular status de pagamento detalhado
+        function calcularStatusPagamentoDetalhado(associado) {
+            const hoje = new Date();
+            const anoAtual = hoje.getFullYear();
+            const mesAtual = hoje.getMonth() + 1;
+            
+            // Obter data de cadastro
+            const dataCadastro = new Date(associado.dataCadastro);
+            const anoCadastro = dataCadastro.getFullYear();
+            const mesCadastro = dataCadastro.getMonth() + 1;
+            
+            // Contadores
+            let totalMeses = 0;
+            let mesesPagos = 0;
+            let mesesPendentes = 0;
+            
+            // Calcular do ano de cadastro até o ano atual
+            for (let ano = anoCadastro; ano <= anoAtual; ano++) {
+                for (let mes = 1; mes <= 12; mes++) {
+                    // Se for o ano de cadastro, só considerar a partir do mês de cadastro
+                    if (ano === anoCadastro && mes < mesCadastro) continue;
+                    
+                    // Se for ano/mês futuro, não contar
+                    if (ano > anoAtual || (ano === anoAtual && mes > mesAtual)) continue;
+                    
+                    totalMeses++;
+                    
+                    const mesAno = `${ano}-${mes.toString().padStart(2, '0')}`;
+                    const contrib = associado.contribuicoes?.find(c => c.mesReferencia === mesAno);
+                    
+                    if (contrib) {
+                        mesesPagos++;
+                    } else {
+                        mesesPendentes++;
+                    }
+                }
+            }
+            
+            // Calcular percentual
+            const percentual = totalMeses > 0 ? Math.round((mesesPagos / totalMeses) * 100) : 0;
+            
+            if (mesesPendentes === 0) {
+                return {
+                    texto: `Em dia (${mesesPagos}/${totalMeses} meses - ${percentual}%)`,
+                    classe: 'status-pago',
+                    totalMeses: totalMeses,
+                    mesesPagos: mesesPagos,
+                    mesesPendentes: 0
+                };
+            } else {
+                return {
+                    texto: `${mesesPendentes} meses atrasados (${mesesPagos}/${totalMeses} pagos - ${percentual}%)`,
+                    classe: 'status-pendente',
+                    totalMeses: totalMeses,
+                    mesesPagos: mesesPagos,
+                    mesesPendentes: mesesPendentes
+                };
+            }
+        }
+        
+        // Função para calcular status de pagamento (simplificada para outras telas)
+        function calcularStatusPagamento(associado) {
+            const statusDetalhado = calcularStatusPagamentoDetalhado(associado);
+            return statusDetalhado;
         }
         
         // Função de logout
@@ -1462,7 +2035,10 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             mainSystem.style.display = 'none';
             loginScreen.style.display = 'block';
             
-            // Resetar formulários de login
+            if (intervaloVerificacao) {
+                clearInterval(intervaloVerificacao);
+            }
+            
             loginFormAssociado.reset();
             loginFormAdmin.reset();
             loginAssociado.style.display = 'none';
@@ -1483,10 +2059,8 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             const formaPagamento = document.getElementById('forma-pagamento').value;
             const telefone = document.getElementById('telefone').value;
             
-            // Gerar número do associado
             const numeroAssociado = associados.length > 0 ? Math.max(...associados.map(a => a.numero)) + 1 : 1;
             
-            // Criar objeto do associado
             const novoAssociado = {
                 numero: numeroAssociado,
                 nome: nome,
@@ -1496,14 +2070,11 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 contribuicoes: []
             };
             
-            // Adicionar à lista
             associados.push(novoAssociado);
             
-            // Salvar no JSONBin
             const salvou = await salvarDados();
             
             if (salvou) {
-                // Exibir resultado
                 cadastroResult.innerHTML = `
                     <div class="alert alert-success">
                         Associado cadastrado com sucesso! Número do associado: <strong>${numeroAssociado}</strong>
@@ -1511,17 +2082,14 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 `;
                 cadastroResult.style.display = 'block';
                 
-                // Limpar formulário
                 cadastroForm.reset();
                 document.getElementById('data-cadastro').valueAsDate = new Date();
                 
-                // Atualizar listas
                 atualizarSeletorAssociados();
                 atualizarListaAssociados();
                 atualizarListaPendentes();
                 atualizarRelatorios();
                 
-                // Rolar para o resultado
                 cadastroResult.scrollIntoView({ behavior: 'smooth' });
             }
         }
@@ -1530,7 +2098,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
         function atualizarListaAssociados() {
             const searchTerm = searchInput.value.toLowerCase();
             
-            // Filtrar associados
             let associadosFiltrados = associados;
             if (searchTerm) {
                 associadosFiltrados = associados.filter(a => 
@@ -1539,19 +2106,15 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 );
             }
             
-            // Calcular paginação
             const totalPages = Math.ceil(associadosFiltrados.length / itemsPerPage);
             if (currentPage > totalPages) currentPage = totalPages || 1;
             
-            // Gerar lista de associados para a página atual
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
             const associadosPagina = associadosFiltrados.slice(startIndex, endIndex);
             
-            // Limpar lista atual
             associadosList.innerHTML = '';
             
-            // Preencher lista
             if (associadosPagina.length === 0) {
                 associadosList.innerHTML = '<tr><td colspan="7" style="text-align: center;">Nenhum associado encontrado</td></tr>';
             } else {
@@ -1567,7 +2130,7 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                         <td>${associado.formaPagamento}</td>
                         <td class="${status.classe}">${status.texto}</td>
                         <td>
-                            <button class="whatsapp-btn" onclick="enviarMensagem(${associado.numero})">
+                            <button class="whatsapp-btn" onclick="enviarMensagemIndividual(${associado.numero})">
                                 <span>Enviar Lembrete</span>
                             </button>
                             <button class="btn-success" onclick="irParaContribuicoes(${associado.numero})">Registrar Pagamento</button>
@@ -1579,7 +2142,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 });
             }
             
-            // Atualizar paginação
             atualizarPaginacao(totalPages);
         }
         
@@ -1609,19 +2171,16 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             selectedAssociado = associados.find(a => a.numero === numero);
             if (!selectedAssociado) return;
             
-            // Preencher informações do associado
             document.getElementById('info-nome').textContent = selectedAssociado.nome;
             document.getElementById('info-numero').textContent = selectedAssociado.numero;
             document.getElementById('info-telefone').textContent = selectedAssociado.telefone;
             document.getElementById('info-data-cadastro').textContent = formatarData(selectedAssociado.dataCadastro);
             
-            // Preencher histórico de contribuições
             paymentHistory.innerHTML = '';
             
             if (selectedAssociado.contribuicoes.length === 0) {
                 paymentHistory.innerHTML = '<p>Nenhuma contribuição registrada.</p>';
             } else {
-                // Ordenar contribuições por data (mais recente primeiro)
                 selectedAssociado.contribuicoes.sort((a, b) => new Date(b.dataPagamento) - new Date(a.dataPagamento));
                 
                 selectedAssociado.contribuicoes.forEach(contrib => {
@@ -1641,9 +2200,7 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 });
             }
             
-            // Configurar formulário de contribuição
             document.getElementById('forma-pagamento-contrib').value = selectedAssociado.formaPagamento;
-            
             associadoInfo.style.display = 'block';
         }
         
@@ -1662,7 +2219,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             const valor = parseFloat(document.getElementById('valor').value);
             const observacoes = document.getElementById('observacoes').value;
             
-            // Verificar se já existe uma contribuição para este mês
             const contribExistente = selectedAssociado.contribuicoes.find(
                 c => c.mesReferencia === mesReferencia
             );
@@ -1672,13 +2228,11 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                     return;
                 }
                 
-                // Remover a contribuição existente
                 selectedAssociado.contribuicoes = selectedAssociado.contribuicoes.filter(
                     c => c.mesReferencia !== mesReferencia
                 );
             }
             
-            // Adicionar nova contribuição
             selectedAssociado.contribuicoes.push({
                 mesReferencia: mesReferencia,
                 dataPagamento: dataPagamento,
@@ -1688,17 +2242,14 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 dataRegistro: new Date().toISOString().split('T')[0]
             });
             
-            // Salvar no JSONBin
             const salvou = await salvarDados();
             
             if (salvou) {
-                // Atualizar a interface
                 selecionarAssociado();
                 atualizarListaAssociados();
                 atualizarListaPendentes();
                 atualizarRelatorios();
                 
-                // Limpar formulário
                 contribuicaoForm.reset();
                 document.getElementById('forma-pagamento-contrib').value = selectedAssociado.formaPagamento;
                 
@@ -1710,7 +2261,7 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
         function atualizarListaPendentes() {
             if (!pendentesList) return;
             
-            const associadosPendentes = associados.filter(a => {
+            associadosPendentes = associados.filter(a => {
                 const status = calcularStatusPagamento(a);
                 return status.mesesPendentes > 0;
             });
@@ -1720,8 +2271,10 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             if (associadosPendentes.length === 0) {
                 pendentesList.innerHTML = '<p>Nenhum associado com pagamento pendente</p>';
                 if (enviarTodosBtn) enviarTodosBtn.style.display = 'none';
+                if (gerarListaBtn) gerarListaBtn.style.display = 'none';
             } else {
-                if (enviarTodosBtn) enviarTodosBtn.style.display = 'block';
+                if (enviarTodosBtn) enviarTodosBtn.style.display = 'inline-block';
+                if (gerarListaBtn) gerarListaBtn.style.display = 'inline-block';
                 
                 associadosPendentes.forEach(associado => {
                     const status = calcularStatusPagamento(associado);
@@ -1736,8 +2289,9 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                                 <h3>${associado.nome}</h3>
                                 <p>Nº: ${associado.numero} | Telefone: ${associado.telefone}</p>
                                 <p>Status: <span class="${status.classe}">${status.texto}</span></p>
+                                <p>Data de Cadastro: ${formatarData(associado.dataCadastro)}</p>
                             </div>
-                            <button class="whatsapp-btn" onclick="enviarMensagem(${associado.numero})">
+                            <button class="whatsapp-btn" onclick="enviarMensagemIndividual(${associado.numero})">
                                 <span>Enviar</span>
                             </button>
                         </div>
@@ -1745,6 +2299,65 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                     
                     pendentesList.appendChild(div);
                 });
+            }
+        }
+        
+        // Função para atualizar a lista de mensagens agendadas
+        function atualizarListaMensagensAgendadas() {
+            if (!listaMensagensAgendadas) return;
+            
+            listaMensagensAgendadas.innerHTML = '';
+            
+            if (scheduledMessages.length === 0) {
+                mensagensAgendadasContainer.style.display = 'none';
+                return;
+            }
+            
+            mensagensAgendadasContainer.style.display = 'block';
+            
+            scheduledMessages.sort((a, b) => new Date(a.data) - new Date(b.data));
+            
+            scheduledMessages.forEach((mensagem, index) => {
+                const associadosParaEnviar = associados.filter(a => 
+                    mensagem.associados.includes(a.numero)
+                );
+                
+                const div = document.createElement('div');
+                div.className = 'mensagem-agendada';
+                div.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div>
+                            <strong>Programada para: ${formatarDataHora(mensagem.data)}</strong><br>
+                            <small>Associados: ${associadosParaEnviar.length}</small><br>
+                            <small>Tipo: ${mensagem.tipo === 'automatico' ? 'Automático' : 'Manual'}</small>
+                        </div>
+                        <div>
+                            <button class="btn-danger" onclick="cancelarMensagemAgendada(${index})" style="padding: 5px 10px; font-size: 12px;">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                        <strong>Mensagem:</strong> ${mensagem.mensagem.substring(0, 80)}...
+                    </div>
+                `;
+                
+                listaMensagensAgendadas.appendChild(div);
+            });
+        }
+        
+        // Função para cancelar uma mensagem agendada
+        async function cancelarMensagemAgendada(index) {
+            if (!confirm('Tem certeza que deseja cancelar esta mensagem agendada?')) {
+                return;
+            }
+            
+            scheduledMessages.splice(index, 1);
+            const salvou = await salvarDados();
+            
+            if (salvou) {
+                atualizarListaMensagensAgendadas();
+                alert('Mensagem agendada cancelada com sucesso!');
             }
         }
         
@@ -1756,7 +2369,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             
             if (totalPages <= 1) return;
             
-            // Botão anterior
             const prevBtn = document.createElement('button');
             prevBtn.className = 'page-btn';
             prevBtn.textContent = '«';
@@ -1769,7 +2381,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             });
             pagination.appendChild(prevBtn);
             
-            // Páginas
             for (let i = 1; i <= totalPages; i++) {
                 const pageBtn = document.createElement('button');
                 pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
@@ -1781,7 +2392,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 pagination.appendChild(pageBtn);
             }
             
-            // Botão próximo
             const nextBtn = document.createElement('button');
             nextBtn.className = 'page-btn';
             nextBtn.textContent = '»';
@@ -1795,59 +2405,18 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             pagination.appendChild(nextBtn);
         }
         
-        // FUNÇÃO CORRIGIDA: Função para calcular status de pagamento
-        function calcularStatusPagamento(associado) {
-            const hoje = new Date();
-            const anoAtual = hoje.getFullYear();
-            
-            // Obter meses pagos no ano atual
-            const mesesPagos = associado.contribuicoes ? 
-                associado.contribuicoes
-                    .filter(c => {
-                        const [ano, mes] = c.mesReferencia.split('-').map(Number);
-                        return ano === anoAtual;
-                    })
-                    .map(c => {
-                        const [ano, mes] = c.mesReferencia.split('-').map(Number);
-                        return mes;
-                    }) : [];
-            
-            // Calcular total de meses pagos
-            const totalMesesPagos = mesesPagos.length;
-            
-            // CORREÇÃO: Sempre considerar 12 meses no ano para o cálculo
-            const mesesPendentes = 12 - totalMesesPagos;
-            
-            if (totalMesesPagos === 0) {
-                return {
-                    texto: `12 meses pendentes (0 pagos)`,
-                    classe: 'status-pendente',
-                    mesesPagos: 0,
-                    mesesPendentes: 12
-                };
-            }
-            else if (mesesPendentes === 0) {
-                return {
-                    texto: `Em dia (${totalMesesPagos} meses pagos)`,
-                    classe: 'status-pago',
-                    mesesPagos: totalMesesPagos,
-                    mesesPendentes: 0
-                };
-            } else {
-                return {
-                    texto: `${mesesPendentes} meses pendentes (${totalMesesPagos} pagos)`,
-                    classe: 'status-pendente',
-                    mesesPagos: totalMesesPagos,
-                    mesesPendentes: mesesPendentes
-                };
-            }
-        }
-        
         // Função para formatar data
         function formatarData(data) {
             if (!data) return '-';
             const date = new Date(data);
             return date.toLocaleDateString('pt-BR');
+        }
+        
+        // Função para formatar data e hora
+        function formatarDataHora(dataHora) {
+            if (!dataHora) return '-';
+            const date = new Date(dataHora);
+            return date.toLocaleString('pt-BR');
         }
         
         // Função para formatar mês/ano
@@ -1858,34 +2427,68 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             return date.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
         }
         
-        // Função para enviar mensagem via WhatsApp
-        function enviarMensagem(numeroAssociado) {
+        // Função para enviar mensagem individual via WhatsApp
+        function enviarMensagemIndividual(numeroAssociado) {
             const associado = associados.find(a => a.numero === numeroAssociado);
             if (!associado) return;
             
             const mensagem = mensagemTemplate.value.replace('[NOME]', associado.nome);
             const telefone = associado.telefone.replace(/\D/g, '');
-            const url = `https://wa.me/55${telefone}?text=${encodeURIComponent(mensagem)}`;
+            const url = `https://web.whatsapp.com/send?phone=55${telefone}&text=${encodeURIComponent(mensagem)}`;
             
             window.open(url, '_blank');
         }
         
-        // Função para enviar mensagens para todos os pendentes
-        function enviarMensagensPendentes() {
-            const associadosPendentes = associados.filter(a => {
-                const status = calcularStatusPagamento(a);
-                return status.mesesPendentes > 0;
-            });
-            
+        // Função para gerar lista de números
+        function gerarListaNumeros() {
             if (associadosPendentes.length === 0) {
                 alert('Não há associados com pagamentos pendentes.');
                 return;
             }
             
+            numerosList.innerHTML = '';
+            
+            associadosPendentes.forEach(associado => {
+                const div = document.createElement('div');
+                div.className = 'numero-item';
+                div.textContent = `${associado.nome} - ${associado.telefone}`;
+                numerosList.appendChild(div);
+            });
+            
+            numerosContainer.style.display = 'block';
+            numerosContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Função para copiar números para área de transferência
+        function copiarNumeros() {
+            let numerosTexto = '';
+            
+            associadosPendentes.forEach(associado => {
+                const telefone = associado.telefone.replace(/\D/g, '');
+                numerosTexto += `55${telefone}\n`;
+            });
+            
+            navigator.clipboard.writeText(numerosTexto)
+                .then(() => {
+                    alert(`${associadosPendentes.length} números copiados para área de transferência!`);
+                })
+                .catch(err => {
+                    console.error('Erro ao copiar: ', err);
+                    alert('Não foi possível copiar automaticamente. Você pode copiar manualmente da lista acima.');
+                });
+        }
+        
+        // Função para iniciar envio de mensagens
+        function iniciarEnvioMensagens() {
+            if (associadosPendentes.length === 0) {
+                alert('Não há associados com pagamentos pendentes.');
+                return;
+            }
+            
+            const tipoEnvio = document.querySelector('input[name="tipo-envio"]:checked').value;
             const dataProgramacao = dataProgramada.value;
             
             if (dataProgramacao) {
-                // Programar envio para data futura
                 const dataObj = new Date(dataProgramacao);
                 const agora = new Date();
                 
@@ -1894,90 +2497,229 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                     return;
                 }
                 
-                const delay = dataObj.getTime() - agora.getTime();
-                
-                // Salvar mensagens agendadas
-                scheduledMessages.push({
+                const mensagemAgendada = {
                     data: dataObj.toISOString(),
                     associados: associadosPendentes.map(a => a.numero),
-                    mensagem: mensagemTemplate.value
+                    mensagem: mensagemTemplate.value,
+                    tipo: tipoEnvio,
+                    status: 'pendente'
+                };
+                
+                scheduledMessages.push(mensagemAgendada);
+                
+                salvarDados().then(salvou => {
+                    if (salvou) {
+                        atualizarListaMensagensAgendadas();
+                        alert(`Mensagem programada para ${formatarDataHora(dataObj)}!\n\nTotal de associados: ${associadosPendentes.length}\nTipo: ${tipoEnvio === 'automatico' ? 'Automático' : 'Manual'}`);
+                    }
                 });
-                
-                // Salvar no JSONBin
-                salvarDados();
-                
-                alert(`Mensagens programadas para ${dataObj.toLocaleString('pt-BR')}`);
-                
-                // Configurar timeout para envio
-                setTimeout(() => {
-                    associadosPendentes.forEach(associado => {
-                        setTimeout(() => {
-                            enviarMensagem(associado.numero);
-                        }, 1000); // Pequeno delay para não sobrecarregar
-                    });
-                    
-                    // Remover mensagem agendada após envio
-                    scheduledMessages = scheduledMessages.filter(m => 
-                        m.data !== dataObj.toISOString()
-                    );
-                    salvarDados();
-                }, delay);
             } else {
-                // Enviar imediatamente
-                if (confirm(`Deseja enviar mensagens para ${associadosPendentes.length} associado(s) com pagamento pendente?`)) {
-                    associadosPendentes.forEach(associado => {
-                        setTimeout(() => {
-                            enviarMensagem(associado.numero);
-                        }, 1000); // Pequeno delay para não sobrecarregar
-                    });
+                if (tipoEnvio === 'automatico') {
+                    iniciarEnvioAutomatico();
+                } else {
+                    if (numerosContainer.style.display === 'none') {
+                        gerarListaNumeros();
+                    }
+                    alert('Use a lista de números acima para enviar mensagens manualmente no WhatsApp Web.');
                 }
             }
         }
         
-        // Função para verificar e processar mensagens agendadas
-        function verificarMensagensAgendadas() {
-            const agora = new Date();
-            const mensagensPendentes = scheduledMessages.filter(m => new Date(m.data) <= agora);
-            
-            if (mensagensPendentes.length > 0) {
-                mensagensPendentes.forEach(mensagem => {
-                    mensagem.associados.forEach(numero => {
-                        enviarMensagem(numero);
-                    });
-                });
-                
-                // Remover mensagens já processadas
-                scheduledMessages = scheduledMessages.filter(m => new Date(m.data) > agora);
-                salvarDados();
+        // Função para iniciar envio automático
+        function iniciarEnvioAutomatico() {
+            if (envioEmAndamento) {
+                if (confirm('Já há um envio em andamento. Deseja cancelar?')) {
+                    cancelarEnvioAutomatico();
+                }
+                return;
             }
+            
+            if (!confirm(`Deseja iniciar o envio automático para ${associadosPendentes.length} associado(s)?\n\nO sistema abrirá uma janela do WhatsApp Web para cada número.\n\nIMPORTANTE: Você precisará clicar em "Enviar" manualmente em cada janela.`)) {
+                return;
+            }
+            
+            envioEmAndamento = true;
+            indiceEnvioAtual = 0;
+            
+            contadorEnvio.style.display = 'block';
+            progressContainer.style.display = 'block';
+            enviarTexto.textContent = 'Enviando...';
+            enviarLoading.style.display = 'inline-block';
+            enviarTodosBtn.disabled = true;
+            
+            enviarProximaMensagem();
+        }
+        
+        // Função para enviar próxima mensagem no modo automático
+        function enviarProximaMensagem() {
+            if (indiceEnvioAtual >= associadosPendentes.length) {
+                finalizarEnvio();
+                return;
+            }
+            
+            const associado = associadosPendentes[indiceEnvioAtual];
+            const mensagem = mensagemTemplate.value.replace('[NOME]', associado.nome);
+            const telefone = associado.telefone.replace(/\D/g, '');
+            const url = `https://web.whatsapp.com/send?phone=55${telefone}&text=${encodeURIComponent(mensagem)}`;
+            
+            contadorTexto.textContent = `Enviando ${indiceEnvioAtual + 1} de ${associadosPendentes.length}: ${associado.nome}`;
+            
+            const progresso = Math.round((indiceEnvioAtual / associadosPendentes.length) * 100);
+            progressBar.style.width = `${progresso}%`;
+            progressText.textContent = `${progresso}%`;
+            
+            setTimeout(() => {
+                window.open(url, `whatsapp_${indiceEnvioAtual}`, 'width=800,height=600');
+                
+                indiceEnvioAtual++;
+                
+                if (indiceEnvioAtual < associadosPendentes.length) {
+                    intervaloEnvio = setTimeout(enviarProximaMensagem, 5000);
+                } else {
+                    setTimeout(finalizarEnvio, 5000);
+                }
+            }, 1000);
+        }
+        
+        // Função para finalizar envio
+        function finalizarEnvio() {
+            envioEmAndamento = false;
+            clearTimeout(intervaloEnvio);
+            
+            contadorTexto.textContent = `Envio concluído! ${associadosPendentes.length} mensagens enviadas.`;
+            progressBar.style.width = '100%';
+            progressText.textContent = '100%';
+            
+            setTimeout(() => {
+                enviarTodosBtn.disabled = false;
+                enviarTexto.textContent = 'Enviar Mensagens';
+                enviarLoading.style.display = 'none';
+                
+                setTimeout(() => {
+                    contadorEnvio.style.display = 'none';
+                    progressContainer.style.display = 'none';
+                }, 3000);
+            }, 2000);
+            
+            alert(`Envio concluído! ${associadosPendentes.length} mensagens foram abertas no WhatsApp Web.`);
+        }
+        
+        // Função para cancelar envio automático
+        function cancelarEnvioAutomatico() {
+            envioEmAndamento = false;
+            clearTimeout(intervaloEnvio);
+            
+            enviarTodosBtn.disabled = false;
+            enviarTexto.textContent = 'Enviar Mensagens';
+            enviarLoading.style.display = 'none';
+            contadorEnvio.style.display = 'none';
+            progressContainer.style.display = 'none';
+            
+            alert('Envio cancelado.');
+        }
+        
+        // Função para verificar mensagens agendadas
+        async function verificarMensagensAgendadas() {
+            const agora = new Date();
+            let mensagensEnviadas = false;
+            
+            for (let i = scheduledMessages.length - 1; i >= 0; i--) {
+                const mensagem = scheduledMessages[i];
+                const dataMensagem = new Date(mensagem.data);
+                
+                if (dataMensagem <= agora) {
+                    const associadosParaEnviar = associados.filter(a => 
+                        mensagem.associados.includes(a.numero)
+                    );
+                    
+                    if (associadosParaEnviar.length > 0) {
+                        if (mensagem.tipo === 'automatico') {
+                            enviarMensagemAgendadaAutomaticamente(associadosParaEnviar, mensagem.mensagem);
+                        } else {
+                            mostrarNotificacaoAgendada(associadosParaEnviar.length);
+                        }
+                        
+                        scheduledMessages.splice(i, 1);
+                        mensagensEnviadas = true;
+                    }
+                }
+            }
+            
+            if (mensagensEnviadas) {
+                await salvarDados();
+                atualizarListaMensagensAgendadas();
+            }
+        }
+        
+        // Função para enviar mensagem agendada automaticamente
+        function enviarMensagemAgendadaAutomaticamente(associadosParaEnviar, mensagemTexto) {
+            if (associadosParaEnviar.length === 0) return;
+            
+            let indice = 0;
+            const total = associadosParaEnviar.length;
+            
+            function enviarProximaAgendada() {
+                if (indice >= total) return;
+                
+                const associado = associadosParaEnviar[indice];
+                const mensagem = mensagemTexto.replace('[NOME]', associado.nome);
+                const telefone = associado.telefone.replace(/\D/g, '');
+                const url = `https://web.whatsapp.com/send?phone=55${telefone}&text=${encodeURIComponent(mensagem)}`;
+                
+                window.open(url, `whatsapp_agendado_${indice}`, 'width=800,height=600');
+                
+                indice++;
+                
+                if (indice < total) {
+                    setTimeout(enviarProximaAgendada, 5000);
+                }
+            }
+            
+            enviarProximaAgendada();
+            mostrarNotificacao(`Iniciando envio automático agendado para ${total} associados.`);
+        }
+        
+        // Função para mostrar notificação
+        function mostrarNotificacao(mensagem) {
+            if (isAdmin && currentTabIndex === 3) {
+                const notificacao = document.createElement('div');
+                notificacao.className = 'alert alert-success';
+                notificacao.textContent = mensagem;
+                notificacao.style.marginTop = '10px';
+                
+                const card = document.querySelector('#mensagens-tab .card');
+                card.insertBefore(notificacao, card.firstChild);
+                
+                setTimeout(() => {
+                    notificacao.remove();
+                }, 5000);
+            }
+        }
+        
+        // Função para mostrar notificação de mensagem agendada
+        function mostrarNotificacaoAgendada(quantidade) {
+            mostrarNotificacao(`Há ${quantidade} mensagens agendadas para envio manual. Gere a lista de números para enviar.`);
         }
         
         // Função para ir para a aba de contribuições com um associado selecionado
         function irParaContribuicoes(numeroAssociado) {
-            // Ativar aba de contribuições
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             
             document.querySelector('.tab[data-tab="contribuicoes"]').classList.add('active');
             document.getElementById('contribuicoes-tab').classList.add('active');
             
-            // Selecionar o associado
             atualizarSeletorAssociados();
             associadoSelect.value = numeroAssociado;
             selecionarAssociado();
             
-            // Configurar mês de referência para o mês atual
             const hoje = new Date();
             const mesAtual = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
             document.getElementById('mes-referencia').value = mesAtual;
-            
-            // Configurar data de pagamento para hoje
             document.getElementById('data-pagamento').valueAsDate = hoje;
             
-            // Atualizar índice da tab atual
             currentTabIndex = 2;
             
-            // Rolagem suave para a seção
             setTimeout(() => {
                 document.getElementById('contribuicoes-tab').scrollIntoView({ 
                     behavior: 'smooth',
@@ -1987,7 +2729,7 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
         }
         
         // =============================================
-        // NOVAS FUNCIONALIDADES IMPLEMENTADAS
+        // FUNÇÕES DE EDIÇÃO DE ASSOCIADOS
         // =============================================
         
         // Função para editar um associado
@@ -1995,16 +2737,12 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             associadoEditando = associados.find(a => a.numero === numero);
             if (!associadoEditando) return;
             
-            // Preencher o formulário de edição com os dados atuais
             document.getElementById('editar-nome').value = associadoEditando.nome;
             document.getElementById('editar-data-cadastro').value = associadoEditando.dataCadastro;
             document.getElementById('editar-forma-pagamento').value = associadoEditando.formaPagamento;
             document.getElementById('editar-telefone').value = associadoEditando.telefone;
             
-            // Preencher a lista de contribuições
             atualizarListaContribuicoesEdicao();
-            
-            // Mostrar o modal
             modalEditar.style.display = 'flex';
         }
         
@@ -2019,7 +2757,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 return;
             }
             
-            // Ordenar contribuições por data (mais recente primeiro)
             associadoEditando.contribuicoes.sort((a, b) => new Date(b.mesReferencia) - new Date(a.mesReferencia));
             
             associadoEditando.contribuicoes.forEach((contrib, index) => {
@@ -2044,20 +2781,15 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             
             if (!associadoEditando) return;
             
-            // Atualizar os dados do associado
             associadoEditando.nome = document.getElementById('editar-nome').value;
             associadoEditando.dataCadastro = document.getElementById('editar-data-cadastro').value;
             associadoEditando.formaPagamento = document.getElementById('editar-forma-pagamento').value;
             associadoEditando.telefone = document.getElementById('editar-telefone').value;
             
-            // Salvar no JSONBin
             const salvou = await salvarDados();
             
             if (salvou) {
-                // Fechar o modal
                 fecharModalEdicao();
-                
-                // Atualizar as listas
                 atualizarListaAssociados();
                 atualizarSeletorAssociados();
                 atualizarRelatorios();
@@ -2070,18 +2802,14 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
         function abrirModalContribuicao() {
             if (!associadoEditando) return;
             
-            // Limpar formulário
             formNovaContribuicao.reset();
             
-            // Configurar data atual
             const hoje = new Date();
             document.getElementById('nova-data-pagamento').valueAsDate = hoje;
             
-            // Configurar mês atual
             const mesAtual = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}`;
             document.getElementById('nova-mes-referencia').value = mesAtual;
             
-            // Mostrar modal
             modalContribuicao.style.display = 'flex';
         }
         
@@ -2097,7 +2825,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             const valor = parseFloat(document.getElementById('nova-valor').value);
             const observacoes = document.getElementById('nova-observacoes').value;
             
-            // Verificar se já existe uma contribuição para este mês
             const contribExistente = associadoEditando.contribuicoes.find(
                 c => c.mesReferencia === mesReferencia
             );
@@ -2107,13 +2834,11 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                     return;
                 }
                 
-                // Remover a contribuição existente
                 associadoEditando.contribuicoes = associadoEditando.contribuicoes.filter(
                     c => c.mesReferencia !== mesReferencia
                 );
             }
             
-            // Adicionar nova contribuição
             associadoEditando.contribuicoes.push({
                 mesReferencia: mesReferencia,
                 dataPagamento: dataPagamento,
@@ -2123,14 +2848,10 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 dataRegistro: new Date().toISOString().split('T')[0]
             });
             
-            // Salvar no JSONBin
             const salvou = await salvarDados();
             
             if (salvou) {
-                // Atualizar a lista de contribuições
                 atualizarListaContribuicoesEdicao();
-                
-                // Fechar o modal
                 fecharModalContribuicao();
                 
                 alert('Contribuição adicionada com sucesso!');
@@ -2151,21 +2872,16 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 return;
             }
             
-            // Coletar índices das contribuições a serem removidas
             const indices = Array.from(checkboxes).map(cb => parseInt(cb.getAttribute('data-index')));
             
-            // Remover contribuições (em ordem decrescente para evitar problemas de índice)
             indices.sort((a, b) => b - a).forEach(index => {
                 associadoEditando.contribuicoes.splice(index, 1);
             });
             
-            // Salvar no JSONBin
             const salvou = await salvarDados();
             
             if (salvou) {
-                // Atualizar a lista
                 atualizarListaContribuicoesEdicao();
-                
                 alert('Contribuições removidas com sucesso!');
             }
         }
@@ -2183,22 +2899,16 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
         
         // Função para exportar relatório em PDF
         function exportarPdf() {
-            // Em uma implementação real, você usaria uma biblioteca como jsPDF
-            // Aqui vou simular a funcionalidade criando um texto formatado
-            
             let conteudo = "RELATÓRIO DE ARRECADAÇÃO\n\n";
             
-            // Adicionar data do relatório
             const dataRelatorio = new Date().toLocaleDateString('pt-BR');
             conteudo += `Data do relatório: ${dataRelatorio}\n\n`;
             
-            // Adicionar totais
             conteudo += `Arrecadação do Mês: ${arrecadacaoMes.textContent}\n`;
             conteudo += `Arrecadação Total: ${arrecadacaoTotal.textContent}\n`;
             conteudo += `Associados Ativos: ${associadosAtivos.textContent}\n`;
             conteudo += `Pagamentos do Mês: ${pagamentosMes.textContent}\n\n`;
             
-            // Adicionar detalhamento por forma de pagamento
             conteudo += "DETALHAMENTO POR FORMA DE PAGAMENTO\n";
             
             const linhas = relatorioFormasPagamentoBody.querySelectorAll('tr');
@@ -2209,7 +2919,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 }
             });
             
-            // Criar e baixar o arquivo
             const blob = new Blob([conteudo], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -2225,28 +2934,22 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
         
         // Função para exportar relatório em Excel
         function exportarExcel() {
-            // Em uma implementação real, você usaria uma biblioteca como SheetJS
-            // Aqui vou simular a funcionalidade criando um CSV
-            
             let csv = "Forma de Pagamento,Quantidade,Valor Total\n";
             
             const linhas = relatorioFormasPagamentoBody.querySelectorAll('tr');
             linhas.forEach(linha => {
                 const colunas = linha.querySelectorAll('td');
                 if (colunas.length === 3) {
-                    // Remover "R$ " do valor para formato numérico
                     const valor = colunas[2].textContent.replace('R$ ', '');
                     csv += `"${colunas[0].textContent}",${colunas[1].textContent},${valor}\n`;
                 }
             });
             
-            // Adicionar totais
             csv += `\n,"Arrecadação do Mês",${arrecadacaoMes.textContent.replace('R$ ', '')}\n`;
             csv += `,"Arrecadação Total",${arrecadacaoTotal.textContent.replace('R$ ', '')}\n`;
             csv += `,"Associados Ativos",${associadosAtivos.textContent}\n`;
             csv += `,"Pagamentos do Mês",${pagamentosMes.textContent}\n`;
             
-            // Criar e baixar o arquivo
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -2264,7 +2967,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
         function atualizarRelatorios() {
             if (!arrecadacaoMes) return;
             
-            // Calcular totais
             let totalGeral = 0;
             let totalMes = 0;
             let pagamentosMesCount = 0;
@@ -2275,19 +2977,15 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
             associados.forEach(associado => {
                 if (associado.contribuicoes) {
                     associado.contribuicoes.forEach(contrib => {
-                        // Verificar se é do mês selecionado
                         const contribMes = contrib.mesReferencia;
                         const valor = contrib.valor || 0;
                         
-                        // Adicionar ao total geral
                         totalGeral += valor;
                         
-                        // Verificar se é do mês selecionado
                         if (!mesSelecionado || contribMes === mesSelecionado) {
                             totalMes += valor;
                             pagamentosMesCount++;
                             
-                            // Contabilizar por forma de pagamento
                             const forma = contrib.formaPagamento;
                             if (!formasPagamento[forma]) {
                                 formasPagamento[forma] = { quantidade: 0, valor: 0 };
@@ -2299,13 +2997,11 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 }
             });
             
-            // Atualizar os valores na interface
             arrecadacaoMes.textContent = `R$ ${totalMes.toFixed(2)}`;
             arrecadacaoTotal.textContent = `R$ ${totalGeral.toFixed(2)}`;
             associadosAtivos.textContent = associados.length;
             pagamentosMes.textContent = pagamentosMesCount;
             
-            // Atualizar a tabela de formas de pagamento
             relatorioFormasPagamentoBody.innerHTML = '';
             
             for (const forma in formasPagamento) {
@@ -2318,7 +3014,6 @@ Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Por
                 relatorioFormasPagamentoBody.appendChild(tr);
             }
             
-            // Se não houver dados, mostrar mensagem
             if (Object.keys(formasPagamento).length === 0) {
                 relatorioFormasPagamentoBody.innerHTML = '<tr><td colspan="3" style="text-align: center;">Nenhum dado encontrado</td></tr>';
             }
