@@ -14,6 +14,7 @@
             --light-color: #ecf0f1;
             --dark-color: #34495e;
             --whatsapp-color: #25D366;
+            --audio-color: #9b59b6;
         }
         
         * {
@@ -174,6 +175,14 @@
         
         .whatsapp-btn:hover {
             background-color: #128C7E;
+        }
+        
+        .audio-btn {
+            background-color: var(--audio-color);
+        }
+        
+        .audio-btn:hover {
+            background-color: #8e44ad;
         }
         
         table {
@@ -337,20 +346,30 @@
         
         .payment-item {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 10px;
             padding: 12px;
             border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
         }
         
         @media (min-width: 481px) {
             .payment-item {
-                flex-direction: row;
                 justify-content: space-between;
             }
         }
         
         .payment-item:last-child {
             border-bottom: none;
+        }
+        
+        /* Checkbox visível na edição */
+        .contrib-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            accent-color: var(--secondary-color);
         }
         
         .months-container {
@@ -1189,8 +1208,8 @@
                         <textarea id="mensagem-template" rows="4">
 Olá associado/a, este é um lembrete amigável da sua mensalidade pendente.  
 Esta é uma mensagem automática enviada pelo sistema de gerenciamento da Associação de Agricultores/as Familiares de Cacimba. 
-Lembrando que houve atualizaçao do valor de R$ 10,00 para R$ 11,00 como esta descrito no edital de fundação . 
-Para mais infomações acesse o link para conferir os meses pendentes: https://mmaura0114.github.io/AAFC/ para acessar digite seu número de acesso Nº  e telefone.
+Lembrando que houve atualização do valor de R$ 10,00 para R$ 11,00 como está descrito no edital de fundação. 
+Para mais informações acesse o link para conferir os meses pendentes: https://mmaura0114.github.io/AAFC/ para acessar digite seu número de acesso Nº e telefone.
                         </textarea>
                         <small>Use [NOME] para inserir o nome do associado.</small>
                     </div>
@@ -1294,11 +1313,15 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
                         </div>
                     </div>
                     
+                    <!-- Botões principais -->
                     <button id="gerar-lista-btn" class="btn-success" style="margin-top: 15px;">📋 Gerar Lista de Números</button>
                     <button id="enviar-todos-btn" class="whatsapp-btn" style="margin-top: 15px;">
                         <span id="enviar-texto">📱 Iniciar Envio</span>
                         <span id="enviar-loading" class="loading" style="display: none;"></span>
                     </button>
+                    
+                    <!-- NOVO BOTÃO DE ÁUDIO -->
+                    <button id="enviar-audio-btn" class="audio-btn" style="margin-top: 15px;">🎤 Enviar Áudio (texto)</button>
                 </div>
             </div>
             
@@ -1554,22 +1577,35 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
         const resumoStatus = document.getElementById('resumo-status');
         const statusDetalhes = document.getElementById('status-detalhes');
         
-        // Funções para JSONBin.io
+        // Botão de áudio
+        const enviarAudioBtn = document.getElementById('enviar-audio-btn');
+        
+        // ==================== FUNÇÕES AUXILIARES ====================
+        
+        // Função formatarMesAno corrigida (usa Date com mês correto)
+        function formatarMesAno(mesAno) {
+            if (!mesAno) return '-';
+            const [ano, mes] = mesAno.split('-').map(Number);
+            const data = new Date(ano, mes - 1, 1); // mês em JS é 0-based
+            return data.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+        }
+        
+        // Função formatarData (já existente)
+        function formatarData(data) { return data ? new Date(data).toLocaleDateString('pt-BR') : '-'; }
+        function formatarDataHora(d) { return d ? new Date(d).toLocaleString('pt-BR') : '-'; }
+        
+        // Funções JSONBin
         async function carregarDados() {
             try {
                 showLoading('login-admin');
                 showLoading('login-associado');
-                
                 const response = await fetch(JSONBIN_URL, {
                     headers: { 'X-Master-Key': JSONBIN_API_KEY }
                 });
-                
                 if (!response.ok) throw new Error('Erro ao carregar dados');
-                
                 const data = await response.json();
                 associados = data.record.associados || [];
                 scheduledMessages = data.record.scheduledMessages || [];
-                
                 hideLoading('login-admin');
                 hideLoading('login-associado');
                 return true;
@@ -1585,7 +1621,6 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
         async function salvarDados() {
             try {
                 showLoading('cadastrar');
-                
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
                     method: 'PUT',
                     headers: {
@@ -1597,9 +1632,7 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
                         scheduledMessages: scheduledMessages
                     })
                 });
-                
                 if (!response.ok) throw new Error('Erro ao salvar dados');
-                
                 hideLoading('cadastrar');
                 return true;
             } catch (error) {
@@ -1635,7 +1668,7 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
             setTimeout(() => { toastMessage.style.display = 'none'; }, 3000);
         }
         
-        // Função para obter dispositivo selecionado
+        // Dispositivo selecionado
         function getDispositivoSelecionado() {
             const dispositivoRadios = document.querySelectorAll('input[name="dispositivo"]');
             for (let radio of dispositivoRadios) {
@@ -1644,194 +1677,188 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
             return isMobile ? 'mobile' : 'web';
         }
         
-        // Função para gerar link do WhatsApp (funciona em ambos dispositivos)
+        // Link WhatsApp universal
         function gerarLinkWhatsApp(telefone, mensagem, nome = '') {
             const mensagemPersonalizada = mensagem.replace('[NOME]', nome);
             const telefoneLimpo = telefone.replace(/\D/g, '');
-            // Usar wa.me que funciona em ambos dispositivos
             return `https://wa.me/55${telefoneLimpo}?text=${encodeURIComponent(mensagemPersonalizada)}`;
         }
         
-        // Função para enviar mensagem via WhatsApp (universal)
+        // Envio universal
         function enviarWhatsAppUniversal(telefone, mensagem, nome = '') {
             const link = gerarLinkWhatsApp(telefone, mensagem, nome);
-            
-            // No celular, abre direto no app; no PC, abre no Web
-            if (isMobile) {
-                // Tenta abrir no app, se não funcionar, abre no navegador
-                window.location.href = link;
-            } else {
-                window.open(link, '_blank');
-            }
+            if (isMobile) window.location.href = link;
+            else window.open(link, '_blank');
         }
         
-        // Função para enviar mensagem individual (universal)
+        // Envio individual
         function enviarMensagemIndividual(numeroAssociado) {
             const associado = associados.find(a => a.numero === numeroAssociado);
             if (!associado) return;
-            
-            enviarWhatsAppUniversal(
-                associado.telefone, 
-                mensagemTemplate.value, 
-                associado.nome
-            );
+            enviarWhatsAppUniversal(associado.telefone, mensagemTemplate.value, associado.nome);
         }
         
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', async function() {
-            await carregarDados();
+        // ==================== NOVA FUNÇÃO DE ÁUDIO ====================
+        function enviarAudio(telefone, texto, nome = '') {
+            // Como não podemos enviar áudio diretamente, enviamos uma mensagem de texto com emojis e formato de áudio
+            const textoPersonalizado = texto.replace('[NOME]', nome);
+            // Prepara uma mensagem que simula um áudio (para quem não sabe ler, pode pedir para alguém ler em voz alta)
+            const mensagemAudio = `🔊 *Mensagem de áudio para você:*\n\n"${textoPersonalizado}"\n\n(Esta é uma mensagem de texto. Se você não sabe ler, peça a alguém para ler em voz alta para você.)`;
+            const link = gerarLinkWhatsApp(telefone, mensagemAudio, ''); // não precisa substituir nome novamente
+            if (isMobile) window.location.href = link;
+            else window.open(link, '_blank');
+        }
+        
+        // ==================== FUNÇÕES DE GRADE DE MESES ====================
+        function atualizarGradeMesesCompleta(associado) {
+            if (!monthsContainer) return;
+            monthsContainer.innerHTML = '';
             
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                isAdmin = localStorage.getItem('isAdmin') === 'true';
-                showMainSystem();
-            }
+            const hoje = new Date();
+            const anoAtual = hoje.getFullYear();
+            const mesAtual = hoje.getMonth() + 1;
+            const dataCadastro = new Date(associado.dataCadastro + 'T12:00:00');
+            const anoCadastro = dataCadastro.getFullYear();
+            const mesCadastro = dataCadastro.getMonth() + 1;
             
-            if (document.getElementById('data-cadastro')) {
-                document.getElementById('data-cadastro').valueAsDate = new Date();
-            }
+            const anoInicio = anoCadastro;
+            const anoFim = anoAtual + 1;
+            const anos = [];
+            for (let ano = anoFim; ano >= anoInicio; ano--) anos.push(ano);
             
-            if (dataProgramada) {
-                const amanha = new Date();
-                amanha.setDate(amanha.getDate() + 1);
-                amanha.setHours(9, 0, 0, 0);
-                dataProgramada.value = amanha.toISOString().slice(0, 16);
-            }
+            const mesesAbreviados = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
             
-            // Event listeners de login
-            btnAcessoAssociado.addEventListener('click', () => {
-                loginAssociado.style.display = 'block';
-                loginAdmin.style.display = 'none';
-                document.getElementById('login-message').style.display = 'none';
-            });
-            
-            btnAcessoAdmin.addEventListener('click', () => {
-                loginAdmin.style.display = 'block';
-                loginAssociado.style.display = 'none';
-                document.getElementById('login-message').style.display = 'none';
-            });
-            
-            loginFormAssociado.addEventListener('submit', loginAssociadoSubmit);
-            loginFormAdmin.addEventListener('submit', loginAdminSubmit);
-            logoutBtn.addEventListener('click', logout);
-            
-            // Máscara de telefone
-            document.querySelectorAll('input[type="tel"]').forEach(input => {
-                input.addEventListener('input', function(e) {
-                    let value = e.target.value.replace(/\D/g, '');
-                    if (value.length > 11) value = value.substring(0, 11);
+            anos.forEach(ano => {
+                const yearSection = document.createElement('div');
+                yearSection.className = 'year-section';
+                yearSection.innerHTML = `<div class="year-title">${ano} ${ano === anoAtual ? '(Atual)' : ano > anoAtual ? '(Futuro)' : ''}</div>`;
+                
+                const monthsGrid = document.createElement('div');
+                monthsGrid.className = 'months-grid';
+                
+                for (let mes = 1; mes <= 12; mes++) {
+                    if (ano === anoCadastro && mes < mesCadastro) continue;
                     
-                    if (value.length > 10) {
-                        value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-                    } else if (value.length > 6) {
-                        value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-                    } else if (value.length > 2) {
-                        value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
-                    } else if (value.length > 0) {
-                        value = value.replace(/^(\d{0,2})/, '($1');
+                    const mesAno = `${ano}-${mes.toString().padStart(2, '0')}`;
+                    const contrib = associado.contribuicoes?.find(c => c.mesReferencia === mesAno);
+                    
+                    const monthDiv = document.createElement('div');
+                    monthDiv.className = 'month-item';
+                    if (ano === anoAtual && mes === mesAtual) monthDiv.classList.add('atual');
+                    
+                    let status = 'futuro', statusText = 'Futuro';
+                    if (contrib) {
+                        status = 'pago';
+                        statusText = 'Pago';
+                        monthDiv.title = `Pago: ${formatarData(contrib.dataPagamento)}\nValor: R$ ${contrib.valor?.toFixed(2)}`;
+                    } else if (ano < anoAtual || (ano === anoAtual && mes < mesAtual)) {
+                        status = 'pendente';
+                        statusText = 'Pendente';
                     }
-                    e.target.value = value;
-                });
-            });
-            
-            // Tabs
-            document.querySelectorAll('.tab').forEach((tab, index) => {
-                tab.addEventListener('click', function() {
-                    if (this.classList.contains('active')) return;
+                    monthDiv.classList.add(status);
                     
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    
-                    this.classList.add('active');
-                    const tabId = this.getAttribute('data-tab') + '-tab';
-                    document.getElementById(tabId).classList.add('active');
-                    
-                    if (this.getAttribute('data-tab') === 'contribuicoes') {
-                        atualizarSeletorAssociados();
-                    } else if (this.getAttribute('data-tab') === 'consulta') {
-                        atualizarListaAssociados();
-                    } else if (this.getAttribute('data-tab') === 'mensagens') {
-                        atualizarListaPendentes();
-                        atualizarListaMensagensAgendadas();
-                    } else if (this.getAttribute('data-tab') === 'minhas-contribuicoes' && currentUser) {
-                        loadAssociadoData();
-                    } else if (this.getAttribute('data-tab') === 'relatorios') {
-                        atualizarRelatorios();
-                    }
-                    
-                    currentTabIndex = index;
-                });
-            });
-            
-            // Event listeners
-            if (cadastroForm) cadastroForm.addEventListener('submit', cadastrarAssociado);
-            if (searchInput) searchInput.addEventListener('input', atualizarListaAssociados);
-            if (gerarListaBtn) gerarListaBtn.addEventListener('click', gerarListaNumeros);
-            if (enviarTodosBtn) enviarTodosBtn.addEventListener('click', iniciarEnvioMensagens);
-            if (associadoSelect) associadoSelect.addEventListener('change', selecionarAssociado);
-            if (contribuicaoForm) contribuicaoForm.addEventListener('submit', registrarContribuicao);
-            if (formEditar) formEditar.addEventListener('submit', salvarEdicaoAssociado);
-            if (btnCancelarEdicao) btnCancelarEdicao.addEventListener('click', () => modalEditar.style.display = 'none');
-            if (btnAdicionarContribuicao) btnAdicionarContribuicao.addEventListener('click', abrirModalContribuicao);
-            if (btnRemoverContribuicao) btnRemoverContribuicao.addEventListener('click', removerContribuicoesSelecionadas);
-            if (formNovaContribuicao) formNovaContribuicao.addEventListener('submit', adicionarNovaContribuicao);
-            if (btnCancelarContribuicao) btnCancelarContribuicao.addEventListener('click', () => modalContribuicao.style.display = 'none');
-            if (btnExportarPdf) btnExportarPdf.addEventListener('click', exportarPdf);
-            if (btnExportarExcel) btnExportarExcel.addEventListener('click', exportarExcel);
-            if (mesRelatorio) mesRelatorio.addEventListener('change', atualizarRelatorios);
-            
-            // Opções de envio
-            document.querySelectorAll('input[name="tipo-envio"]').forEach(option => {
-                option.addEventListener('change', function() {
-                    document.getElementById('info-manual').style.display = this.value === 'manual' ? 'block' : 'none';
-                    document.getElementById('info-automatico').style.display = this.value === 'automatico' ? 'block' : 'none';
-                    enviarTodosBtn.textContent = this.value === 'automatico' ? '🚀 Iniciar Envio Automático' : '📱 Enviar Mensagens';
-                });
-            });
-            document.getElementById('info-manual').style.display = 'block';
-            
-            // Botões de ação
-            if (copiarNumerosBtn) copiarNumerosBtn.addEventListener('click', copiarNumeros);
-            if (gerarLinksBtn) gerarLinksBtn.addEventListener('click', gerarLinks);
-            if (abrirWhatsappBtn) abrirWhatsappBtn.addEventListener('click', () => {
-                if (isMobile) {
-                    window.location.href = 'https://wa.me';
-                } else {
-                    window.open('https://web.whatsapp.com', '_blank');
+                    monthDiv.innerHTML = `<div class="mes-nome">${mesesAbreviados[mes-1]}</div><div class="status-info">${statusText}</div>`;
+                    monthsGrid.appendChild(monthDiv);
                 }
+                
+                yearSection.appendChild(monthsGrid);
+                monthsContainer.appendChild(yearSection);
             });
             
-            if (fabWhatsapp) {
-                fabWhatsapp.addEventListener('click', () => {
-                    document.querySelector('.tab[data-tab="mensagens"]')?.click();
-                });
-            }
-            
-            // Mostrar FAB apenas em mobile
-            if (isMobile) {
-                fabWhatsapp.style.display = 'flex';
-            }
-            
-            iniciarVerificacaoMensagensAgendadas();
-            verificarMensagensAgendadas();
-        });
-        
-        function iniciarVerificacaoMensagensAgendadas() {
-            if (intervaloVerificacao) clearInterval(intervaloVerificacao);
-            intervaloVerificacao = setInterval(verificarMensagensAgendadas, 30000);
+            // Adiciona legenda
+            const legenda = document.createElement('div');
+            legenda.className = 'year-section';
+            legenda.innerHTML = `
+                <div class="year-title">Legenda</div>
+                <div style="display: grid; grid-template-columns: repeat(2,1fr); gap:10px;">
+                    <div style="display:flex; align-items:center;"><span style="display:inline-block; width:20px; height:20px; background:#d4edda; border:1px solid #c3e6cb; border-radius:4px; margin-right:8px;"></span>Pago</div>
+                    <div style="display:flex; align-items:center;"><span style="display:inline-block; width:20px; height:20px; background:#f8d7da; border:1px solid #f5c6cb; border-radius:4px; margin-right:8px;"></span>Pendente</div>
+                    <div style="display:flex; align-items:center;"><span style="display:inline-block; width:20px; height:20px; background:#e8f4fd; border:1px solid #b6e0fe; border-radius:4px; margin-right:8px;"></span>Futuro</div>
+                    <div style="display:flex; align-items:center;"><span style="display:inline-block; width:20px; height:20px; border:2px solid var(--warning-color); border-radius:4px; margin-right:8px;"></span>Mês Atual</div>
+                </div>
+            `;
+            monthsContainer.appendChild(legenda);
         }
+        
+        function calcularStatusPagamentoDetalhado(associado) {
+            const hoje = new Date();
+            const anoAtual = hoje.getFullYear();
+            const mesAtual = hoje.getMonth() + 1;
+            const dataCadastro = new Date(associado.dataCadastro);
+            const anoCadastro = dataCadastro.getFullYear();
+            const mesCadastro = dataCadastro.getMonth() + 1;
+            
+            let totalMeses = 0, mesesPagos = 0;
+            for (let ano = anoCadastro; ano <= anoAtual; ano++) {
+                for (let mes = 1; mes <= 12; mes++) {
+                    if (ano === anoCadastro && mes < mesCadastro) continue;
+                    if (ano === anoAtual && mes > mesAtual) continue;
+                    totalMeses++;
+                    const mesAno = `${ano}-${mes.toString().padStart(2, '0')}`;
+                    if (associado.contribuicoes?.find(c => c.mesReferencia === mesAno)) mesesPagos++;
+                }
+            }
+            const pendentes = totalMeses - mesesPagos;
+            const percentual = totalMeses > 0 ? Math.round((mesesPagos / totalMeses) * 100) : 0;
+            return pendentes === 0 
+                ? { texto: `Em dia (${mesesPagos}/${totalMeses} - ${percentual}%)`, classe: 'status-pago', mesesPendentes: 0 }
+                : { texto: `${pendentes} atrasados (${mesesPagos}/${totalMeses} - ${percentual}%)`, classe: 'status-pendente', mesesPendentes: pendentes };
+        }
+        
+        function calcularStatusPagamento(associado) {
+            return calcularStatusPagamentoDetalhado(associado);
+        }
+        
+        // Atualizar resumo do status
+        function atualizarResumoStatus(associado) {
+            if (!statusDetalhes) return;
+            const hoje = new Date();
+            const anoAtual = hoje.getFullYear();
+            const mesAtual = hoje.getMonth() + 1;
+            const dataCadastro = new Date(associado.dataCadastro);
+            const anoCadastro = dataCadastro.getFullYear();
+            const mesCadastro = dataCadastro.getMonth() + 1;
+            
+            let totalMeses = 0, mesesPagos = 0, mesesPendentes = 0, mesesFuturos = 0, valorTotal = 0;
+            
+            for (let ano = anoCadastro; ano <= anoAtual + 1; ano++) {
+                for (let mes = 1; mes <= 12; mes++) {
+                    if (ano === anoCadastro && mes < mesCadastro) continue;
+                    totalMeses++;
+                    const mesAno = `${ano}-${mes.toString().padStart(2, '0')}`;
+                    const contrib = associado.contribuicoes?.find(c => c.mesReferencia === mesAno);
+                    if (contrib) {
+                        mesesPagos++;
+                        valorTotal += contrib.valor || 0;
+                    } else if (ano > anoAtual || (ano === anoAtual && mes > mesAtual)) {
+                        mesesFuturos++;
+                    } else {
+                        mesesPendentes++;
+                    }
+                }
+            }
+            
+            const percentualPago = totalMeses > 0 ? Math.round((mesesPagos / totalMeses) * 100) : 0;
+            
+            statusDetalhes.innerHTML = `
+                <div class="status-item"><div class="status-valor">${totalMeses}</div><div class="status-label">Total</div></div>
+                <div class="status-item"><div class="status-valor" style="color: var(--success-color);">${mesesPagos}</div><div class="status-label">Pagos (${percentualPago}%)</div></div>
+                <div class="status-item"><div class="status-valor" style="color: var(--danger-color);">${mesesPendentes}</div><div class="status-label">Pendentes</div></div>
+                <div class="status-item"><div class="status-valor">${mesesFuturos}</div><div class="status-label">Futuros</div></div>
+                <div class="status-item"><div class="status-valor">R$ ${valorTotal.toFixed(2)}</div><div class="status-label">Total Pago</div></div>
+            `;
+        }
+        
+        // ==================== FUNÇÕES PRINCIPAIS ====================
         
         // Login associado
         async function loginAssociadoSubmit(e) {
             e.preventDefault();
             showLoading('login-associado');
             await carregarDados();
-            
             const numero = parseInt(document.getElementById('numero-associado').value);
             const telefone = document.getElementById('telefone-login').value.replace(/\D/g, '');
             const associado = associados.find(a => a.numero === numero && a.telefone.replace(/\D/g, '') === telefone);
-            
             if (associado) {
                 currentUser = associado;
                 isAdmin = false;
@@ -1848,7 +1875,6 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
             e.preventDefault();
             showLoading('login-admin');
             await carregarDados();
-            
             if (document.getElementById('senha-admin').value === 'associacao2024') {
                 currentUser = { nome: 'Administrador' };
                 isAdmin = true;
@@ -1860,10 +1886,10 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
             hideLoading('login-admin');
         }
         
+        // Mostrar sistema principal
         function showMainSystem() {
             loginScreen.style.display = 'none';
             mainSystem.style.display = 'block';
-            
             localStorage.setItem('currentUser', JSON.stringify(currentUser));
             localStorage.setItem('isAdmin', isAdmin.toString());
             
@@ -1893,6 +1919,7 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
             currentTabIndex = 0;
         }
         
+        // Carregar dados do associado
         function loadAssociadoData() {
             document.getElementById('associado-info-detail').innerHTML = `
                 <p><strong>Número:</strong> ${currentUser.numero}</p>
@@ -1909,150 +1936,33 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
             
             atualizarResumoStatus(currentUser);
             
+            // Histórico de contribuições com mês correto
             const contribuicoesHTML = currentUser.contribuicoes?.length > 0 ? 
-                currentUser.contribuicoes.sort((a, b) => new Date(b.mesReferencia) - new Date(a.mesReferencia))
-                .map(contrib => `
-                    <div class="payment-item">
-                        <div>
-                            <strong>${formatarMesAno(contrib.mesReferencia)}</strong>
-                            <small>Pago: ${formatarData(contrib.dataPagamento)}</small>
-                        </div>
-                        <div><strong>R$ ${contrib.valor?.toFixed(2) || '0,00'}</strong></div>
-                    </div>
-                `).join('') : '<p>Nenhuma contribuição registrada.</p>';
+                currentUser.contribuicoes
+                    .sort((a, b) => {
+                        const [anoA, mesA] = a.mesReferencia.split('-').map(Number);
+                        const [anoB, mesB] = b.mesReferencia.split('-').map(Number);
+                        if (anoA !== anoB) return anoB - anoA;
+                        return mesB - mesA;
+                    })
+                    .map(contrib => {
+                        const [ano, mes] = contrib.mesReferencia.split('-').map(Number);
+                        const dataObj = new Date(ano, mes - 1, 1);
+                        const mesExtenso = dataObj.toLocaleDateString('pt-BR', { month: 'long' });
+                        return `<div class="payment-item">
+                            <div>
+                                <strong>${mesExtenso} de ${ano}</strong>
+                                <small>Pago: ${formatarData(contrib.dataPagamento)}</small>
+                            </div>
+                            <div><strong>R$ ${contrib.valor?.toFixed(2) || '0,00'}</strong></div>
+                        </div>`;
+                    }).join('') : '<p>Nenhuma contribuição registrada.</p>';
             
             document.getElementById('minhas-contribuicoes-list').innerHTML = contribuicoesHTML;
             atualizarGradeMesesCompleta(currentUser);
         }
         
-        function atualizarResumoStatus(associado) {
-            if (!statusDetalhes) return;
-            
-            const hoje = new Date();
-            const anoAtual = hoje.getFullYear();
-            const mesAtual = hoje.getMonth() + 1;
-            const dataCadastro = new Date(associado.dataCadastro);
-            const anoCadastro = dataCadastro.getFullYear();
-            const mesCadastro = dataCadastro.getMonth() + 1;
-            
-            let totalMeses = 0, mesesPagos = 0, mesesPendentes = 0, mesesFuturos = 0, valorTotal = 0;
-            
-            for (let ano = anoCadastro; ano <= anoAtual + 1; ano++) {
-                for (let mes = 1; mes <= 12; mes++) {
-                    if (ano === anoCadastro && mes < mesCadastro) continue;
-                    totalMeses++;
-                    
-                    const mesAno = `${ano}-${mes.toString().padStart(2, '0')}`;
-                    const contrib = associado.contribuicoes?.find(c => c.mesReferencia === mesAno);
-                    
-                    if (contrib) {
-                        mesesPagos++;
-                        valorTotal += contrib.valor || 0;
-                    } else if (ano > anoAtual || (ano === anoAtual && mes > mesAtual)) {
-                        mesesFuturos++;
-                    } else {
-                        mesesPendentes++;
-                    }
-                }
-            }
-            
-            const percentualPago = totalMeses > 0 ? Math.round((mesesPagos / totalMeses) * 100) : 0;
-            
-            statusDetalhes.innerHTML = `
-                <div class="status-item"><div class="status-valor">${totalMeses}</div><div class="status-label">Total</div></div>
-                <div class="status-item"><div class="status-valor" style="color: var(--success-color);">${mesesPagos}</div><div class="status-label">Pagos (${percentualPago}%)</div></div>
-                <div class="status-item"><div class="status-valor" style="color: var(--danger-color);">${mesesPendentes}</div><div class="status-label">Pendentes</div></div>
-                <div class="status-item"><div class="status-valor">${mesesFuturos}</div><div class="status-label">Futuros</div></div>
-                <div class="status-item"><div class="status-valor">R$ ${valorTotal.toFixed(2)}</div><div class="status-label">Total Pago</div></div>
-            `;
-        }
-        
-        function atualizarGradeMesesCompleta(associado) {
-            if (!monthsContainer) return;
-            monthsContainer.innerHTML = '';
-            
-            const hoje = new Date();
-            const anoAtual = hoje.getFullYear();
-            const mesAtual = hoje.getMonth() + 1;
-            const dataCadastro = new Date(associado.dataCadastro);
-            const anoCadastro = dataCadastro.getFullYear();
-            const mesCadastro = dataCadastro.getMonth() + 1;
-            const anos = [];
-            
-            for (let ano = anoAtual + 1; ano >= anoCadastro; ano--) anos.push(ano);
-            
-            anos.forEach(ano => {
-                const yearSection = document.createElement('div');
-                yearSection.className = 'year-section';
-                yearSection.innerHTML = `<div class="year-title">${ano} ${ano === anoAtual ? '(Atual)' : ano > anoAtual ? '(Futuro)' : ''}</div>`;
-                
-                const monthsGrid = document.createElement('div');
-                monthsGrid.className = 'months-grid';
-                const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-                
-                for (let mes = 1; mes <= 12; mes++) {
-                    if (ano === anoCadastro && mes < mesCadastro) continue;
-                    
-                    const mesAno = `${ano}-${mes.toString().padStart(2, '0')}`;
-                    const contrib = associado.contribuicoes?.find(c => c.mesReferencia === mesAno);
-                    
-                    const monthDiv = document.createElement('div');
-                    monthDiv.className = 'month-item';
-                    if (ano === anoAtual && mes === mesAtual) monthDiv.classList.add('atual');
-                    
-                    let status = 'futuro', statusText = 'Futuro';
-                    if (contrib) {
-                        status = 'pago';
-                        statusText = 'Pago';
-                        monthDiv.title = `Pago: ${formatarData(contrib.dataPagamento)}\nValor: R$ ${contrib.valor?.toFixed(2)}`;
-                    } else if (ano < anoAtual || (ano === anoAtual && mes < mesAtual)) {
-                        status = 'pendente';
-                        statusText = 'Pendente';
-                    }
-                    monthDiv.classList.add(status);
-                    
-                    monthDiv.innerHTML = `<div class="mes-nome">${meses[mes-1]}</div><div class="status-info">${statusText}</div>`;
-                    monthsGrid.appendChild(monthDiv);
-                }
-                
-                yearSection.appendChild(monthsGrid);
-                monthsContainer.appendChild(yearSection);
-            });
-        }
-        
-        function calcularStatusPagamentoDetalhado(associado) {
-            const hoje = new Date();
-            const anoAtual = hoje.getFullYear();
-            const mesAtual = hoje.getMonth() + 1;
-            const dataCadastro = new Date(associado.dataCadastro);
-            const anoCadastro = dataCadastro.getFullYear();
-            const mesCadastro = dataCadastro.getMonth() + 1;
-            
-            let totalMeses = 0, mesesPagos = 0;
-            
-            for (let ano = anoCadastro; ano <= anoAtual; ano++) {
-                for (let mes = 1; mes <= 12; mes++) {
-                    if (ano === anoCadastro && mes < mesCadastro) continue;
-                    if (ano === anoAtual && mes > mesAtual) continue;
-                    
-                    totalMeses++;
-                    const mesAno = `${ano}-${mes.toString().padStart(2, '0')}`;
-                    if (associado.contribuicoes?.find(c => c.mesReferencia === mesAno)) mesesPagos++;
-                }
-            }
-            
-            const pendentes = totalMeses - mesesPagos;
-            const percentual = totalMeses > 0 ? Math.round((mesesPagos / totalMeses) * 100) : 0;
-            
-            return pendentes === 0 
-                ? { texto: `Em dia (${mesesPagos}/${totalMeses} - ${percentual}%)`, classe: 'status-pago', mesesPendentes: 0 }
-                : { texto: `${pendentes} atrasados (${mesesPagos}/${totalMeses} - ${percentual}%)`, classe: 'status-pendente', mesesPendentes: pendentes };
-        }
-        
-        function calcularStatusPagamento(associado) {
-            return calcularStatusPagamentoDetalhado(associado);
-        }
-        
+        // Logout
         function logout() {
             currentUser = null;
             isAdmin = false;
@@ -2067,7 +1977,7 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
             loginAdmin.style.display = 'none';
         }
         
-        // Funções Admin
+        // ==================== FUNÇÕES ADMIN ====================
         async function cadastrarAssociado(e) {
             e.preventDefault();
             const novoAssociado = {
@@ -2127,7 +2037,6 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
         function selecionarAssociado() {
             const numero = parseInt(this.value);
             if (!numero) { associadoInfo.style.display = 'none'; selectedAssociado = null; return; }
-            
             selectedAssociado = associados.find(a => a.numero === numero);
             if (!selectedAssociado) return;
             
@@ -2238,14 +2147,9 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
             pagination.appendChild(next);
         }
         
-        function formatarData(data) { return data ? new Date(data).toLocaleDateString('pt-BR') : '-'; }
-        function formatarDataHora(d) { return d ? new Date(d).toLocaleString('pt-BR') : '-'; }
-        function formatarMesAno(m) { return m ? new Date(m + '-01').toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }) : '-'; }
-        
         // Funções de envio
         function gerarListaNumeros() {
             if (!associadosPendentes.length) return alert('Sem pendentes');
-            
             numerosList.innerHTML = associadosPendentes.map(a => `<div class="numero-item">${a.nome} - ${a.telefone}</div>`).join('');
             numerosContainer.style.display = 'block';
             linksContainer.style.display = 'none';
@@ -2260,13 +2164,11 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
         
         function gerarLinks() {
             if (!associadosPendentes.length) return alert('Sem pendentes');
-            
             const dispositivo = getDispositivoSelecionado();
             linksList.innerHTML = associadosPendentes.map(a => {
                 const link = gerarLinkWhatsApp(a.telefone, mensagemTemplate.value, a.nome);
                 return `<div class="numero-item"><a href="${link}" target="_blank" style="word-break:break-all;">${a.nome}: ${link}</a></div>`;
             }).join('');
-            
             linksContainer.style.display = 'block';
             qrcodeContainer.style.display = dispositivo === 'mobile' ? 'block' : 'none';
             gerarQRCodeParaPrimeiro();
@@ -2274,10 +2176,10 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
         
         function gerarQRCodeParaPrimeiro() {
             if (!associadosPendentes.length || !qrcodeContainer) return;
-            
             qrcodePlaceholder.innerHTML = '<p style="color:#666;">Para gerar QR Code, é necessário instalar uma biblioteca como qrcode-generator.<br>Use os links acima no celular.</p>';
         }
         
+        // Iniciar envio (com correção da data)
         function iniciarEnvioMensagens() {
             if (!associadosPendentes.length) return alert('Sem pendentes');
             
@@ -2287,7 +2189,9 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
             
             if (data) {
                 const dataObj = new Date(data);
-                if (dataObj <= new Date()) return alert('Data deve ser futura');
+                const agora = new Date();
+                // Permite data igual ou futura (remove <=, só bloqueia se < agora)
+                if (dataObj < agora) return alert('A data programada não pode ser no passado.');
                 
                 scheduledMessages.push({
                     data: dataObj.toISOString(),
@@ -2311,7 +2215,6 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
                 if (confirm('Cancelar envio em andamento?')) cancelarEnvioAutomatico();
                 return;
             }
-            
             if (!confirm(`Enviar para ${associadosPendentes.length} associados?`)) return;
             
             envioEmAndamento = true;
@@ -2327,7 +2230,6 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
         
         function enviarProximaMensagem() {
             if (indiceEnvioAtual >= associadosPendentes.length) { finalizarEnvio(); return; }
-            
             const a = associadosPendentes[indiceEnvioAtual];
             const dispositivo = getDispositivoSelecionado();
             
@@ -2342,7 +2244,6 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
                 } else {
                     window.open(gerarLinkWhatsApp(a.telefone, mensagemTemplate.value, a.nome), `wpp_${indiceEnvioAtual}`);
                 }
-                
                 indiceEnvioAtual++;
                 if (indiceEnvioAtual < associadosPendentes.length) {
                     intervaloEnvio = setTimeout(enviarProximaMensagem, 5000);
@@ -2387,7 +2288,6 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
                 const m = scheduledMessages[i];
                 if (new Date(m.data) <= agora) {
                     const associadosEnviar = associados.filter(a => m.associados.includes(a.numero));
-                    
                     if (associadosEnviar.length) {
                         if (m.tipo === 'automatico') {
                             let idx = 0;
@@ -2411,7 +2311,6 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
                     }
                 }
             }
-            
             if (enviadas) {
                 await salvarDados();
                 atualizarListaMensagensAgendadas();
@@ -2432,7 +2331,7 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
             document.getElementById('data-pagamento').valueAsDate = hoje;
         }
         
-        // Funções de edição
+        // Funções de edição de associado
         function editarAssociado(num) {
             associadoEditando = associados.find(a => a.numero === num);
             if (!associadoEditando) return;
@@ -2521,7 +2420,6 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
         function exportarPdf() {
             const data = new Date().toLocaleDateString('pt-BR').replace(/\//g,'-');
             const conteudo = `RELATÓRIO DE ARRECADAÇÃO - ${data}\n\nArrecadação do Mês: ${arrecadacaoMes.textContent}\nArrecadação Total: ${arrecadacaoTotal.textContent}\nAssociados Ativos: ${associadosAtivos.textContent}\nPagamentos do Mês: ${pagamentosMes.textContent}`;
-            
             const blob = new Blob([conteudo], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -2538,7 +2436,6 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
                 const tds = tr.querySelectorAll('td');
                 if (tds.length === 3) csv += `"${tds[0].textContent}",${tds[1].textContent},${tds[2].textContent.replace('R$','')}\n`;
             });
-            
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -2576,7 +2473,168 @@ Para mais infomações acesse o link para conferir os meses pendentes: https://m
                 ? Object.entries(formas).map(([f,d]) => `<tr><td>${f}</td><td>${d.qtd}</td><td>R$ ${d.valor.toFixed(2)}</td></tr>`).join('')
                 : '<tr><td colspan="3" style="text-align:center;">Sem dados</td></tr>';
         }
+        
+        // ==================== INICIALIZAÇÃO ====================
+        document.addEventListener('DOMContentLoaded', async function() {
+            await carregarDados();
+            
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                isAdmin = localStorage.getItem('isAdmin') === 'true';
+                showMainSystem();
+            }
+            
+            if (document.getElementById('data-cadastro')) {
+                document.getElementById('data-cadastro').valueAsDate = new Date();
+            }
+            
+            if (dataProgramada) {
+                const amanha = new Date();
+                amanha.setDate(amanha.getDate() + 1);
+                amanha.setHours(9, 0, 0, 0);
+                dataProgramada.value = amanha.toISOString().slice(0, 16);
+            }
+            
+            // Event listeners de login
+            btnAcessoAssociado.addEventListener('click', () => {
+                loginAssociado.style.display = 'block';
+                loginAdmin.style.display = 'none';
+                document.getElementById('login-message').style.display = 'none';
+            });
+            
+            btnAcessoAdmin.addEventListener('click', () => {
+                loginAdmin.style.display = 'block';
+                loginAssociado.style.display = 'none';
+                document.getElementById('login-message').style.display = 'none';
+            });
+            
+            loginFormAssociado.addEventListener('submit', loginAssociadoSubmit);
+            loginFormAdmin.addEventListener('submit', loginAdminSubmit);
+            logoutBtn.addEventListener('click', logout);
+            
+            // Máscara de telefone
+            document.querySelectorAll('input[type="tel"]').forEach(input => {
+                input.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 11) value = value.substring(0, 11);
+                    if (value.length > 10) {
+                        value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                    } else if (value.length > 6) {
+                        value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+                    } else if (value.length > 2) {
+                        value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+                    } else if (value.length > 0) {
+                        value = value.replace(/^(\d{0,2})/, '($1');
+                    }
+                    e.target.value = value;
+                });
+            });
+            
+            // Tabs
+            document.querySelectorAll('.tab').forEach((tab, index) => {
+                tab.addEventListener('click', function() {
+                    if (this.classList.contains('active')) return;
+                    
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab') + '-tab';
+                    document.getElementById(tabId).classList.add('active');
+                    
+                    if (this.getAttribute('data-tab') === 'contribuicoes') {
+                        atualizarSeletorAssociados();
+                    } else if (this.getAttribute('data-tab') === 'consulta') {
+                        atualizarListaAssociados();
+                    } else if (this.getAttribute('data-tab') === 'mensagens') {
+                        atualizarListaPendentes();
+                        atualizarListaMensagensAgendadas();
+                    } else if (this.getAttribute('data-tab') === 'minhas-contribuicoes' && currentUser) {
+                        loadAssociadoData();
+                    } else if (this.getAttribute('data-tab') === 'relatorios') {
+                        atualizarRelatorios();
+                    }
+                    
+                    currentTabIndex = index;
+                });
+            });
+            
+            // Event listeners principais
+            if (cadastroForm) cadastroForm.addEventListener('submit', cadastrarAssociado);
+            if (searchInput) searchInput.addEventListener('input', atualizarListaAssociados);
+            if (gerarListaBtn) gerarListaBtn.addEventListener('click', gerarListaNumeros);
+            if (enviarTodosBtn) enviarTodosBtn.addEventListener('click', iniciarEnvioMensagens);
+            if (associadoSelect) associadoSelect.addEventListener('change', selecionarAssociado);
+            if (contribuicaoForm) contribuicaoForm.addEventListener('submit', registrarContribuicao);
+            if (formEditar) formEditar.addEventListener('submit', salvarEdicaoAssociado);
+            if (btnCancelarEdicao) btnCancelarEdicao.addEventListener('click', () => modalEditar.style.display = 'none');
+            if (btnAdicionarContribuicao) btnAdicionarContribuicao.addEventListener('click', abrirModalContribuicao);
+            if (btnRemoverContribuicao) btnRemoverContribuicao.addEventListener('click', removerContribuicoesSelecionadas);
+            if (formNovaContribuicao) formNovaContribuicao.addEventListener('submit', adicionarNovaContribuicao);
+            if (btnCancelarContribuicao) btnCancelarContribuicao.addEventListener('click', () => modalContribuicao.style.display = 'none');
+            if (btnExportarPdf) btnExportarPdf.addEventListener('click', exportarPdf);
+            if (btnExportarExcel) btnExportarExcel.addEventListener('click', exportarExcel);
+            if (mesRelatorio) mesRelatorio.addEventListener('change', atualizarRelatorios);
+            
+            // Opções de envio
+            document.querySelectorAll('input[name="tipo-envio"]').forEach(option => {
+                option.addEventListener('change', function() {
+                    document.getElementById('info-manual').style.display = this.value === 'manual' ? 'block' : 'none';
+                    document.getElementById('info-automatico').style.display = this.value === 'automatico' ? 'block' : 'none';
+                    enviarTodosBtn.textContent = this.value === 'automatico' ? '🚀 Iniciar Envio Automático' : '📱 Enviar Mensagens';
+                });
+            });
+            document.getElementById('info-manual').style.display = 'block';
+            
+            // Botões de ação
+            if (copiarNumerosBtn) copiarNumerosBtn.addEventListener('click', copiarNumeros);
+            if (gerarLinksBtn) gerarLinksBtn.addEventListener('click', gerarLinks);
+            if (abrirWhatsappBtn) abrirWhatsappBtn.addEventListener('click', () => {
+                if (isMobile) window.location.href = 'https://wa.me';
+                else window.open('https://web.whatsapp.com', '_blank');
+            });
+            
+            // Botão de áudio
+            if (enviarAudioBtn) {
+                enviarAudioBtn.addEventListener('click', function() {
+                    if (!associadosPendentes.length) return alert('Sem pendentes');
+                    if (associadosPendentes.length === 1) {
+                        const a = associadosPendentes[0];
+                        enviarAudio(a.telefone, mensagemTemplate.value, a.nome);
+                    } else {
+                        if (confirm(`Enviar áudio para todos os ${associadosPendentes.length} pendentes?`)) {
+                            associadosPendentes.forEach((a, idx) => {
+                                setTimeout(() => {
+                                    enviarAudio(a.telefone, mensagemTemplate.value, a.nome);
+                                }, idx * 2000);
+                            });
+                        } else {
+                            const a = associadosPendentes[0];
+                            enviarAudio(a.telefone, mensagemTemplate.value, a.nome);
+                        }
+                    }
+                });
+            }
+            
+            // FAB
+            if (fabWhatsapp) {
+                fabWhatsapp.addEventListener('click', () => {
+                    document.querySelector('.tab[data-tab="mensagens"]')?.click();
+                });
+            }
+            if (isMobile) {
+                fabWhatsapp.style.display = 'flex';
+            }
+            
+            iniciarVerificacaoMensagensAgendadas();
+            verificarMensagensAgendadas();
+        });
+        
+        function iniciarVerificacaoMensagensAgendadas() {
+            if (intervaloVerificacao) clearInterval(intervaloVerificacao);
+            intervaloVerificacao = setInterval(verificarMensagensAgendadas, 30000);
+        }
     </script>
 </body>
 </html>
-
