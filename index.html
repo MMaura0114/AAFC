@@ -570,6 +570,7 @@
         @media (min-width: 481px) {
             .export-options {
                 flex-direction: row;
+                flex-wrap: wrap;
             }
         }
         
@@ -946,6 +947,26 @@
         .mobile-nav-item.active {
             color: var(--secondary-color);
             font-weight: 600;
+        }
+        
+        /* Estilos para impressão (PDF) */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-area, .print-area * {
+                visibility: visible;
+            }
+            .print-area {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                padding: 20px;
+            }
+            button, .no-print {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -1331,30 +1352,37 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                     
                     <div class="form-group">
                         <label for="mes-relatorio">Filtrar por Mês</label>
-                        <input type="month" id="mes-relatorio">
+                        <select id="mes-relatorio">
+                            <option value="">Todos os meses</option>
+                            <!-- As opções de meses serão geradas dinamicamente -->
+                        </select>
                     </div>
                     
                     <div class="export-options">
                         <button id="btn-exportar-pdf" class="btn-danger">📄 Exportar PDF</button>
+                        <button id="btn-exportar-word" class="btn-primary">📝 Exportar Word</button>
                         <button id="btn-exportar-excel" class="btn-success">📊 Exportar Excel</button>
                     </div>
                     
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <h3>Arrecadação do Mês</h3>
+                            <h3>Arrecadação do Período</h3>
                             <div class="stat-value" id="arrecadacao-mes">R$ 0,00</div>
+                            <small>Valor arrecadado no filtro selecionado</small>
                         </div>
                         <div class="stat-card">
                             <h3>Arrecadação Total</h3>
                             <div class="stat-value" id="arrecadacao-total">R$ 0,00</div>
+                            <small>Desde o início</small>
                         </div>
                         <div class="stat-card">
                             <h3>Associados Ativos</h3>
                             <div class="stat-value" id="associados-ativos">0</div>
                         </div>
                         <div class="stat-card">
-                            <h3>Pagamentos do Mês</h3>
+                            <h3>Pagamentos no Período</h3>
                             <div class="stat-value" id="pagamentos-mes">0</div>
+                            <small>Quantidade de pagamentos no filtro</small>
                         </div>
                     </div>
                     
@@ -1369,6 +1397,23 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                                 </tr>
                             </thead>
                             <tbody id="relatorio-formas-pagamento-body"></tbody>
+                        </table>
+                    </div>
+                    
+                    <h3 style="margin-top: 20px;">Lista de Contribuições</h3>
+                    <div style="overflow-x: auto;">
+                        <table id="relatorio-lista-contribuicoes">
+                            <thead>
+                                <tr>
+                                    <th>Associado</th>
+                                    <th>Mês/Ano</th>
+                                    <th>Data Pagamento</th>
+                                    <th>Valor</th>
+                                    <th>Forma</th>
+                                    <th>Observações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="relatorio-lista-contribuicoes-body"></tbody>
                         </table>
                     </div>
                 </div>
@@ -1546,6 +1591,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         
         // Elementos de relatório
         const btnExportarPdf = document.getElementById('btn-exportar-pdf');
+        const btnExportarWord = document.getElementById('btn-exportar-word');
         const btnExportarExcel = document.getElementById('btn-exportar-excel');
         const mesRelatorio = document.getElementById('mes-relatorio');
         const arrecadacaoMes = document.getElementById('arrecadacao-mes');
@@ -1553,6 +1599,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         const associadosAtivos = document.getElementById('associados-ativos');
         const pagamentosMes = document.getElementById('pagamentos-mes');
         const relatorioFormasPagamentoBody = document.getElementById('relatorio-formas-pagamento-body');
+        const relatorioListaContribuicoesBody = document.getElementById('relatorio-lista-contribuicoes-body');
         
         // Elementos de envio
         const gerarListaBtn = document.getElementById('gerar-lista-btn');
@@ -1582,19 +1629,16 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         
         // ==================== FUNÇÕES AUXILIARES ====================
         
-        // Função formatarMesAno corrigida (usa Date com mês correto)
         function formatarMesAno(mesAno) {
             if (!mesAno) return '-';
             const [ano, mes] = mesAno.split('-').map(Number);
-            const data = new Date(ano, mes - 1, 1); // mês em JS é 0-based
+            const data = new Date(ano, mes - 1, 1);
             return data.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
         }
         
-        // Função formatarData (já existente)
         function formatarData(data) { return data ? new Date(data).toLocaleDateString('pt-BR') : '-'; }
         function formatarDataHora(d) { return d ? new Date(d).toLocaleString('pt-BR') : '-'; }
         
-        // Funções JSONBin
         async function carregarDados() {
             try {
                 showLoading('login-admin');
@@ -1668,7 +1712,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             setTimeout(() => { toastMessage.style.display = 'none'; }, 3000);
         }
         
-        // Dispositivo selecionado
         function getDispositivoSelecionado() {
             const dispositivoRadios = document.querySelectorAll('input[name="dispositivo"]');
             for (let radio of dispositivoRadios) {
@@ -1677,34 +1720,28 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             return isMobile ? 'mobile' : 'web';
         }
         
-        // Link WhatsApp universal
         function gerarLinkWhatsApp(telefone, mensagem, nome = '') {
             const mensagemPersonalizada = mensagem.replace('[NOME]', nome);
             const telefoneLimpo = telefone.replace(/\D/g, '');
             return `https://wa.me/55${telefoneLimpo}?text=${encodeURIComponent(mensagemPersonalizada)}`;
         }
         
-        // Envio universal
         function enviarWhatsAppUniversal(telefone, mensagem, nome = '') {
             const link = gerarLinkWhatsApp(telefone, mensagem, nome);
             if (isMobile) window.location.href = link;
             else window.open(link, '_blank');
         }
         
-        // Envio individual
         function enviarMensagemIndividual(numeroAssociado) {
             const associado = associados.find(a => a.numero === numeroAssociado);
             if (!associado) return;
             enviarWhatsAppUniversal(associado.telefone, mensagemTemplate.value, associado.nome);
         }
         
-        // ==================== NOVA FUNÇÃO DE ÁUDIO ====================
         function enviarAudio(telefone, texto, nome = '') {
-            // Como não podemos enviar áudio diretamente, enviamos uma mensagem de texto com emojis e formato de áudio
             const textoPersonalizado = texto.replace('[NOME]', nome);
-            // Prepara uma mensagem que simula um áudio (para quem não sabe ler, pode pedir para alguém ler em voz alta)
             const mensagemAudio = `🔊 *Mensagem de áudio para você:*\n\n"${textoPersonalizado}"\n\n(Esta é uma mensagem de texto. Se você não sabe ler, peça a alguém para ler em voz alta para você.)`;
-            const link = gerarLinkWhatsApp(telefone, mensagemAudio, ''); // não precisa substituir nome novamente
+            const link = gerarLinkWhatsApp(telefone, mensagemAudio, '');
             if (isMobile) window.location.href = link;
             else window.open(link, '_blank');
         }
@@ -1765,7 +1802,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                 monthsContainer.appendChild(yearSection);
             });
             
-            // Adiciona legenda
             const legenda = document.createElement('div');
             legenda.className = 'year-section';
             legenda.innerHTML = `
@@ -1809,7 +1845,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             return calcularStatusPagamentoDetalhado(associado);
         }
         
-        // Atualizar resumo do status
         function atualizarResumoStatus(associado) {
             if (!statusDetalhes) return;
             const hoje = new Date();
@@ -1851,7 +1886,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         
         // ==================== FUNÇÕES PRINCIPAIS ====================
         
-        // Login associado
         async function loginAssociadoSubmit(e) {
             e.preventDefault();
             showLoading('login-associado');
@@ -1870,7 +1904,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             hideLoading('login-associado');
         }
         
-        // Login admin
         async function loginAdminSubmit(e) {
             e.preventDefault();
             showLoading('login-admin');
@@ -1886,7 +1919,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             hideLoading('login-admin');
         }
         
-        // Mostrar sistema principal
         function showMainSystem() {
             loginScreen.style.display = 'none';
             mainSystem.style.display = 'block';
@@ -1909,6 +1941,8 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                 atualizarListaAssociados();
                 atualizarListaPendentes();
                 atualizarListaMensagensAgendadas();
+                popularSelectMeses();
+                atualizarRelatorios();
             } else {
                 userType.textContent = 'Área do Associado';
                 userWelcome.textContent = `Bem-vindo, ${currentUser.nome}`;
@@ -1919,7 +1953,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             currentTabIndex = 0;
         }
         
-        // Carregar dados do associado
         function loadAssociadoData() {
             document.getElementById('associado-info-detail').innerHTML = `
                 <p><strong>Número:</strong> ${currentUser.numero}</p>
@@ -1936,7 +1969,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             
             atualizarResumoStatus(currentUser);
             
-            // Histórico de contribuições com mês correto
             const contribuicoesHTML = currentUser.contribuicoes?.length > 0 ? 
                 currentUser.contribuicoes
                     .sort((a, b) => {
@@ -1949,12 +1981,15 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                         const [ano, mes] = contrib.mesReferencia.split('-').map(Number);
                         const dataObj = new Date(ano, mes - 1, 1);
                         const mesExtenso = dataObj.toLocaleDateString('pt-BR', { month: 'long' });
+                        const observacaoHtml = contrib.observacoes ? `<br><small style="color:#666;">Obs: ${contrib.observacoes}</small>` : '';
                         return `<div class="payment-item">
                             <div>
-                                <strong>${mesExtenso} de ${ano}</strong>
+                                <strong>${mesExtenso} de ${ano}</strong><br>
                                 <small>Pago: ${formatarData(contrib.dataPagamento)}</small>
+                                ${observacaoHtml}
                             </div>
-                            <div><strong>R$ ${contrib.valor?.toFixed(2) || '0,00'}</strong></div>
+                            <div><strong>R$ ${contrib.valor?.toFixed(2) || '0,00'}</strong><br>
+                            <small>${contrib.formaPagamento}</small></div>
                         </div>`;
                     }).join('') : '<p>Nenhuma contribuição registrada.</p>';
             
@@ -1962,7 +1997,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             atualizarGradeMesesCompleta(currentUser);
         }
         
-        // Logout
         function logout() {
             currentUser = null;
             isAdmin = false;
@@ -1997,6 +2031,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                 atualizarSeletorAssociados();
                 atualizarListaAssociados();
                 atualizarListaPendentes();
+                popularSelectMeses();
                 atualizarRelatorios();
             }
         }
@@ -2023,7 +2058,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                         <button class="btn-warning" onclick="editarAssociado(${a.numero})">✏️</button>
                     </td>
                 </tr>`;
-            }).join('') : '<tr><td colspan="7" style="text-align:center;">Nenhum associado</td></tr>';
+            }).join('') : '<tr><td colspan="7" style="text-align:center;">Nenhum associado encontrado</td></tr>';
             
             atualizarPaginacao(totalPages);
         }
@@ -2047,7 +2082,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             
             paymentHistory.innerHTML = selectedAssociado.contribuicoes?.length 
                 ? selectedAssociado.contribuicoes.sort((a,b)=>new Date(b.dataPagamento)-new Date(a.dataPagamento))
-                    .map(c => `<div class="payment-item"><div><strong>${formatarMesAno(c.mesReferencia)}</strong><br><small>${formatarData(c.dataPagamento)}</small></div><div><strong>R$ ${c.valor.toFixed(2)}</strong><br><small>${c.formaPagamento}</small></div></div>`).join('')
+                    .map(c => `<div class="payment-item"><div><strong>${formatarMesAno(c.mesReferencia)}</strong><br><small>${formatarData(c.dataPagamento)}</small><br><small>Obs: ${c.observacoes || '-'}</small></div><div><strong>R$ ${c.valor.toFixed(2)}</strong><br><small>${c.formaPagamento}</small></div></div>`).join('')
                 : '<p>Nenhuma contribuição</p>';
             
             document.getElementById('forma-pagamento-contrib').value = selectedAssociado.formaPagamento;
@@ -2074,6 +2109,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                 selecionarAssociado();
                 atualizarListaAssociados();
                 atualizarListaPendentes();
+                popularSelectMeses();
                 atualizarRelatorios();
                 contribuicaoForm.reset();
                 document.getElementById('forma-pagamento-contrib').value = selectedAssociado.formaPagamento;
@@ -2179,7 +2215,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             qrcodePlaceholder.innerHTML = '<p style="color:#666;">Para gerar QR Code, é necessário instalar uma biblioteca como qrcode-generator.<br>Use os links acima no celular.</p>';
         }
         
-        // Iniciar envio (com correção da data)
         function iniciarEnvioMensagens() {
             if (!associadosPendentes.length) return alert('Sem pendentes');
             
@@ -2190,7 +2225,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             if (data) {
                 const dataObj = new Date(data);
                 const agora = new Date();
-                // Permite data igual ou futura (remove <=, só bloqueia se < agora)
                 if (dataObj < agora) return alert('A data programada não pode ser no passado.');
                 
                 scheduledMessages.push({
@@ -2348,7 +2382,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             if (!contribuicoesLista || !associadoEditando) return;
             contribuicoesLista.innerHTML = associadoEditando.contribuicoes?.length 
                 ? associadoEditando.contribuicoes.sort((a,b)=>new Date(b.mesReferencia)-new Date(a.mesReferencia))
-                    .map((c,i)=>`<div class="payment-item"><input type="checkbox" class="contrib-checkbox" data-index="${i}"> ${formatarMesAno(c.mesReferencia)} - R$ ${c.valor.toFixed(2)}</div>`).join('')
+                    .map((c,i)=>`<div class="payment-item"><input type="checkbox" class="contrib-checkbox" data-index="${i}"> ${formatarMesAno(c.mesReferencia)} - R$ ${c.valor.toFixed(2)} - Obs: ${c.observacoes || '-'}</div>`).join('')
                 : '<p>Nenhuma contribuição</p>';
         }
         
@@ -2365,6 +2399,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                 modalEditar.style.display = 'none';
                 atualizarListaAssociados();
                 atualizarSeletorAssociados();
+                popularSelectMeses();
                 atualizarRelatorios();
                 showToast('Associado atualizado!');
             }
@@ -2416,62 +2451,219 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             }
         }
         
-        // Funções de relatório
-        function exportarPdf() {
-            const data = new Date().toLocaleDateString('pt-BR').replace(/\//g,'-');
-            const conteudo = `RELATÓRIO DE ARRECADAÇÃO - ${data}\n\nArrecadação do Mês: ${arrecadacaoMes.textContent}\nArrecadação Total: ${arrecadacaoTotal.textContent}\nAssociados Ativos: ${associadosAtivos.textContent}\nPagamentos do Mês: ${pagamentosMes.textContent}`;
-            const blob = new Blob([conteudo], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `relatorio-${data}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('Relatório exportado!');
-        }
+        // ==================== FUNÇÕES DE RELATÓRIOS ====================
         
-        function exportarExcel() {
-            let csv = "Forma,Quantidade,Valor Total\n";
-            document.querySelectorAll('#relatorio-formas-pagamento-body tr').forEach(tr => {
-                const tds = tr.querySelectorAll('td');
-                if (tds.length === 3) csv += `"${tds[0].textContent}",${tds[1].textContent},${tds[2].textContent.replace('R$','')}\n`;
+        function popularSelectMeses() {
+            if (!mesRelatorio) return;
+            // Coletar todos os meses únicos de todas as contribuições
+            const mesesSet = new Set();
+            associados.forEach(associado => {
+                associado.contribuicoes?.forEach(contrib => {
+                    mesesSet.add(contrib.mesReferencia);
+                });
             });
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `relatorio-${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('Relatório exportado!');
+            const mesesOrdenados = Array.from(mesesSet).sort().reverse(); // do mais recente para o mais antigo
+            
+            let options = '<option value="">Todos os meses</option>';
+            mesesOrdenados.forEach(mes => {
+                const [ano, mesNum] = mes.split('-');
+                const nomeMes = new Date(ano, parseInt(mesNum)-1, 1).toLocaleDateString('pt-BR', { month: 'long' });
+                options += `<option value="${mes}">${nomeMes} de ${ano}</option>`;
+            });
+            mesRelatorio.innerHTML = options;
         }
         
-        function atualizarRelatorios() {
-            let totalGeral = 0, totalMes = 0, pagMes = 0;
-            const formas = {};
+        function getDadosRelatorio() {
             const mesFiltro = mesRelatorio.value;
+            let totalPeriodo = 0;
+            let qtdPeriodo = 0;
+            const formas = {};
+            const listaContribuicoes = [];
+            let totalGeral = 0;
             
-            associados.forEach(a => {
-                a.contribuicoes?.forEach(c => {
-                    totalGeral += c.valor || 0;
-                    if (!mesFiltro || c.mesReferencia === mesFiltro) {
-                        totalMes += c.valor || 0;
-                        pagMes++;
-                        if (!formas[c.formaPagamento]) formas[c.formaPagamento] = { qtd: 0, valor: 0 };
-                        formas[c.formaPagamento].qtd++;
-                        formas[c.formaPagamento].valor += c.valor || 0;
+            associados.forEach(associado => {
+                associado.contribuicoes?.forEach(contrib => {
+                    totalGeral += contrib.valor || 0;
+                    if (!mesFiltro || contrib.mesReferencia === mesFiltro) {
+                        totalPeriodo += contrib.valor || 0;
+                        qtdPeriodo++;
+                        const forma = contrib.formaPagamento;
+                        if (!formas[forma]) formas[forma] = { qtd: 0, valor: 0 };
+                        formas[forma].qtd++;
+                        formas[forma].valor += contrib.valor || 0;
+                        
+                        listaContribuicoes.push({
+                            associado: associado.nome,
+                            numero: associado.numero,
+                            mesReferencia: contrib.mesReferencia,
+                            dataPagamento: contrib.dataPagamento,
+                            valor: contrib.valor,
+                            formaPagamento: contrib.formaPagamento,
+                            observacoes: contrib.observacoes || ''
+                        });
                     }
                 });
             });
             
-            arrecadacaoMes.textContent = `R$ ${totalMes.toFixed(2)}`;
+            // Ordenar lista por data (mais recente primeiro)
+            listaContribuicoes.sort((a,b) => new Date(b.dataPagamento) - new Date(a.dataPagamento));
+            
+            return { totalPeriodo, qtdPeriodo, formas, listaContribuicoes, totalGeral };
+        }
+        
+        function atualizarRelatorios() {
+            const { totalPeriodo, qtdPeriodo, formas, listaContribuicoes, totalGeral } = getDadosRelatorio();
+            
+            arrecadacaoMes.textContent = `R$ ${totalPeriodo.toFixed(2)}`;
             arrecadacaoTotal.textContent = `R$ ${totalGeral.toFixed(2)}`;
             associadosAtivos.textContent = associados.length;
-            pagamentosMes.textContent = pagMes;
+            pagamentosMes.textContent = qtdPeriodo;
             
+            // Tabela formas de pagamento
             relatorioFormasPagamentoBody.innerHTML = Object.keys(formas).length
                 ? Object.entries(formas).map(([f,d]) => `<tr><td>${f}</td><td>${d.qtd}</td><td>R$ ${d.valor.toFixed(2)}</td></tr>`).join('')
                 : '<tr><td colspan="3" style="text-align:center;">Sem dados</td></tr>';
+            
+            // Tabela lista de contribuições
+            relatorioListaContribuicoesBody.innerHTML = listaContribuicoes.length
+                ? listaContribuicoes.map(c => `<tr>
+                    <td>${c.associado} (Nº ${c.numero})</td>
+                    <td>${formatarMesAno(c.mesReferencia)}</td>
+                    <td>${formatarData(c.dataPagamento)}</td>
+                    <td>R$ ${c.valor.toFixed(2)}</td>
+                    <td>${c.formaPagamento}</td>
+                    <td>${c.observacoes}</td>
+                </tr>`).join('')
+                : '<tr><td colspan="6" style="text-align:center;">Nenhuma contribuição no período</td></tr>';
+        }
+        
+        function gerarHtmlRelatorio() {
+            const { totalPeriodo, qtdPeriodo, formas, listaContribuicoes, totalGeral } = getDadosRelatorio();
+            const mesFiltro = mesRelatorio.value;
+            const titulo = mesFiltro ? `Relatório - ${formatarMesAno(mesFiltro)}` : 'Relatório Geral - Todos os meses';
+            const dataGeracao = new Date().toLocaleString('pt-BR');
+            
+            let html = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>${titulo}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 40px; }
+                        h1 { color: #2c3e50; }
+                        .header { text-align: center; margin-bottom: 30px; }
+                        .info { margin-bottom: 20px; }
+                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                        th { background-color: #3498db; color: white; }
+                        .total { font-weight: bold; font-size: 1.2em; margin-top: 20px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>${titulo}</h1>
+                        <p>Gerado em: ${dataGeracao}</p>
+                    </div>
+                    <div class="info">
+                        <p><strong>Arrecadação no período:</strong> R$ ${totalPeriodo.toFixed(2)}</p>
+                        <p><strong>Arrecadação total (histórico):</strong> R$ ${totalGeral.toFixed(2)}</p>
+                        <p><strong>Associados ativos:</strong> ${associados.length}</p>
+                        <p><strong>Pagamentos no período:</strong> ${qtdPeriodo}</p>
+                    </div>
+                    
+                    <h2>Detalhamento por Forma de Pagamento</h2>
+                    <table>
+                        <thead><tr><th>Forma</th><th>Quantidade</th><th>Valor Total</th></tr></thead>
+                        <tbody>
+                            ${Object.entries(formas).length ? Object.entries(formas).map(([f,d]) => `<tr><td>${f}</td><td>${d.qtd}</td><td>R$ ${d.valor.toFixed(2)}</td></tr>`).join('') : '<tr><td colspan="3">Nenhum dado</td></tr>'}
+                        </tbody>
+                    </table>
+                    
+                    <h2>Lista de Contribuições</h2>
+                    <table>
+                        <thead><tr><th>Associado</th><th>Mês/Ano</th><th>Data Pagamento</th><th>Valor</th><th>Forma</th><th>Observações</th></tr></thead>
+                        <tbody>
+                            ${listaContribuicoes.length ? listaContribuicoes.map(c => `<tr>
+                                <td>${c.associado} (Nº ${c.numero})</td>
+                                <td>${formatarMesAno(c.mesReferencia)}</td>
+                                <td>${formatarData(c.dataPagamento)}</td>
+                                <td>R$ ${c.valor.toFixed(2)}</td>
+                                <td>${c.formaPagamento}</td>
+                                <td>${c.observacoes}</td>
+                            </tr>`).join('') : '<tr><td colspan="6">Nenhuma contribuição no período</td></tr>'}
+                        </tbody>
+                    </table>
+                    <div class="total">
+                        <p>Total de registros: ${listaContribuicoes.length}</p>
+                    </div>
+                </body>
+                </html>
+            `;
+            return html;
+        }
+        
+        function exportarPDF() {
+            const htmlContent = gerarHtmlRelatorio();
+            // Criar iframe oculto para impressão
+            const iframe = document.createElement('iframe');
+            iframe.style.position = 'absolute';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = 'none';
+            document.body.appendChild(iframe);
+            const iframeDoc = iframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write(htmlContent);
+            iframeDoc.close();
+            
+            // Aguardar carregamento e chamar print
+            iframe.onload = () => {
+                iframe.contentWindow.print();
+                setTimeout(() => document.body.removeChild(iframe), 1000);
+            };
+            // Se o iframe já carregou rápido
+            if (iframe.contentWindow.document.readyState === 'complete') {
+                iframe.contentWindow.print();
+                setTimeout(() => document.body.removeChild(iframe), 1000);
+            }
+        }
+        
+        function exportarWord() {
+            const htmlContent = gerarHtmlRelatorio();
+            const blob = new Blob([htmlContent], { type: 'application/msword' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            const mesFiltro = mesRelatorio.value;
+            const nomeArquivo = mesFiltro ? `relatorio_${mesFiltro}.doc` : 'relatorio_todos_meses.doc';
+            link.download = nomeArquivo;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('Relatório exportado para Word!');
+        }
+        
+        function exportarExcel() {
+            const { listaContribuicoes } = getDadosRelatorio();
+            // Criar CSV com todas as colunas
+            let csv = "Associado;Nº;Mês/Ano;Data Pagamento;Valor;Forma de Pagamento;Observações\n";
+            listaContribuicoes.forEach(c => {
+                csv += `"${c.associado}";${c.numero};"${formatarMesAno(c.mesReferencia)}";${formatarData(c.dataPagamento)};${c.valor.toFixed(2)};${c.formaPagamento};"${c.observacoes}"\n`;
+            });
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            const mesFiltro = mesRelatorio.value;
+            const nomeArquivo = mesFiltro ? `relatorio_${mesFiltro}.csv` : 'relatorio_todos_meses.csv';
+            link.download = nomeArquivo;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('Relatório exportado para Excel!');
         }
         
         // ==================== INICIALIZAÇÃO ====================
@@ -2553,6 +2745,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                     } else if (this.getAttribute('data-tab') === 'minhas-contribuicoes' && currentUser) {
                         loadAssociadoData();
                     } else if (this.getAttribute('data-tab') === 'relatorios') {
+                        popularSelectMeses();
                         atualizarRelatorios();
                     }
                     
@@ -2573,9 +2766,10 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             if (btnRemoverContribuicao) btnRemoverContribuicao.addEventListener('click', removerContribuicoesSelecionadas);
             if (formNovaContribuicao) formNovaContribuicao.addEventListener('submit', adicionarNovaContribuicao);
             if (btnCancelarContribuicao) btnCancelarContribuicao.addEventListener('click', () => modalContribuicao.style.display = 'none');
-            if (btnExportarPdf) btnExportarPdf.addEventListener('click', exportarPdf);
-            if (btnExportarExcel) btnExportarExcel.addEventListener('click', exportarExcel);
             if (mesRelatorio) mesRelatorio.addEventListener('change', atualizarRelatorios);
+            if (btnExportarPdf) btnExportarPdf.addEventListener('click', exportarPDF);
+            if (btnExportarWord) btnExportarWord.addEventListener('click', exportarWord);
+            if (btnExportarExcel) btnExportarExcel.addEventListener('click', exportarExcel);
             
             // Opções de envio
             document.querySelectorAll('input[name="tipo-envio"]').forEach(option => {
