@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Sistema de Associados</title>
     <style>
+        /* Estilos existentes (mantidos) */
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #3498db;
@@ -363,7 +364,6 @@
             border-bottom: none;
         }
         
-        /* Checkbox visível na edição */
         .contrib-checkbox {
             width: 20px;
             height: 20px;
@@ -949,7 +949,6 @@
             font-weight: 600;
         }
         
-        /* Estilos para impressão (PDF) */
         @media print {
             body * {
                 visibility: hidden;
@@ -1341,7 +1340,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                         <span id="enviar-loading" class="loading" style="display: none;"></span>
                     </button>
                     
-                    <!-- NOVO BOTÃO DE ÁUDIO -->
+                    <!-- Botão de ÁUDIO -->
                     <button id="enviar-audio-btn" class="audio-btn" style="margin-top: 15px;">🎤 Enviar Áudio (texto)</button>
                 </div>
             </div>
@@ -1400,20 +1399,19 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                         </table>
                     </div>
                     
-                    <h3 style="margin-top: 20px;">Lista de Contribuições</h3>
+                    <!-- NOVA SEÇÃO: Arrecadação por Mês (sem nomes de associados) -->
+                    <h3 style="margin-top: 20px;">Arrecadação por Mês</h3>
                     <div style="overflow-x: auto;">
-                        <table id="relatorio-lista-contribuicoes">
+                        <table id="relatorio-arrecadacao-meses">
                             <thead>
                                 <tr>
-                                    <th>Associado</th>
                                     <th>Mês/Ano</th>
-                                    <th>Data Pagamento</th>
-                                    <th>Valor</th>
-                                    <th>Forma</th>
-                                    <th>Observações</th>
+                                    <th>Total Arrecadado</th>
+                                    <th>Quantidade de Pagamentos</th>
+                                    <th>Média por Pagamento</th>
                                 </tr>
                             </thead>
-                            <tbody id="relatorio-lista-contribuicoes-body"></tbody>
+                            <tbody id="relatorio-arrecadacao-meses-body"></tbody>
                         </table>
                     </div>
                 </div>
@@ -1599,7 +1597,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         const associadosAtivos = document.getElementById('associados-ativos');
         const pagamentosMes = document.getElementById('pagamentos-mes');
         const relatorioFormasPagamentoBody = document.getElementById('relatorio-formas-pagamento-body');
-        const relatorioListaContribuicoesBody = document.getElementById('relatorio-lista-contribuicoes-body');
+        const relatorioArrecadacaoMesesBody = document.getElementById('relatorio-arrecadacao-meses-body');
         
         // Elementos de envio
         const gerarListaBtn = document.getElementById('gerar-lista-btn');
@@ -2036,6 +2034,41 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             }
         }
         
+        // NOVA FUNÇÃO: Excluir associado e renumerar
+        async function excluirAssociado(numero) {
+            if (!confirm(`Tem certeza que deseja excluir o associado de número ${numero}? Esta ação não pode ser desfeita.`)) return;
+            
+            const index = associados.findIndex(a => a.numero === numero);
+            if (index === -1) return;
+            
+            // Remover o associado
+            associados.splice(index, 1);
+            
+            // Renumerar todos os associados restantes (ordenar por número atual)
+            associados.sort((a,b) => a.numero - b.numero);
+            for (let i = 0; i < associados.length; i++) {
+                associados[i].numero = i + 1;
+            }
+            
+            // Atualizar referências nas mensagens agendadas (os números dos associados podem ter mudado)
+            scheduledMessages.forEach(msg => {
+                // Mapear números antigos para novos? Como não guardamos histórico, vamos apenas manter os números que existem.
+                // Os números que foram removidos simplesmente deixam de existir.
+                msg.associados = msg.associados.filter(num => associados.some(a => a.numero === num));
+            });
+            
+            if (await salvarDados()) {
+                showToast('Associado excluído e números reorganizados!');
+                atualizarSeletorAssociados();
+                atualizarListaAssociados();
+                atualizarListaPendentes();
+                popularSelectMeses();
+                atualizarRelatorios();
+            } else {
+                showToast('Erro ao excluir. Tente novamente.', 'error');
+            }
+        }
+        
         function atualizarListaAssociados() {
             const searchTerm = searchInput.value.toLowerCase();
             let filtrados = searchTerm ? associados.filter(a => a.nome.toLowerCase().includes(searchTerm) || a.numero.toString().includes(searchTerm)) : associados;
@@ -2056,6 +2089,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                         <button class="whatsapp-btn" onclick="enviarMensagemIndividual(${a.numero})">📱</button>
                         <button class="btn-success" onclick="irParaContribuicoes(${a.numero})">💰</button>
                         <button class="btn-warning" onclick="editarAssociado(${a.numero})">✏️</button>
+                        <button class="btn-danger" onclick="excluirAssociado(${a.numero})">🗑️</button>
                     </td>
                 </tr>`;
             }).join('') : '<tr><td colspan="7" style="text-align:center;">Nenhum associado encontrado</td></tr>';
@@ -2455,14 +2489,13 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         
         function popularSelectMeses() {
             if (!mesRelatorio) return;
-            // Coletar todos os meses únicos de todas as contribuições
             const mesesSet = new Set();
             associados.forEach(associado => {
                 associado.contribuicoes?.forEach(contrib => {
                     mesesSet.add(contrib.mesReferencia);
                 });
             });
-            const mesesOrdenados = Array.from(mesesSet).sort().reverse(); // do mais recente para o mais antigo
+            const mesesOrdenados = Array.from(mesesSet).sort().reverse();
             
             let options = '<option value="">Todos os meses</option>';
             mesesOrdenados.forEach(mes => {
@@ -2478,7 +2511,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             let totalPeriodo = 0;
             let qtdPeriodo = 0;
             const formas = {};
-            const listaContribuicoes = [];
+            const arrecadacaoPorMes = new Map(); // chave: mesAno, valor: {total, qtd}
             let totalGeral = 0;
             
             associados.forEach(associado => {
@@ -2492,53 +2525,54 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                         formas[forma].qtd++;
                         formas[forma].valor += contrib.valor || 0;
                         
-                        listaContribuicoes.push({
-                            associado: associado.nome,
-                            numero: associado.numero,
-                            mesReferencia: contrib.mesReferencia,
-                            dataPagamento: contrib.dataPagamento,
-                            valor: contrib.valor,
-                            formaPagamento: contrib.formaPagamento,
-                            observacoes: contrib.observacoes || ''
-                        });
+                        // Agrupar por mês/ano
+                        if (!arrecadacaoPorMes.has(contrib.mesReferencia)) {
+                            arrecadacaoPorMes.set(contrib.mesReferencia, { total: 0, qtd: 0 });
+                        }
+                        const mesData = arrecadacaoPorMes.get(contrib.mesReferencia);
+                        mesData.total += contrib.valor || 0;
+                        mesData.qtd++;
                     }
                 });
             });
             
-            // Ordenar lista por data (mais recente primeiro)
-            listaContribuicoes.sort((a,b) => new Date(b.dataPagamento) - new Date(a.dataPagamento));
+            // Ordenar meses do mais recente para o mais antigo
+            const mesesOrdenados = Array.from(arrecadacaoPorMes.keys()).sort().reverse();
+            const arrecadacaoMeses = mesesOrdenados.map(mes => ({
+                mes: mes,
+                total: arrecadacaoPorMes.get(mes).total,
+                qtd: arrecadacaoPorMes.get(mes).qtd,
+                media: arrecadacaoPorMes.get(mes).qtd > 0 ? arrecadacaoPorMes.get(mes).total / arrecadacaoPorMes.get(mes).qtd : 0
+            }));
             
-            return { totalPeriodo, qtdPeriodo, formas, listaContribuicoes, totalGeral };
+            return { totalPeriodo, qtdPeriodo, formas, arrecadacaoMeses, totalGeral };
         }
         
         function atualizarRelatorios() {
-            const { totalPeriodo, qtdPeriodo, formas, listaContribuicoes, totalGeral } = getDadosRelatorio();
+            const { totalPeriodo, qtdPeriodo, formas, arrecadacaoMeses, totalGeral } = getDadosRelatorio();
             
             arrecadacaoMes.textContent = `R$ ${totalPeriodo.toFixed(2)}`;
             arrecadacaoTotal.textContent = `R$ ${totalGeral.toFixed(2)}`;
             associadosAtivos.textContent = associados.length;
             pagamentosMes.textContent = qtdPeriodo;
             
-            // Tabela formas de pagamento
             relatorioFormasPagamentoBody.innerHTML = Object.keys(formas).length
-                ? Object.entries(formas).map(([f,d]) => `<tr><td>${f}</td><td>${d.qtd}</td><td>R$ ${d.valor.toFixed(2)}</td></tr>`).join('')
+                ? Object.entries(formas).map(([f,d]) => `<tr><td>${f}</td><td>${d.qtd}</td><td>R$ ${d.valor.toFixed(2)}</td>`).join('')
                 : '<tr><td colspan="3" style="text-align:center;">Sem dados</td></tr>';
             
-            // Tabela lista de contribuições
-            relatorioListaContribuicoesBody.innerHTML = listaContribuicoes.length
-                ? listaContribuicoes.map(c => `<tr>
-                    <td>${c.associado} (Nº ${c.numero})</td>
-                    <td>${formatarMesAno(c.mesReferencia)}</td>
-                    <td>${formatarData(c.dataPagamento)}</td>
-                    <td>R$ ${c.valor.toFixed(2)}</td>
-                    <td>${c.formaPagamento}</td>
-                    <td>${c.observacoes}</td>
+            // Tabela de arrecadação por mês
+            relatorioArrecadacaoMesesBody.innerHTML = arrecadacaoMeses.length
+                ? arrecadacaoMeses.map(m => `<tr>
+                    <td>${formatarMesAno(m.mes)}</td>
+                    <td>R$ ${m.total.toFixed(2)}</td>
+                    <td>${m.qtd}</td>
+                    <td>R$ ${m.media.toFixed(2)}</td>
                 </tr>`).join('')
-                : '<tr><td colspan="6" style="text-align:center;">Nenhuma contribuição no período</td></tr>';
+                : '<tr><td colspan="4" style="text-align:center;">Nenhuma contribuição no período</td></tr>';
         }
         
         function gerarHtmlRelatorio() {
-            const { totalPeriodo, qtdPeriodo, formas, listaContribuicoes, totalGeral } = getDadosRelatorio();
+            const { totalPeriodo, qtdPeriodo, formas, arrecadacaoMeses, totalGeral } = getDadosRelatorio();
             const mesFiltro = mesRelatorio.value;
             const titulo = mesFiltro ? `Relatório - ${formatarMesAno(mesFiltro)}` : 'Relatório Geral - Todos os meses';
             const dataGeracao = new Date().toLocaleString('pt-BR');
@@ -2576,27 +2610,17 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                     <table>
                         <thead><tr><th>Forma</th><th>Quantidade</th><th>Valor Total</th></tr></thead>
                         <tbody>
-                            ${Object.entries(formas).length ? Object.entries(formas).map(([f,d]) => `<tr><td>${f}</td><td>${d.qtd}</td><td>R$ ${d.valor.toFixed(2)}</td></tr>`).join('') : '<tr><td colspan="3">Nenhum dado</td></tr>'}
+                            ${Object.keys(formas).length ? Object.entries(formas).map(([f,d]) => `<tr><td>${f}</td><td>${d.qtd}</td><td>R$ ${d.valor.toFixed(2)}</td></tr>`).join('') : '<tr><td colspan="3">Nenhum dado</td></tr>'}
                         </tbody>
                     </table>
                     
-                    <h2>Lista de Contribuições</h2>
+                    <h2>Arrecadação por Mês</h2>
                     <table>
-                        <thead><tr><th>Associado</th><th>Mês/Ano</th><th>Data Pagamento</th><th>Valor</th><th>Forma</th><th>Observações</th></tr></thead>
+                        <thead><tr><th>Mês/Ano</th><th>Total Arrecadado</th><th>Quantidade</th><th>Média por Pagamento</th></tr></thead>
                         <tbody>
-                            ${listaContribuicoes.length ? listaContribuicoes.map(c => `<tr>
-                                <td>${c.associado} (Nº ${c.numero})</td>
-                                <td>${formatarMesAno(c.mesReferencia)}</td>
-                                <td>${formatarData(c.dataPagamento)}</td>
-                                <td>R$ ${c.valor.toFixed(2)}</td>
-                                <td>${c.formaPagamento}</td>
-                                <td>${c.observacoes}</td>
-                            </tr>`).join('') : '<tr><td colspan="6">Nenhuma contribuição no período</td></tr>'}
+                            ${arrecadacaoMeses.length ? arrecadacaoMeses.map(m => `<tr><td>${formatarMesAno(m.mes)}</td><td>R$ ${m.total.toFixed(2)}</td><td>${m.qtd}</td><td>R$ ${m.media.toFixed(2)}</td></tr>`).join('') : '<tr><td colspan="4">Nenhuma contribuição no período</td></tr>'}
                         </tbody>
                     </table>
-                    <div class="total">
-                        <p>Total de registros: ${listaContribuicoes.length}</p>
-                    </div>
                 </body>
                 </html>
             `;
@@ -2605,7 +2629,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         
         function exportarPDF() {
             const htmlContent = gerarHtmlRelatorio();
-            // Criar iframe oculto para impressão
             const iframe = document.createElement('iframe');
             iframe.style.position = 'absolute';
             iframe.style.width = '0';
@@ -2616,13 +2639,10 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             iframeDoc.open();
             iframeDoc.write(htmlContent);
             iframeDoc.close();
-            
-            // Aguardar carregamento e chamar print
             iframe.onload = () => {
                 iframe.contentWindow.print();
                 setTimeout(() => document.body.removeChild(iframe), 1000);
             };
-            // Se o iframe já carregou rápido
             if (iframe.contentWindow.document.readyState === 'complete') {
                 iframe.contentWindow.print();
                 setTimeout(() => document.body.removeChild(iframe), 1000);
@@ -2646,11 +2666,10 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         }
         
         function exportarExcel() {
-            const { listaContribuicoes } = getDadosRelatorio();
-            // Criar CSV com todas as colunas
-            let csv = "Associado;Nº;Mês/Ano;Data Pagamento;Valor;Forma de Pagamento;Observações\n";
-            listaContribuicoes.forEach(c => {
-                csv += `"${c.associado}";${c.numero};"${formatarMesAno(c.mesReferencia)}";${formatarData(c.dataPagamento)};${c.valor.toFixed(2)};${c.formaPagamento};"${c.observacoes}"\n`;
+            const { arrecadacaoMeses } = getDadosRelatorio();
+            let csv = "Mês/Ano;Total Arrecadado;Quantidade de Pagamentos;Média por Pagamento\n";
+            arrecadacaoMeses.forEach(m => {
+                csv += `"${formatarMesAno(m.mes)}";${m.total.toFixed(2)};${m.qtd};${m.media.toFixed(2)}\n`;
             });
             const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
