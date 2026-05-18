@@ -565,6 +565,7 @@
             flex-direction: column;
             gap: 10px;
             margin-top: 15px;
+            margin-bottom: 15px;
         }
         
         @media (min-width: 481px) {
@@ -603,273 +604,6 @@
         
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-        
-        .enviar-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin: 15px 0;
-        }
-        
-        .enviar-option {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background-color: #f9f9f9;
-        }
-        
-        .enviar-option:hover {
-            background-color: #f0f0f0;
-            border-color: var(--secondary-color);
-        }
-        
-        .enviar-option input[type="radio"] {
-            margin-right: 12px;
-            width: 20px;
-            height: 20px;
-        }
-        
-        .enviar-info {
-            background-color: #e8f4fd;
-            padding: 15px;
-            border-radius: 6px;
-            margin: 15px 0;
-            font-size: 14px;
-            border-left: 4px solid var(--secondary-color);
-        }
-        
-        .enviar-info h4 {
-            margin-top: 0;
-            color: var(--primary-color);
-            font-size: 1rem;
-        }
-        
-        .enviar-info ol {
-            margin: 10px 0;
-            padding-left: 25px;
-        }
-        
-        .enviar-info li {
-            margin-bottom: 5px;
-        }
-        
-        .copy-btn {
-            background-color: var(--warning-color);
-        }
-        
-        .copy-btn:hover {
-            background-color: #e67e22;
-        }
-        
-        .numeros-container {
-            margin: 20px 0;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 15px;
-            background-color: #f9f9f9;
-        }
-        
-        .numeros-list {
-            max-height: 250px;
-            overflow-y: auto;
-            margin-bottom: 15px;
-            padding: 10px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        
-        .numero-item {
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
-        }
-        
-        .numero-item:last-child {
-            border-bottom: none;
-        }
-        
-        .progress-container {
-            margin: 20px 0;
-            background-color: #f0f0f0;
-            border-radius: 4px;
-            padding: 10px;
-            display: none;
-        }
-        
-        .progress-bar {
-            height: 20px;
-            background-color: var(--secondary-color);
-            border-radius: 4px;
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-        
-        .progress-text {
-            text-align: center;
-            margin-top: 5px;
-            font-weight: 600;
-        }
-        
-        .contador-envio {
-            background-color: var(--warning-color);
-            color: white;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            text-align: center;
-            display: none;
-            font-weight: 600;
-        }
-        
-        .mensagens-agendadas {
-            margin-top: 20px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            padding: 15px;
-            background-color: #f9f9f9;
-        }
-        
-        .mensagem-agendada {
-            padding: 12px;
-            border-bottom: 1px solid #eee;
-            background-color: white;
-            margin-bottom: 10px;
-            border-radius: 4px;
-        }
-        
-        .mensagem-agendada:last-child {
-            border-bottom: none;
-        }
-        
-        .resumo-status {
-            background-color: #e8f4fd;
-            padding: 15px;
-            border-radius: 6px;
-            margin: 15px 0;
-            border-left: 4px solid var(--secondary-color);
-        }
-        
-        .resumo-status h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-            font-size: 1.1rem;
-        }
-        
-        .status-detalhes {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-            margin-top: 15px;
-        }
-        
-        @media (min-width: 481px) {
-            .status-detalhes {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (min-width: 769px) {
-            .status-detalhes {
-                grid-template-columns: repeat(5, 1fr);
-            }
-        }
-        
-        .status-item {
-            text-align: center;
-            padding: 12px;
-            background-color: white;
-            border-radius: 4px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        
-        .status-valor {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 5px 0;
-        }
-        
-        .status-label {
-            font-size: 0.85rem;
-            color: #666;
-        }
-        
-        .device-selector {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin: 15px 0;
-        }
-        
-        @media (min-width: 481px) {
-            .device-selector {
-                flex-direction: row;
-                align-items: center;
-            }
-        }
-        
-        .device-option {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            cursor: pointer;
-            background-color: #f9f9f9;
-        }
-        
-        .device-option input[type="radio"] {
-            margin-right: 10px;
-            width: 18px;
-            height: 18px;
-        }
-        
-        .device-option i {
-            margin-right: 8px;
-            font-size: 1.2rem;
-        }
-        
-        .qrcode-container {
-            text-align: center;
-            margin: 20px 0;
-            padding: 20px;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        
-        .qrcode-placeholder {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto;
-            background-color: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid #ddd;
-        }
-        
-        .action-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        @media (min-width: 481px) {
-            .action-buttons {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-        }
-        
-        .action-buttons button {
-            margin-bottom: 0;
         }
         
         .toast-message {
@@ -918,37 +652,6 @@
             font-size: 30px;
         }
         
-        .mobile-bottom-nav {
-            display: flex;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: white;
-            border-top: 1px solid #ddd;
-            z-index: 999;
-            padding: 5px 0;
-        }
-        
-        @media (min-width: 769px) {
-            .mobile-bottom-nav {
-                display: none;
-            }
-        }
-        
-        .mobile-nav-item {
-            flex: 1;
-            text-align: center;
-            padding: 8px 0;
-            color: var(--dark-color);
-            font-size: 12px;
-        }
-        
-        .mobile-nav-item.active {
-            color: var(--secondary-color);
-            font-weight: 600;
-        }
-        
         @media print {
             body * {
                 visibility: hidden;
@@ -967,6 +670,30 @@
                 display: none !important;
             }
         }
+        
+        .filter-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        @media (min-width: 481px) {
+            .filter-bar {
+                flex-direction: row;
+                align-items: flex-end;
+                flex-wrap: wrap;
+            }
+        }
+        
+        .filter-bar .form-group {
+            margin-bottom: 0;
+            flex: 1;
+            min-width: 150px;
+        }
     </style>
 </head>
 <body>
@@ -979,7 +706,6 @@
             <button id="btn-acesso-admin" class="btn-warning" style="width: 100%;">Sou Administrador</button>
         </div>
         
-        <!-- Formulário de Login para Associado -->
         <div id="login-associado" style="display: none;">
             <h3>Acesso do Associado</h3>
             <form id="login-form-associado">
@@ -998,7 +724,6 @@
             </form>
         </div>
         
-        <!-- Formulário de Login para Admin -->
         <div id="login-admin" style="display: none;">
             <h3>Acesso Administrativo</h3>
             <form id="login-form-admin">
@@ -1013,7 +738,6 @@
             </form>
         </div>
         
-        <!-- Mensagem de status -->
         <div id="login-message" style="margin-top: 15px; display: none;"></div>
     </div>
 
@@ -1028,60 +752,47 @@
                     <button id="logout-btn" style="width: auto; padding: 8px 15px;">Sair</button>
                 </div>
                 
-                <!-- Navegação Rápida por Âncora (apenas desktop) -->
                 <div id="quick-nav-admin" class="quick-nav admin-only" style="display: none;">
                     <a href="#cadastro-tab" class="quick-nav-btn">Cadastrar</a>
                     <a href="#consulta-tab" class="quick-nav-btn">Consultar</a>
                     <a href="#contribuicoes-tab" class="quick-nav-btn">Contribuições</a>
                     <a href="#mensagens-tab" class="quick-nav-btn">Mensagens</a>
                     <a href="#relatorios-tab" class="quick-nav-btn">Relatórios</a>
+                    <a href="#pagamentos-tab" class="quick-nav-btn">💳 Pagamentos</a>
                 </div>
             </header>
             
-            <!-- Abas de Navegação (desktop) -->
+            <!-- Abas -->
             <div class="tabs desktop-only">
-                <!-- Abas para Associados -->
                 <div class="tab associado-only active" data-tab="meus-dados">Meus Dados</div>
                 <div class="tab associado-only" data-tab="minhas-contribuicoes">Minhas Contribuições</div>
                 
-                <!-- Abas para Administrador -->
                 <div class="tab admin-only" data-tab="cadastro">Cadastrar</div>
                 <div class="tab admin-only" data-tab="consulta">Consultar</div>
                 <div class="tab admin-only" data-tab="contribuicoes">Contribuições</div>
                 <div class="tab admin-only" data-tab="mensagens">Mensagens</div>
                 <div class="tab admin-only" data-tab="relatorios">Relatórios</div>
+                <div class="tab admin-only" data-tab="pagamentos">💳 Pagamentos</div>
             </div>
             
             <!-- Conteúdo para Associados -->
             <div class="tab-content associado-only active" id="meus-dados-tab">
                 <div class="card">
                     <h2>Meus Dados</h2>
-                    <div id="associado-info-detail">
-                        <!-- Dados do associado serão carregados aqui -->
-                    </div>
+                    <div id="associado-info-detail"></div>
                 </div>
             </div>
             
             <div class="tab-content associado-only" id="minhas-contribuicoes-tab">
                 <div class="card">
                     <h2>Minhas Contribuições</h2>
-                    
-                    <!-- Resumo do Status -->
                     <div class="resumo-status" id="resumo-status">
                         <h3>Resumo do Status</h3>
-                        <div class="status-detalhes" id="status-detalhes">
-                            <!-- Detalhes do status serão carregados aqui -->
-                        </div>
+                        <div class="status-detalhes" id="status-detalhes"></div>
                     </div>
-                    
-                    <div class="payment-history" id="minhas-contribuicoes-list">
-                        <!-- Histórico de contribuições será carregado aqui -->
-                    </div>
-                    
+                    <div class="payment-history" id="minhas-contribuicoes-list"></div>
                     <h3 style="margin-top: 20px;">Status por Mês (Todos os Anos)</h3>
-                    <div class="months-container" id="months-container">
-                        <!-- Seções por ano serão preenchidas aqui -->
-                    </div>
+                    <div class="months-container" id="months-container"></div>
                 </div>
             </div>
             
@@ -1090,69 +801,25 @@
                 <div class="card">
                     <h2>Cadastrar Novo Associado</h2>
                     <form id="cadastro-form">
-                        <div class="form-group">
-                            <label for="nome">Nome Completo</label>
-                            <input type="text" id="nome" required>
+                        <div class="form-group"><label for="nome">Nome Completo</label><input type="text" id="nome" required></div>
+                        <div class="form-group"><label for="data-cadastro">Data de Cadastro</label><input type="date" id="data-cadastro" required></div>
+                        <div class="form-group"><label for="forma-pagamento">Forma de Pagamento</label>
+                            <select id="forma-pagamento" required><option value="">Selecione</option><option value="pix">PIX</option><option value="dinheiro">Dinheiro</option><option value="cartao">Cartão</option><option value="transferencia">Transferência</option></select>
                         </div>
-                        
-                        <div class="form-group">
-                            <label for="data-cadastro">Data de Cadastro</label>
-                            <input type="date" id="data-cadastro" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="forma-pagamento">Forma de Pagamento</label>
-                            <select id="forma-pagamento" required>
-                                <option value="">Selecione</option>
-                                <option value="pix">PIX</option>
-                                <option value="dinheiro">Dinheiro</option>
-                                <option value="cartao">Cartão</option>
-                                <option value="transferencia">Transferência</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="telefone">Telefone (WhatsApp)</label>
-                            <input type="tel" id="telefone" placeholder="(00) 00000-0000" required>
-                        </div>
-                        
-                        <button type="submit" id="btn-cadastrar">
-                            <span id="cadastrar-text">Cadastrar</span>
-                            <span id="cadastrar-loading" class="loading" style="display: none;"></span>
-                        </button>
+                        <div class="form-group"><label for="telefone">Telefone (WhatsApp)</label><input type="tel" id="telefone" placeholder="(00) 00000-0000" required></div>
+                        <button type="submit" id="btn-cadastrar"><span id="cadastrar-text">Cadastrar</span><span id="cadastrar-loading" class="loading" style="display: none;"></span></button>
                     </form>
                 </div>
-                
                 <div id="cadastro-result" style="display: none;"></div>
             </div>
             
             <div class="tab-content admin-only" id="consulta-tab">
                 <div class="card">
                     <h2>Consultar Associados</h2>
-                    
-                    <div class="search-box">
-                        <input type="text" id="search-input" placeholder="Buscar por nome ou número...">
-                    </div>
-                    
+                    <div class="search-box"><input type="text" id="search-input" placeholder="Buscar por nome ou número..."></div>
                     <div style="overflow-x: auto;">
-                        <table id="associados-table">
-                            <thead>
-                                <tr>
-                                    <th>Nº</th>
-                                    <th>Nome</th>
-                                    <th>Telefone</th>
-                                    <th>Cadastro</th>
-                                    <th>Pagamento</th>
-                                    <th>Status</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
-                            <tbody id="associados-list">
-                                <!-- Lista de associados será preenchida aqui -->
-                            </tbody>
-                        </table>
+                        <table id="associados-table"><thead><tr><th>Nº</th><th>Nome</th><th>Telefone</th><th>Cadastro</th><th>Pagamento</th><th>Status</th><th>Ações</th></tr></thead><tbody id="associados-list"></tbody></table>
                     </div>
-                    
                     <div class="pagination" id="pagination"></div>
                 </div>
             </div>
@@ -1160,59 +827,19 @@
             <div class="tab-content admin-only" id="contribuicoes-tab">
                 <div class="card">
                     <h2>Registrar Contribuições</h2>
-                    
-                    <div class="form-group">
-                        <label for="associado-select">Selecionar Associado</label>
-                        <select id="associado-select">
-                            <option value="">Selecione...</option>
-                        </select>
-                    </div>
-                    
+                    <div class="form-group"><label for="associado-select">Selecionar Associado</label><select id="associado-select"><option value="">Selecione...</option></select></div>
                     <div id="associado-info" style="display: none;">
                         <h3>Informações</h3>
-                        <div class="details-panel">
-                            <p><strong>Nome:</strong> <span id="info-nome"></span></p>
-                            <p><strong>Número:</strong> <span id="info-numero"></span></p>
-                            <p><strong>Telefone:</strong> <span id="info-telefone"></span></p>
-                            <p><strong>Data Cadastro:</strong> <span id="info-data-cadastro"></span></p>
-                        </div>
-                        
+                        <div class="details-panel"><p><strong>Nome:</strong> <span id="info-nome"></span></p><p><strong>Número:</strong> <span id="info-numero"></span></p><p><strong>Telefone:</strong> <span id="info-telefone"></span></p><p><strong>Data Cadastro:</strong> <span id="info-data-cadastro"></span></p></div>
                         <h3>Histórico de Contribuições</h3>
                         <div class="payment-history" id="payment-history"></div>
-                        
                         <h3>Registrar Nova Contribuição</h3>
                         <form id="contribuicao-form">
-                            <div class="form-group">
-                                <label for="mes-referencia">Mês de Referência</label>
-                                <input type="month" id="mes-referencia" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="data-pagamento">Data do Pagamento</label>
-                                <input type="date" id="data-pagamento" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="forma-pagamento-contrib">Forma de Pagamento</label>
-                                <select id="forma-pagamento-contrib" required>
-                                    <option value="">Selecione</option>
-                                    <option value="pix">PIX</option>
-                                    <option value="dinheiro">Dinheiro</option>
-                                    <option value="cartao">Cartão</option>
-                                    <option value="transferencia">Transferência</option>
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="valor">Valor (R$)</label>
-                                <input type="number" id="valor" step="0.01" min="0" required>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="observacoes">Observações</label>
-                                <textarea id="observacoes" rows="2"></textarea>
-                            </div>
-                            
+                            <div class="form-group"><label for="mes-referencia">Mês de Referência</label><input type="month" id="mes-referencia" required></div>
+                            <div class="form-group"><label for="data-pagamento">Data do Pagamento</label><input type="date" id="data-pagamento" required></div>
+                            <div class="form-group"><label for="forma-pagamento-contrib">Forma de Pagamento</label><select id="forma-pagamento-contrib" required><option value="">Selecione</option><option value="pix">PIX</option><option value="dinheiro">Dinheiro</option><option value="cartao">Cartão</option><option value="transferencia">Transferência</option></select></div>
+                            <div class="form-group"><label for="valor">Valor (R$)</label><input type="number" id="valor" step="0.01" min="0" required></div>
+                            <div class="form-group"><label for="observacoes">Observações</label><textarea id="observacoes" rows="2"></textarea></div>
                             <button type="submit">Registrar</button>
                         </form>
                     </div>
@@ -1222,125 +849,20 @@
             <div class="tab-content admin-only" id="mensagens-tab">
                 <div class="card">
                     <h2>Enviar Mensagens de Lembrete</h2>
-                    
-                    <div class="form-group">
-                        <label for="mensagem-template">Modelo de Mensagem</label>
-                        <textarea id="mensagem-template" rows="4">
-Olá associado/a, este é um lembrete amigável da sua mensalidade pendente.  
-Esta é uma mensagem automática enviada pelo sistema de gerenciamento da Associação de Agricultores/as Familiares de Cacimba. 
-Lembrando que houve atualização do valor de R$ 10,00 para R$ 11,00 como está descrito no edital de fundação. 
-Para mais informações acesse o link para conferir os meses pendentes: https://mmaura0114.github.io/AAFC/ para acessar digite seu número de acesso Nº e telefone.
-                        </textarea>
-                        <small>Use [NOME] para inserir o nome do associado.</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="data-programada">Programar Envio (Opcional)</label>
-                        <input type="datetime-local" id="data-programada">
-                        <small>Deixe em branco para enviar agora</small>
-                    </div>
-                    
-                    <div class="enviar-options">
-                        <label class="enviar-option">
-                            <input type="radio" name="tipo-envio" value="manual" checked> 
-                            <div>
-                                <strong>Envio Manual</strong>
-                                <p style="font-size: 14px;">Copie e cole os números manualmente</p>
-                            </div>
-                        </label>
-                        <label class="enviar-option">
-                            <input type="radio" name="tipo-envio" value="automatico"> 
-                            <div>
-                                <strong>Envio Automático</strong>
-                                <p style="font-size: 14px;">Abre uma janela para cada número</p>
-                            </div>
-                        </label>
-                    </div>
-                    
-                    <!-- Seletor de Dispositivo -->
-                    <div class="device-selector">
-                        <label class="device-option">
-                            <input type="radio" name="dispositivo" value="web" checked>
-                            <span>💻 WhatsApp Web (PC)</span>
-                        </label>
-                        <label class="device-option">
-                            <input type="radio" name="dispositivo" value="mobile">
-                            <span>📱 WhatsApp Mobile (Celular)</span>
-                        </label>
-                    </div>
-                    
-                    <div class="enviar-info" style="display: none;" id="info-manual">
-                        <h4>Envio Manual</h4>
-                        <ol>
-                            <li>Clique em "Gerar Lista de Números"</li>
-                            <li>Copie os números abaixo</li>
-                            <li>Abra o WhatsApp no seu dispositivo</li>
-                            <li>Para celular: use o link gerado ou cole manualmente</li>
-                        </ol>
-                    </div>
-                    
-                    <div class="enviar-info" style="display: none;" id="info-automatico">
-                        <h4>Envio Automático</h4>
-                        <ol>
-                            <li>Clique em "Iniciar Envio"</li>
-                            <li>No celular, cada link será aberto em uma nova aba</li>
-                            <li>No PC, cada janela será aberta separadamente</li>
-                            <li>Clique em "Enviar" manualmente em cada conversa</li>
-                        </ol>
-                        <p><strong>Intervalo:</strong> 5 segundos entre cada envio</p>
-                    </div>
-                    
-                    <!-- Mensagens Agendadas -->
-                    <div class="mensagens-agendadas" id="mensagens-agendadas-container" style="display: none;">
-                        <h3>Mensagens Agendadas</h3>
-                        <div id="lista-mensagens-agendadas"></div>
-                    </div>
-                    
+                    <div class="form-group"><label for="mensagem-template">Modelo de Mensagem</label><textarea id="mensagem-template" rows="4">Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Esta é uma mensagem automática enviada pelo sistema de gerenciamento da Associação de Agricultores/as Familiares de Cacimba. Lembrando que houve atualização do valor de R$ 10,00 para R$ 11,00 como está descrito no edital de fundação. Para mais informações acesse o link para conferir os meses pendentes: https://mmaura0114.github.io/AAFC/ para acessar digite seu número de acesso Nº e telefone.</textarea><small>Use [NOME] para inserir o nome do associado.</small></div>
+                    <div class="form-group"><label for="data-programada">Programar Envio (Opcional)</label><input type="datetime-local" id="data-programada"><small>Deixe em branco para enviar agora</small></div>
+                    <div class="enviar-options"><label class="enviar-option"><input type="radio" name="tipo-envio" value="manual" checked> <div><strong>Envio Manual</strong><p style="font-size: 14px;">Copie e cole os números manualmente</p></div></label><label class="enviar-option"><input type="radio" name="tipo-envio" value="automatico"> <div><strong>Envio Automático</strong><p style="font-size: 14px;">Abre uma janela para cada número</p></div></label></div>
+                    <div class="device-selector"><label class="device-option"><input type="radio" name="dispositivo" value="web" checked> <span>💻 WhatsApp Web (PC)</span></label><label class="device-option"><input type="radio" name="dispositivo" value="mobile"> <span>📱 WhatsApp Mobile (Celular)</span></label></div>
+                    <div class="enviar-info" style="display: block;" id="info-manual"><h4>Envio Manual</h4><ol><li>Clique em "Gerar Lista de Números"</li><li>Copie os números abaixo</li><li>Abra o WhatsApp no seu dispositivo</li><li>Para celular: use o link gerado ou cole manualmente</li></ol></div>
+                    <div class="enviar-info" style="display: none;" id="info-automatico"><h4>Envio Automático</h4><ol><li>Clique em "Iniciar Envio"</li><li>No celular, cada link será aberto em uma nova aba</li><li>No PC, cada janela será aberta separadamente</li><li>Clique em "Enviar" manualmente em cada conversa</li></ol><p><strong>Intervalo:</strong> 5 segundos entre cada envio</p></div>
+                    <div class="mensagens-agendadas" id="mensagens-agendadas-container" style="display: none;"><h3>Mensagens Agendadas</h3><div id="lista-mensagens-agendadas"></div></div>
                     <div id="pendentes-list"></div>
-                    
-                    <!-- QR Code (para mobile) -->
-                    <div class="qrcode-container" id="qrcode-container" style="display: none;">
-                        <h3>Escaneie para abrir no celular</h3>
-                        <div class="qrcode-placeholder" id="qrcode-placeholder">
-                            <p style="color: #666;">QR Code será gerado ao selecionar números</p>
-                        </div>
-                        <p style="font-size: 12px; margin-top: 10px;">Abra o WhatsApp no celular e escaneie para enviar mensagem</p>
-                    </div>
-                    
-                    <!-- Contador para envio automático -->
-                    <div class="contador-envio" id="contador-envio">
-                        <div id="contador-texto">Preparando envio...</div>
-                    </div>
-                    
-                    <!-- Barra de progresso -->
-                    <div class="progress-container" id="progress-container">
-                        <div class="progress-bar" id="progress-bar"></div>
-                        <div class="progress-text" id="progress-text">0%</div>
-                    </div>
-                    
-                    <!-- Lista de números -->
-                    <div class="numeros-container" id="numeros-container" style="display: none;">
-                        <h3>Números para Envio</h3>
-                        <div class="numeros-list" id="numeros-list"></div>
-                        <div class="action-buttons">
-                            <button class="copy-btn" id="copiar-numeros-btn">📋 Copiar Números</button>
-                            <button class="whatsapp-btn" id="gerar-links-btn">🔗 Gerar Links</button>
-                            <button class="btn-success" id="abrir-whatsapp-btn">📱 Abrir WhatsApp</button>
-                        </div>
-                        <div id="links-container" style="margin-top: 15px; display: none;">
-                            <h4>Links para WhatsApp:</h4>
-                            <div class="numeros-list" id="links-list"></div>
-                        </div>
-                    </div>
-                    
-                    <!-- Botões principais -->
+                    <div class="qrcode-container" id="qrcode-container" style="display: none;"><h3>Escaneie para abrir no celular</h3><div class="qrcode-placeholder" id="qrcode-placeholder"><p style="color: #666;">QR Code será gerado ao selecionar números</p></div><p style="font-size: 12px; margin-top: 10px;">Abra o WhatsApp no celular e escaneie para enviar mensagem</p></div>
+                    <div class="contador-envio" id="contador-envio"><div id="contador-texto">Preparando envio...</div></div>
+                    <div class="progress-container" id="progress-container"><div class="progress-bar" id="progress-bar"></div><div class="progress-text" id="progress-text">0%</div></div>
+                    <div class="numeros-container" id="numeros-container" style="display: none;"><h3>Números para Envio</h3><div class="numeros-list" id="numeros-list"></div><div class="action-buttons"><button class="copy-btn" id="copiar-numeros-btn">📋 Copiar Números</button><button class="whatsapp-btn" id="gerar-links-btn">🔗 Gerar Links</button><button class="btn-success" id="abrir-whatsapp-btn">📱 Abrir WhatsApp</button></div><div id="links-container" style="margin-top: 15px; display: none;"><h4>Links para WhatsApp:</h4><div class="numeros-list" id="links-list"></div></div></div>
                     <button id="gerar-lista-btn" class="btn-success" style="margin-top: 15px;">📋 Gerar Lista de Números</button>
-                    <button id="enviar-todos-btn" class="whatsapp-btn" style="margin-top: 15px;">
-                        <span id="enviar-texto">📱 Iniciar Envio</span>
-                        <span id="enviar-loading" class="loading" style="display: none;"></span>
-                    </button>
-                    
-                    <!-- Botão de ÁUDIO -->
+                    <button id="enviar-todos-btn" class="whatsapp-btn" style="margin-top: 15px;"><span id="enviar-texto">📱 Iniciar Envio</span><span id="enviar-loading" class="loading" style="display: none;"></span></button>
                     <button id="enviar-audio-btn" class="audio-btn" style="margin-top: 15px;">🎤 Enviar Áudio (texto)</button>
                 </div>
             </div>
@@ -1348,175 +870,105 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             <div class="tab-content admin-only" id="relatorios-tab">
                 <div class="card">
                     <h2>Relatórios de Arrecadação</h2>
+                    <div class="form-group"><label for="mes-relatorio">Filtrar por Mês</label><select id="mes-relatorio"><option value="">Todos os meses</option></select></div>
+                    <div class="export-options"><button id="btn-exportar-pdf" class="btn-danger">📄 Exportar PDF</button><button id="btn-exportar-word" class="btn-primary">📝 Exportar Word</button><button id="btn-exportar-excel" class="btn-success">📊 Exportar Excel</button></div>
+                    <div class="stats-grid"><div class="stat-card"><h3>Arrecadação do Período</h3><div class="stat-value" id="arrecadacao-mes">R$ 0,00</div><small>Valor arrecadado no filtro selecionado</small></div><div class="stat-card"><h3>Arrecadação Total</h3><div class="stat-value" id="arrecadacao-total">R$ 0,00</div><small>Desde o início</small></div><div class="stat-card"><h3>Associados Ativos</h3><div class="stat-value" id="associados-ativos">0</div></div><div class="stat-card"><h3>Pagamentos no Período</h3><div class="stat-value" id="pagamentos-mes">0</div><small>Quantidade de pagamentos no filtro</small></div></div>
+                    <h3>Detalhamento por Forma de Pagamento</h3>
+                    <div style="overflow-x: auto;"><table id="relatorio-formas-pagamento"><thead><tr><th>Forma de Pagamento</th><th>Quantidade</th><th>Valor Total</th></tr></thead><tbody id="relatorio-formas-pagamento-body"></tbody></table></div>
+                    <h3 style="margin-top: 20px;">Arrecadação por Mês</h3>
+                    <div style="overflow-x: auto;"><table id="relatorio-arrecadacao-meses"><thead><tr><th>Mês/Ano</th><th>Total Arrecadado</th><th>Quantidade de Pagamentos</th><th>Média por Pagamento</th></tr></thead><tbody id="relatorio-arrecadacao-meses-body"></tbody></table></div>
+                </div>
+            </div>
+            
+            <!-- NOVA ABA: RELATÓRIO DE PAGAMENTOS (DEVOLUÇÃO DE MENSALIDADES) -->
+            <div class="tab-content admin-only" id="pagamentos-tab">
+                <div class="card">
+                    <h2>📋 Relatório de Pagamentos - Devolução de Mensalidades</h2>
+                    <p style="margin-bottom: 15px; color: #666;">Relatório completo de todas as mensalidades pagas por cada associado, com detalhes de data, mês, ano, valor e forma de pagamento.</p>
                     
-                    <div class="form-group">
-                        <label for="mes-relatorio">Filtrar por Mês</label>
-                        <select id="mes-relatorio">
-                            <option value="">Todos os meses</option>
-                            <!-- As opções de meses serão geradas dinamicamente -->
-                        </select>
+                    <div class="filter-bar">
+                        <div class="form-group">
+                            <label for="filtro-associado-pag">Filtrar por Associado</label>
+                            <select id="filtro-associado-pag">
+                                <option value="">Todos os associados</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filtro-ano-pag">Filtrar por Ano</label>
+                            <select id="filtro-ano-pag">
+                                <option value="">Todos os anos</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filtro-mes-pag">Filtrar por Mês</label>
+                            <select id="filtro-mes-pag">
+                                <option value="">Todos os meses</option>
+                                <option value="01">Janeiro</option><option value="02">Fevereiro</option><option value="03">Março</option>
+                                <option value="04">Abril</option><option value="05">Maio</option><option value="06">Junho</option>
+                                <option value="07">Julho</option><option value="08">Agosto</option><option value="09">Setembro</option>
+                                <option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filtro-forma-pag">Filtrar por Forma de Pagamento</label>
+                            <select id="filtro-forma-pag">
+                                <option value="">Todas</option>
+                                <option value="pix">PIX</option>
+                                <option value="dinheiro">Dinheiro</option>
+                                <option value="cartao">Cartão</option>
+                                <option value="transferencia">Transferência</option>
+                            </select>
+                        </div>
+                        <button id="aplicar-filtros-pag" class="btn-success" style="margin-bottom: 0;">🔍 Aplicar Filtros</button>
+                        <button id="limpar-filtros-pag" class="btn-warning" style="margin-bottom: 0;">🗑️ Limpar</button>
                     </div>
                     
                     <div class="export-options">
-                        <button id="btn-exportar-pdf" class="btn-danger">📄 Exportar PDF</button>
-                        <button id="btn-exportar-word" class="btn-primary">📝 Exportar Word</button>
-                        <button id="btn-exportar-excel" class="btn-success">📊 Exportar Excel</button>
+                        <button id="btn-exportar-pagamentos-pdf" class="btn-danger">📄 Exportar PDF</button>
+                        <button id="btn-exportar-pagamentos-word" class="btn-primary">📝 Exportar Word</button>
+                        <button id="btn-exportar-pagamentos-excel" class="btn-success">📊 Exportar Excel</button>
                     </div>
                     
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <h3>Arrecadação do Período</h3>
-                            <div class="stat-value" id="arrecadacao-mes">R$ 0,00</div>
-                            <small>Valor arrecadado no filtro selecionado</small>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Arrecadação Total</h3>
-                            <div class="stat-value" id="arrecadacao-total">R$ 0,00</div>
-                            <small>Desde o início</small>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Associados Ativos</h3>
-                            <div class="stat-value" id="associados-ativos">0</div>
-                        </div>
-                        <div class="stat-card">
-                            <h3>Pagamentos no Período</h3>
-                            <div class="stat-value" id="pagamentos-mes">0</div>
-                            <small>Quantidade de pagamentos no filtro</small>
-                        </div>
+                    <div class="stats-grid" style="margin-bottom: 20px;">
+                        <div class="stat-card"><h3>Total de Pagamentos</h3><div class="stat-value" id="total-pagamentos-count">0</div><small>Quantidade de mensalidades pagas</small></div>
+                        <div class="stat-card"><h3>Valor Total Arrecadado</h3><div class="stat-value" id="total-pagamentos-valor">R$ 0,00</div><small>Soma de todos os pagamentos</small></div>
+                        <div class="stat-card"><h3>Valor Médio por Pagamento</h3><div class="stat-value" id="media-pagamento">R$ 0,00</div><small>Média por mensalidade</small></div>
+                        <div class="stat-card"><h3>Associados com Pagamentos</h3><div class="stat-value" id="associados-com-pagamentos">0</div><small>Total de associados que pagaram</small></div>
                     </div>
                     
-                    <h3>Detalhamento por Forma de Pagamento</h3>
                     <div style="overflow-x: auto;">
-                        <table id="relatorio-formas-pagamento">
+                        <table id="tabela-pagamentos">
                             <thead>
                                 <tr>
+                                    <th>Nº</th>
+                                    <th>Associado</th>
+                                    <th>Telefone</th>
+                                    <th>Mês Referência</th>
+                                    <th>Data do Pagamento</th>
+                                    <th>Dia</th>
+                                    <th>Mês</th>
+                                    <th>Ano</th>
+                                    <th>Valor (R$)</th>
                                     <th>Forma de Pagamento</th>
-                                    <th>Quantidade</th>
-                                    <th>Valor Total</th>
+                                    <th>Observações</th>
                                 </tr>
                             </thead>
-                            <tbody id="relatorio-formas-pagamento-body"></tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- NOVA SEÇÃO: Arrecadação por Mês (sem nomes de associados) -->
-                    <h3 style="margin-top: 20px;">Arrecadação por Mês</h3>
-                    <div style="overflow-x: auto;">
-                        <table id="relatorio-arrecadacao-meses">
-                            <thead>
-                                <tr>
-                                    <th>Mês/Ano</th>
-                                    <th>Total Arrecadado</th>
-                                    <th>Quantidade de Pagamentos</th>
-                                    <th>Média por Pagamento</th>
-                                </tr>
-                            </thead>
-                            <tbody id="relatorio-arrecadacao-meses-body"></tbody>
+                            <tbody id="tabela-pagamentos-body">
+                                <tr><td colspan="11" style="text-align:center;">Carregando...</td></tr>
+                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
         
-        <!-- Botão flutuante para mobile -->
-        <button class="fab-button" id="fab-whatsapp" style="display: none;">
-            <span>📱</span>
-        </button>
+        <button class="fab-button" id="fab-whatsapp" style="display: none;"><span>📱</span></button>
     </div>
 
-    <!-- Modal para Edição de Associado -->
-    <div id="modal-editar" class="modal">
-        <div class="modal-content">
-            <h2>Editar Associado</h2>
-            <form id="form-editar">
-                <div class="form-group">
-                    <label for="editar-nome">Nome Completo</label>
-                    <input type="text" id="editar-nome" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editar-data-cadastro">Data de Cadastro</label>
-                    <input type="date" id="editar-data-cadastro" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editar-forma-pagamento">Forma de Pagamento</label>
-                    <select id="editar-forma-pagamento" required>
-                        <option value="">Selecione</option>
-                        <option value="pix">PIX</option>
-                        <option value="dinheiro">Dinheiro</option>
-                        <option value="cartao">Cartão</option>
-                        <option value="transferencia">Transferência</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="editar-telefone">Telefone (WhatsApp)</label>
-                    <input type="tel" id="editar-telefone" required>
-                </div>
-                
-                <div class="month-contributions">
-                    <h3>Gerenciar Contribuições</h3>
-                    <div id="contribuicoes-lista"></div>
-                    <div class="contribution-controls">
-                        <button type="button" id="btn-adicionar-contribuicao" class="btn-success">➕ Adicionar</button>
-                        <button type="button" id="btn-remover-contribuicao" class="btn-danger">🗑️ Remover</button>
-                    </div>
-                </div>
-                
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button type="submit" class="btn-success">💾 Salvar</button>
-                    <button type="button" id="btn-cancelar-edicao">❌ Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <!-- Modais existentes -->
+    <div id="modal-editar" class="modal"><div class="modal-content"><h2>Editar Associado</h2><form id="form-editar"><div class="form-group"><label for="editar-nome">Nome Completo</label><input type="text" id="editar-nome" required></div><div class="form-group"><label for="editar-data-cadastro">Data de Cadastro</label><input type="date" id="editar-data-cadastro" required></div><div class="form-group"><label for="editar-forma-pagamento">Forma de Pagamento</label><select id="editar-forma-pagamento" required><option value="">Selecione</option><option value="pix">PIX</option><option value="dinheiro">Dinheiro</option><option value="cartao">Cartão</option><option value="transferencia">Transferência</option></select></div><div class="form-group"><label for="editar-telefone">Telefone (WhatsApp)</label><input type="tel" id="editar-telefone" required></div><div class="month-contributions"><h3>Gerenciar Contribuições</h3><div id="contribuicoes-lista"></div><div class="contribution-controls"><button type="button" id="btn-adicionar-contribuicao" class="btn-success">➕ Adicionar</button><button type="button" id="btn-remover-contribuicao" class="btn-danger">🗑️ Remover</button></div></div><div style="display: flex; gap: 10px; margin-top: 20px;"><button type="submit" class="btn-success">💾 Salvar</button><button type="button" id="btn-cancelar-edicao">❌ Cancelar</button></div></form></div></div>
+    <div id="modal-contribuicao" class="modal"><div class="modal-content"><h2>Adicionar Contribuição</h2><form id="form-nova-contribuicao"><div class="form-group"><label for="nova-mes-referencia">Mês de Referência</label><input type="month" id="nova-mes-referencia" required></div><div class="form-group"><label for="nova-data-pagamento">Data do Pagamento</label><input type="date" id="nova-data-pagamento" required></div><div class="form-group"><label for="nova-forma-pagamento">Forma de Pagamento</label><select id="nova-forma-pagamento" required><option value="">Selecione</option><option value="pix">PIX</option><option value="dinheiro">Dinheiro</option><option value="cartao">Cartão</option><option value="transferencia">Transferência</option></select></div><div class="form-group"><label for="nova-valor">Valor (R$)</label><input type="number" id="nova-valor" step="0.01" min="0" required></div><div class="form-group"><label for="nova-observacoes">Observações</label><textarea id="nova-observacoes" rows="2"></textarea></div><div style="display: flex; gap: 10px; margin-top: 20px;"><button type="submit" class="btn-success">➕ Adicionar</button><button type="button" id="btn-cancelar-contribuicao">❌ Cancelar</button></div></form></div></div>
 
-    <!-- Modal para Adicionar Contribuição -->
-    <div id="modal-contribuicao" class="modal">
-        <div class="modal-content">
-            <h2>Adicionar Contribuição</h2>
-            <form id="form-nova-contribuicao">
-                <div class="form-group">
-                    <label for="nova-mes-referencia">Mês de Referência</label>
-                    <input type="month" id="nova-mes-referencia" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="nova-data-pagamento">Data do Pagamento</label>
-                    <input type="date" id="nova-data-pagamento" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="nova-forma-pagamento">Forma de Pagamento</label>
-                    <select id="nova-forma-pagamento" required>
-                        <option value="">Selecione</option>
-                        <option value="pix">PIX</option>
-                        <option value="dinheiro">Dinheiro</option>
-                        <option value="cartao">Cartão</option>
-                        <option value="transferencia">Transferência</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label for="nova-valor">Valor (R$)</label>
-                    <input type="number" id="nova-valor" step="0.01" min="0" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="nova-observacoes">Observações</label>
-                    <textarea id="nova-observacoes" rows="2"></textarea>
-                </div>
-                
-                <div style="display: flex; gap: 10px; margin-top: 20px;">
-                    <button type="submit" class="btn-success">➕ Adicionar</button>
-                    <button type="button" id="btn-cancelar-contribuicao">❌ Cancelar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Toast para mensagens -->
     <div class="toast-message" id="toast-message"></div>
 
     <script>
@@ -1525,7 +977,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         const JSONBIN_BIN_ID = '691d1701ae596e708f61d4c6';
         const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`;
 
-        // Variáveis globais
         let associados = [];
         let currentUser = null;
         let isAdmin = false;
@@ -1533,7 +984,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         const itemsPerPage = 10;
         let selectedAssociado = null;
         let associadoEditando = null;
-        let currentTabIndex = 0;
         let scheduledMessages = [];
         let associadosPendentes = [];
         let envioEmAndamento = false;
@@ -1541,7 +991,12 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         let intervaloEnvio = null;
         let intervaloVerificacao = null;
         
-        // Detectar dispositivo
+        // Filtros para a aba de pagamentos
+        let filtroAssociadoPag = '';
+        let filtroAnoPag = '';
+        let filtroMesPag = '';
+        let filtroFormaPag = '';
+        
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
         // Elementos DOM
@@ -1560,7 +1015,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         const toastMessage = document.getElementById('toast-message');
         const fabWhatsapp = document.getElementById('fab-whatsapp');
         
-        // Elementos do sistema
         const cadastroForm = document.getElementById('cadastro-form');
         const cadastroResult = document.getElementById('cadastro-result');
         const associadosList = document.getElementById('associados-list');
@@ -1576,7 +1030,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         const monthsContainer = document.getElementById('months-container');
         const dataProgramada = document.getElementById('data-programada');
         
-        // Elementos de edição
         const modalEditar = document.getElementById('modal-editar');
         const formEditar = document.getElementById('form-editar');
         const btnCancelarEdicao = document.getElementById('btn-cancelar-edicao');
@@ -1587,7 +1040,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         const formNovaContribuicao = document.getElementById('form-nova-contribuicao');
         const btnCancelarContribuicao = document.getElementById('btn-cancelar-contribuicao');
         
-        // Elementos de relatório
         const btnExportarPdf = document.getElementById('btn-exportar-pdf');
         const btnExportarWord = document.getElementById('btn-exportar-word');
         const btnExportarExcel = document.getElementById('btn-exportar-excel');
@@ -1599,7 +1051,22 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         const relatorioFormasPagamentoBody = document.getElementById('relatorio-formas-pagamento-body');
         const relatorioArrecadacaoMesesBody = document.getElementById('relatorio-arrecadacao-meses-body');
         
-        // Elementos de envio
+        // Elementos da nova aba de pagamentos
+        const filtroAssociadoPagSelect = document.getElementById('filtro-associado-pag');
+        const filtroAnoPagSelect = document.getElementById('filtro-ano-pag');
+        const filtroMesPagSelect = document.getElementById('filtro-mes-pag');
+        const filtroFormaPagSelect = document.getElementById('filtro-forma-pag');
+        const aplicarFiltrosBtn = document.getElementById('aplicar-filtros-pag');
+        const limparFiltrosBtn = document.getElementById('limpar-filtros-pag');
+        const btnExportarPagamentosPdf = document.getElementById('btn-exportar-pagamentos-pdf');
+        const btnExportarPagamentosWord = document.getElementById('btn-exportar-pagamentos-word');
+        const btnExportarPagamentosExcel = document.getElementById('btn-exportar-pagamentos-excel');
+        const tabelaPagamentosBody = document.getElementById('tabela-pagamentos-body');
+        const totalPagamentosCount = document.getElementById('total-pagamentos-count');
+        const totalPagamentosValor = document.getElementById('total-pagamentos-valor');
+        const mediaPagamento = document.getElementById('media-pagamento');
+        const associadosComPagamentos = document.getElementById('associados-com-pagamentos');
+        
         const gerarListaBtn = document.getElementById('gerar-lista-btn');
         const copiarNumerosBtn = document.getElementById('copiar-numeros-btn');
         const gerarLinksBtn = document.getElementById('gerar-links-btn');
@@ -1621,8 +1088,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         const listaMensagensAgendadas = document.getElementById('lista-mensagens-agendadas');
         const resumoStatus = document.getElementById('resumo-status');
         const statusDetalhes = document.getElementById('status-detalhes');
-        
-        // Botão de áudio
         const enviarAudioBtn = document.getElementById('enviar-audio-btn');
         
         // ==================== FUNÇÕES AUXILIARES ====================
@@ -1636,25 +1101,18 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         
         function formatarData(data) { return data ? new Date(data).toLocaleDateString('pt-BR') : '-'; }
         function formatarDataHora(d) { return d ? new Date(d).toLocaleString('pt-BR') : '-'; }
+        function formatarValor(valor) { return `R$ ${(valor || 0).toFixed(2)}`; }
         
         async function carregarDados() {
             try {
-                showLoading('login-admin');
-                showLoading('login-associado');
-                const response = await fetch(JSONBIN_URL, {
-                    headers: { 'X-Master-Key': JSONBIN_API_KEY }
-                });
+                const response = await fetch(JSONBIN_URL, { headers: { 'X-Master-Key': JSONBIN_API_KEY } });
                 if (!response.ok) throw new Error('Erro ao carregar dados');
                 const data = await response.json();
                 associados = data.record.associados || [];
                 scheduledMessages = data.record.scheduledMessages || [];
-                hideLoading('login-admin');
-                hideLoading('login-associado');
                 return true;
             } catch (error) {
                 console.error('Erro:', error);
-                hideLoading('login-admin');
-                hideLoading('login-associado');
                 showToast('Erro ao carregar dados. Tente novamente.', 'error');
                 return false;
             }
@@ -1662,44 +1120,17 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         
         async function salvarDados() {
             try {
-                showLoading('cadastrar');
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': JSONBIN_API_KEY
-                    },
-                    body: JSON.stringify({
-                        associados: associados,
-                        scheduledMessages: scheduledMessages
-                    })
+                    headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_API_KEY },
+                    body: JSON.stringify({ associados: associados, scheduledMessages: scheduledMessages })
                 });
                 if (!response.ok) throw new Error('Erro ao salvar dados');
-                hideLoading('cadastrar');
                 return true;
             } catch (error) {
                 console.error('Erro:', error);
-                hideLoading('cadastrar');
                 showToast('Erro ao salvar dados. Tente novamente.', 'error');
                 return false;
-            }
-        }
-        
-        function showLoading(buttonType) {
-            const textElement = document.getElementById(`${buttonType}-text`);
-            const loadingElement = document.getElementById(`${buttonType}-loading`);
-            if (textElement && loadingElement) {
-                textElement.style.display = 'none';
-                loadingElement.style.display = 'inline-block';
-            }
-        }
-        
-        function hideLoading(buttonType) {
-            const textElement = document.getElementById(`${buttonType}-text`);
-            const loadingElement = document.getElementById(`${buttonType}-loading`);
-            if (textElement && loadingElement) {
-                textElement.style.display = 'inline-block';
-                loadingElement.style.display = 'none';
             }
         }
         
@@ -1712,9 +1143,7 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         
         function getDispositivoSelecionado() {
             const dispositivoRadios = document.querySelectorAll('input[name="dispositivo"]');
-            for (let radio of dispositivoRadios) {
-                if (radio.checked) return radio.value;
-            }
+            for (let radio of dispositivoRadios) if (radio.checked) return radio.value;
             return isMobile ? 'mobile' : 'web';
         }
         
@@ -1744,84 +1173,13 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             else window.open(link, '_blank');
         }
         
-        // ==================== FUNÇÕES DE GRADE DE MESES ====================
-        function atualizarGradeMesesCompleta(associado) {
-            if (!monthsContainer) return;
-            monthsContainer.innerHTML = '';
-            
-            const hoje = new Date();
-            const anoAtual = hoje.getFullYear();
-            const mesAtual = hoje.getMonth() + 1;
-            const dataCadastro = new Date(associado.dataCadastro + 'T12:00:00');
-            const anoCadastro = dataCadastro.getFullYear();
-            const mesCadastro = dataCadastro.getMonth() + 1;
-            
-            const anoInicio = anoCadastro;
-            const anoFim = anoAtual + 1;
-            const anos = [];
-            for (let ano = anoFim; ano >= anoInicio; ano--) anos.push(ano);
-            
-            const mesesAbreviados = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
-            
-            anos.forEach(ano => {
-                const yearSection = document.createElement('div');
-                yearSection.className = 'year-section';
-                yearSection.innerHTML = `<div class="year-title">${ano} ${ano === anoAtual ? '(Atual)' : ano > anoAtual ? '(Futuro)' : ''}</div>`;
-                
-                const monthsGrid = document.createElement('div');
-                monthsGrid.className = 'months-grid';
-                
-                for (let mes = 1; mes <= 12; mes++) {
-                    if (ano === anoCadastro && mes < mesCadastro) continue;
-                    
-                    const mesAno = `${ano}-${mes.toString().padStart(2, '0')}`;
-                    const contrib = associado.contribuicoes?.find(c => c.mesReferencia === mesAno);
-                    
-                    const monthDiv = document.createElement('div');
-                    monthDiv.className = 'month-item';
-                    if (ano === anoAtual && mes === mesAtual) monthDiv.classList.add('atual');
-                    
-                    let status = 'futuro', statusText = 'Futuro';
-                    if (contrib) {
-                        status = 'pago';
-                        statusText = 'Pago';
-                        monthDiv.title = `Pago: ${formatarData(contrib.dataPagamento)}\nValor: R$ ${contrib.valor?.toFixed(2)}`;
-                    } else if (ano < anoAtual || (ano === anoAtual && mes < mesAtual)) {
-                        status = 'pendente';
-                        statusText = 'Pendente';
-                    }
-                    monthDiv.classList.add(status);
-                    
-                    monthDiv.innerHTML = `<div class="mes-nome">${mesesAbreviados[mes-1]}</div><div class="status-info">${statusText}</div>`;
-                    monthsGrid.appendChild(monthDiv);
-                }
-                
-                yearSection.appendChild(monthsGrid);
-                monthsContainer.appendChild(yearSection);
-            });
-            
-            const legenda = document.createElement('div');
-            legenda.className = 'year-section';
-            legenda.innerHTML = `
-                <div class="year-title">Legenda</div>
-                <div style="display: grid; grid-template-columns: repeat(2,1fr); gap:10px;">
-                    <div style="display:flex; align-items:center;"><span style="display:inline-block; width:20px; height:20px; background:#d4edda; border:1px solid #c3e6cb; border-radius:4px; margin-right:8px;"></span>Pago</div>
-                    <div style="display:flex; align-items:center;"><span style="display:inline-block; width:20px; height:20px; background:#f8d7da; border:1px solid #f5c6cb; border-radius:4px; margin-right:8px;"></span>Pendente</div>
-                    <div style="display:flex; align-items:center;"><span style="display:inline-block; width:20px; height:20px; background:#e8f4fd; border:1px solid #b6e0fe; border-radius:4px; margin-right:8px;"></span>Futuro</div>
-                    <div style="display:flex; align-items:center;"><span style="display:inline-block; width:20px; height:20px; border:2px solid var(--warning-color); border-radius:4px; margin-right:8px;"></span>Mês Atual</div>
-                </div>
-            `;
-            monthsContainer.appendChild(legenda);
-        }
-        
-        function calcularStatusPagamentoDetalhado(associado) {
+        function calcularStatusPagamento(associado) {
             const hoje = new Date();
             const anoAtual = hoje.getFullYear();
             const mesAtual = hoje.getMonth() + 1;
             const dataCadastro = new Date(associado.dataCadastro);
             const anoCadastro = dataCadastro.getFullYear();
             const mesCadastro = dataCadastro.getMonth() + 1;
-            
             let totalMeses = 0, mesesPagos = 0;
             for (let ano = anoCadastro; ano <= anoAtual; ano++) {
                 for (let mes = 1; mes <= 12; mes++) {
@@ -1834,182 +1192,246 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             }
             const pendentes = totalMeses - mesesPagos;
             const percentual = totalMeses > 0 ? Math.round((mesesPagos / totalMeses) * 100) : 0;
-            return pendentes === 0 
-                ? { texto: `Em dia (${mesesPagos}/${totalMeses} - ${percentual}%)`, classe: 'status-pago', mesesPendentes: 0 }
-                : { texto: `${pendentes} atrasados (${mesesPagos}/${totalMeses} - ${percentual}%)`, classe: 'status-pendente', mesesPendentes: pendentes };
+            return pendentes === 0 ? { texto: `Em dia (${mesesPagos}/${totalMeses} - ${percentual}%)`, classe: 'status-pago', mesesPendentes: 0 }
+                                    : { texto: `${pendentes} atrasados (${mesesPagos}/${totalMeses} - ${percentual}%)`, classe: 'status-pendente', mesesPendentes: pendentes };
         }
         
-        function calcularStatusPagamento(associado) {
-            return calcularStatusPagamentoDetalhado(associado);
-        }
+        // ==================== FUNÇÕES DO RELATÓRIO DE PAGAMENTOS ====================
         
-        function atualizarResumoStatus(associado) {
-            if (!statusDetalhes) return;
-            const hoje = new Date();
-            const anoAtual = hoje.getFullYear();
-            const mesAtual = hoje.getMonth() + 1;
-            const dataCadastro = new Date(associado.dataCadastro);
-            const anoCadastro = dataCadastro.getFullYear();
-            const mesCadastro = dataCadastro.getMonth() + 1;
-            
-            let totalMeses = 0, mesesPagos = 0, mesesPendentes = 0, mesesFuturos = 0, valorTotal = 0;
-            
-            for (let ano = anoCadastro; ano <= anoAtual + 1; ano++) {
-                for (let mes = 1; mes <= 12; mes++) {
-                    if (ano === anoCadastro && mes < mesCadastro) continue;
-                    totalMeses++;
-                    const mesAno = `${ano}-${mes.toString().padStart(2, '0')}`;
-                    const contrib = associado.contribuicoes?.find(c => c.mesReferencia === mesAno);
-                    if (contrib) {
-                        mesesPagos++;
-                        valorTotal += contrib.valor || 0;
-                    } else if (ano > anoAtual || (ano === anoAtual && mes > mesAtual)) {
-                        mesesFuturos++;
-                    } else {
-                        mesesPendentes++;
-                    }
-                }
-            }
-            
-            const percentualPago = totalMeses > 0 ? Math.round((mesesPagos / totalMeses) * 100) : 0;
-            
-            statusDetalhes.innerHTML = `
-                <div class="status-item"><div class="status-valor">${totalMeses}</div><div class="status-label">Total</div></div>
-                <div class="status-item"><div class="status-valor" style="color: var(--success-color);">${mesesPagos}</div><div class="status-label">Pagos (${percentualPago}%)</div></div>
-                <div class="status-item"><div class="status-valor" style="color: var(--danger-color);">${mesesPendentes}</div><div class="status-label">Pendentes</div></div>
-                <div class="status-item"><div class="status-valor">${mesesFuturos}</div><div class="status-label">Futuros</div></div>
-                <div class="status-item"><div class="status-valor">R$ ${valorTotal.toFixed(2)}</div><div class="status-label">Total Pago</div></div>
-            `;
-        }
-        
-        // ==================== FUNÇÕES PRINCIPAIS ====================
-        
-        async function loginAssociadoSubmit(e) {
-            e.preventDefault();
-            showLoading('login-associado');
-            await carregarDados();
-            const numero = parseInt(document.getElementById('numero-associado').value);
-            const telefone = document.getElementById('telefone-login').value.replace(/\D/g, '');
-            const associado = associados.find(a => a.numero === numero && a.telefone.replace(/\D/g, '') === telefone);
-            if (associado) {
-                currentUser = associado;
-                isAdmin = false;
-                showMainSystem();
-                showToast('Login realizado com sucesso!');
-            } else {
-                showToast('Associado não encontrado.', 'error');
-            }
-            hideLoading('login-associado');
-        }
-        
-        async function loginAdminSubmit(e) {
-            e.preventDefault();
-            showLoading('login-admin');
-            await carregarDados();
-            if (document.getElementById('senha-admin').value === 'associacao2024') {
-                currentUser = { nome: 'Administrador' };
-                isAdmin = true;
-                showMainSystem();
-                showToast('Login administrativo realizado!');
-            } else {
-                showToast('Senha incorreta.', 'error');
-            }
-            hideLoading('login-admin');
-        }
-        
-        function showMainSystem() {
-            loginScreen.style.display = 'none';
-            mainSystem.style.display = 'block';
-            localStorage.setItem('currentUser', JSON.stringify(currentUser));
-            localStorage.setItem('isAdmin', isAdmin.toString());
-            
-            if (isAdmin) {
-                userType.textContent = 'Modo Administrador';
-                userWelcome.textContent = 'Bem-vindo, Administrador';
-                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
-                document.querySelectorAll('.associado-only').forEach(el => el.style.display = 'none');
-                quickNavAdmin.style.display = isMobile ? 'none' : 'flex';
-                
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                document.querySelector('.tab.admin-only').classList.add('active');
-                document.getElementById('cadastro-tab').classList.add('active');
-                
-                atualizarSeletorAssociados();
-                atualizarListaAssociados();
-                atualizarListaPendentes();
-                atualizarListaMensagensAgendadas();
-                popularSelectMeses();
-                atualizarRelatorios();
-            } else {
-                userType.textContent = 'Área do Associado';
-                userWelcome.textContent = `Bem-vindo, ${currentUser.nome}`;
-                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
-                document.querySelectorAll('.associado-only').forEach(el => el.style.display = 'block');
-                loadAssociadoData();
-            }
-            currentTabIndex = 0;
-        }
-        
-        function loadAssociadoData() {
-            document.getElementById('associado-info-detail').innerHTML = `
-                <p><strong>Número:</strong> ${currentUser.numero}</p>
-                <p><strong>Nome:</strong> ${currentUser.nome}</p>
-                <p><strong>Telefone:</strong> ${currentUser.telefone}</p>
-                <p><strong>Data de Cadastro:</strong> ${formatarData(currentUser.dataCadastro)}</p>
-                <p><strong>Forma de Pagamento:</strong> ${currentUser.formaPagamento}</p>
-            `;
-            
-            const status = calcularStatusPagamentoDetalhado(currentUser);
-            document.getElementById('associado-info-detail').innerHTML += `
-                <p><strong>Status:</strong> <span class="${status.classe}">${status.texto}</span></p>
-            `;
-            
-            atualizarResumoStatus(currentUser);
-            
-            const contribuicoesHTML = currentUser.contribuicoes?.length > 0 ? 
-                currentUser.contribuicoes
-                    .sort((a, b) => {
-                        const [anoA, mesA] = a.mesReferencia.split('-').map(Number);
-                        const [anoB, mesB] = b.mesReferencia.split('-').map(Number);
-                        if (anoA !== anoB) return anoB - anoA;
-                        return mesB - mesA;
-                    })
-                    .map(contrib => {
+        function obterTodosPagamentos() {
+            const pagamentos = [];
+            associados.forEach(associado => {
+                if (associado.contribuicoes && associado.contribuicoes.length) {
+                    associado.contribuicoes.forEach(contrib => {
                         const [ano, mes] = contrib.mesReferencia.split('-').map(Number);
-                        const dataObj = new Date(ano, mes - 1, 1);
-                        const mesExtenso = dataObj.toLocaleDateString('pt-BR', { month: 'long' });
-                        const observacaoHtml = contrib.observacoes ? `<br><small style="color:#666;">Obs: ${contrib.observacoes}</small>` : '';
-                        return `<div class="payment-item">
-                            <div>
-                                <strong>${mesExtenso} de ${ano}</strong><br>
-                                <small>Pago: ${formatarData(contrib.dataPagamento)}</small>
-                                ${observacaoHtml}
-                            </div>
-                            <div><strong>R$ ${contrib.valor?.toFixed(2) || '0,00'}</strong><br>
-                            <small>${contrib.formaPagamento}</small></div>
-                        </div>`;
-                    }).join('') : '<p>Nenhuma contribuição registrada.</p>';
+                        pagamentos.push({
+                            numero: associado.numero,
+                            nome: associado.nome,
+                            telefone: associado.telefone,
+                            mesReferencia: contrib.mesReferencia,
+                            dataPagamento: contrib.dataPagamento,
+                            dia: new Date(contrib.dataPagamento).getDate(),
+                            mes: mes,
+                            ano: ano,
+                            valor: contrib.valor || 0,
+                            formaPagamento: contrib.formaPagamento,
+                            observacoes: contrib.observacoes || ''
+                        });
+                    });
+                }
+            });
+            return pagamentos.sort((a,b) => new Date(b.dataPagamento) - new Date(a.dataPagamento));
+        }
+        
+        function filtrarPagamentos(pagamentos) {
+            return pagamentos.filter(p => {
+                if (filtroAssociadoPag && p.numero != filtroAssociadoPag) return false;
+                if (filtroAnoPag && p.ano != filtroAnoPag) return false;
+                if (filtroMesPag && p.mes != parseInt(filtroMesPag)) return false;
+                if (filtroFormaPag && p.formaPagamento !== filtroFormaPag) return false;
+                return true;
+            });
+        }
+        
+        function atualizarFiltrosPagamentos() {
+            filtroAssociadoPag = filtroAssociadoPagSelect.value;
+            filtroAnoPag = filtroAnoPagSelect.value;
+            filtroMesPag = filtroMesPagSelect.value;
+            filtroFormaPag = filtroFormaPagSelect.value;
+            atualizarTabelaPagamentos();
+        }
+        
+        function limparFiltrosPagamentos() {
+            filtroAssociadoPagSelect.value = '';
+            filtroAnoPagSelect.value = '';
+            filtroMesPagSelect.value = '';
+            filtroFormaPagSelect.value = '';
+            filtroAssociadoPag = '';
+            filtroAnoPag = '';
+            filtroMesPag = '';
+            filtroFormaPag = '';
+            atualizarTabelaPagamentos();
+        }
+        
+        function popularFiltrosPagamentos() {
+            // Popular select de associados
+            filtroAssociadoPagSelect.innerHTML = '<option value="">Todos os associados</option>' + 
+                associados.map(a => `<option value="${a.numero}">${a.numero} - ${a.nome}</option>`).join('');
             
-            document.getElementById('minhas-contribuicoes-list').innerHTML = contribuicoesHTML;
-            atualizarGradeMesesCompleta(currentUser);
+            // Popular select de anos
+            const anos = new Set();
+            associados.forEach(a => {
+                a.contribuicoes?.forEach(c => {
+                    const ano = c.mesReferencia.split('-')[0];
+                    anos.add(ano);
+                });
+            });
+            const anosOrdenados = Array.from(anos).sort().reverse();
+            filtroAnoPagSelect.innerHTML = '<option value="">Todos os anos</option>' + 
+                anosOrdenados.map(ano => `<option value="${ano}">${ano}</option>`).join('');
         }
         
-        function logout() {
-            currentUser = null;
-            isAdmin = false;
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('isAdmin');
-            mainSystem.style.display = 'none';
-            loginScreen.style.display = 'block';
-            if (intervaloVerificacao) clearInterval(intervaloVerificacao);
-            loginFormAssociado.reset();
-            loginFormAdmin.reset();
-            loginAssociado.style.display = 'none';
-            loginAdmin.style.display = 'none';
+        function atualizarTabelaPagamentos() {
+            const todosPagamentos = obterTodosPagamentos();
+            const pagamentosFiltrados = filtrarPagamentos(todosPagamentos);
+            
+            const totalValor = pagamentosFiltrados.reduce((sum, p) => sum + p.valor, 0);
+            const totalCount = pagamentosFiltrados.length;
+            const media = totalCount > 0 ? totalValor / totalCount : 0;
+            const associadosUnicos = new Set(pagamentosFiltrados.map(p => p.numero)).size;
+            
+            totalPagamentosCount.textContent = totalCount;
+            totalPagamentosValor.textContent = formatarValor(totalValor);
+            mediaPagamento.textContent = formatarValor(media);
+            associadosComPagamentos.textContent = associadosUnicos;
+            
+            if (pagamentosFiltrados.length === 0) {
+                tabelaPagamentosBody.innerHTML = '<tr><td colspan="11" style="text-align:center;">Nenhum pagamento encontrado com os filtros selecionados.</td></tr>';
+                return;
+            }
+            
+            tabelaPagamentosBody.innerHTML = pagamentosFiltrados.map(p => `
+                <tr>
+                    <td>${p.numero}</td>
+                    <td>${p.nome}</td>
+                    <td>${p.telefone}</td>
+                    <td>${formatarMesAno(p.mesReferencia)}</td>
+                    <td>${formatarData(p.dataPagamento)}</td>
+                    <td>${p.dia}</td>
+                    <td>${p.mes}</td>
+                    <td>${p.ano}</td>
+                    <td>${formatarValor(p.valor)}</td>
+                    <td>${p.formaPagamento}</td>
+                    <td>${p.observacoes || '-'}</td>
+                </tr>
+            `).join('');
         }
         
-        // ==================== FUNÇÕES ADMIN ====================
+        function gerarHtmlRelatorioPagamentos() {
+            const todosPagamentos = obterTodosPagamentos();
+            const pagamentosFiltrados = filtrarPagamentos(todosPagamentos);
+            const totalValor = pagamentosFiltrados.reduce((sum, p) => sum + p.valor, 0);
+            const totalCount = pagamentosFiltrados.length;
+            const media = totalCount > 0 ? totalValor / totalCount : 0;
+            const associadosUnicos = new Set(pagamentosFiltrados.map(p => p.numero)).size;
+            const dataGeracao = new Date().toLocaleString('pt-BR');
+            
+            let tituloFiltros = '';
+            if (filtroAssociadoPag) {
+                const associado = associados.find(a => a.numero == filtroAssociadoPag);
+                tituloFiltros += `Associado: ${associado?.nome || filtroAssociadoPag} | `;
+            }
+            if (filtroAnoPag) tituloFiltros += `Ano: ${filtroAnoPag} | `;
+            if (filtroMesPag) tituloFiltros += `Mês: ${filtroMesPag} | `;
+            if (filtroFormaPag) tituloFiltros += `Forma: ${filtroFormaPag} | `;
+            if (!tituloFiltros) tituloFiltros = 'Todos os pagamentos';
+            else tituloFiltros = tituloFiltros.slice(0, -3);
+            
+            let html = `
+                <!DOCTYPE html>
+                <html>
+                <head><meta charset="UTF-8"><title>Relatório de Pagamentos - ${tituloFiltros}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 40px; }
+                    h1 { color: #2c3e50; text-align: center; }
+                    .header { text-align: center; margin-bottom: 30px; }
+                    .info { margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; }
+                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+                    th { background-color: #3498db; color: white; }
+                    .total { font-weight: bold; font-size: 1.2em; margin-top: 20px; }
+                    .stats { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
+                    .stat-box { background: #ecf0f1; padding: 15px; border-radius: 8px; flex: 1; text-align: center; }
+                    .stat-value { font-size: 1.8rem; font-weight: bold; color: #2c3e50; }
+                </style>
+                </head>
+                <body>
+                <div class="header"><h1>Relatório de Pagamentos - Mensalidades</h1><p>Gerado em: ${dataGeracao}</p><p><strong>Filtros:</strong> ${tituloFiltros}</p></div>
+                <div class="stats">
+                    <div class="stat-box"><div class="stat-value">${totalCount}</div><div>Total de Pagamentos</div></div>
+                    <div class="stat-box"><div class="stat-value">${formatarValor(totalValor)}</div><div>Valor Total Arrecadado</div></div>
+                    <div class="stat-box"><div class="stat-value">${formatarValor(media)}</div><div>Valor Médio por Pagamento</div></div>
+                    <div class="stat-box"><div class="stat-value">${associadosUnicos}</div><div>Associados que Pagaram</div></div>
+                </div>
+                <table>
+                    <thead><tr><th>Nº</th><th>Associado</th><th>Telefone</th><th>Mês Referência</th><th>Data Pagamento</th><th>Dia</th><th>Mês</th><th>Ano</th><th>Valor</th><th>Forma Pagamento</th><th>Observações</th></tr></thead>
+                    <tbody>
+                        ${pagamentosFiltrados.length ? pagamentosFiltrados.map(p => `
+                            <tr>
+                                <td>${p.numero}</td>
+                                <td>${p.nome}</td>
+                                <td>${p.telefone}</td>
+                                <td>${formatarMesAno(p.mesReferencia)}</td>
+                                <td>${formatarData(p.dataPagamento)}</td>
+                                <td>${p.dia}</td>
+                                <td>${p.mes}</td>
+                                <td>${p.ano}</td>
+                                <td>${formatarValor(p.valor)}</td>
+                                <td>${p.formaPagamento}</td>
+                                <td>${p.observacoes || '-'}</td>
+                            </tr>
+                        `).join('') : '<tr><td colspan="11" style="text-align:center;">Nenhum pagamento encontrado</td></tr>'}
+                    </tbody>
+                </table>
+                <div class="total">Total de Registros: ${totalCount}</div>
+                </body></html>
+            `;
+            return html;
+        }
+        
+        function exportarPagamentosPDF() {
+            const htmlContent = gerarHtmlRelatorioPagamentos();
+            const iframe = document.createElement('iframe');
+            iframe.style.position = 'absolute';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = 'none';
+            document.body.appendChild(iframe);
+            const iframeDoc = iframe.contentWindow.document;
+            iframeDoc.open();
+            iframeDoc.write(htmlContent);
+            iframeDoc.close();
+            iframe.onload = () => {
+                iframe.contentWindow.print();
+                setTimeout(() => document.body.removeChild(iframe), 1000);
+            };
+        }
+        
+        function exportarPagamentosWord() {
+            const htmlContent = gerarHtmlRelatorioPagamentos();
+            const blob = new Blob([htmlContent], { type: 'application/msword' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = `relatorio_pagamentos_${new Date().toISOString().slice(0,19)}.doc`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('Relatório de pagamentos exportado para Word!');
+        }
+        
+        function exportarPagamentosExcel() {
+            const todosPagamentos = obterTodosPagamentos();
+            const pagamentosFiltrados = filtrarPagamentos(todosPagamentos);
+            let csv = "Nº;Associado;Telefone;Mês Referência;Data Pagamento;Dia;Mês;Ano;Valor (R$);Forma Pagamento;Observações\n";
+            pagamentosFiltrados.forEach(p => {
+                csv += `"${p.numero}";"${p.nome}";"${p.telefone}";"${formatarMesAno(p.mesReferencia)}";"${formatarData(p.dataPagamento)}";${p.dia};${p.mes};${p.ano};${p.valor.toFixed(2)};"${p.formaPagamento}";"${p.observacoes || ''}"\n`;
+            });
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = `relatorio_pagamentos_${new Date().toISOString().slice(0,19)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('Relatório de pagamentos exportado para Excel!');
+        }
+        
+        // ==================== FUNÇÕES ADMIN EXISTENTES ====================
+        
         async function cadastrarAssociado(e) {
             e.preventDefault();
             const novoAssociado = {
@@ -2031,32 +1453,17 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                 atualizarListaPendentes();
                 popularSelectMeses();
                 atualizarRelatorios();
+                popularFiltrosPagamentos();
             }
         }
         
-        // NOVA FUNÇÃO: Excluir associado e renumerar
         async function excluirAssociado(numero) {
-            if (!confirm(`Tem certeza que deseja excluir o associado de número ${numero}? Esta ação não pode ser desfeita.`)) return;
-            
+            if (!confirm(`Tem certeza que deseja excluir o associado de número ${numero}?`)) return;
             const index = associados.findIndex(a => a.numero === numero);
             if (index === -1) return;
-            
-            // Remover o associado
             associados.splice(index, 1);
-            
-            // Renumerar todos os associados restantes (ordenar por número atual)
             associados.sort((a,b) => a.numero - b.numero);
-            for (let i = 0; i < associados.length; i++) {
-                associados[i].numero = i + 1;
-            }
-            
-            // Atualizar referências nas mensagens agendadas (os números dos associados podem ter mudado)
-            scheduledMessages.forEach(msg => {
-                // Mapear números antigos para novos? Como não guardamos histórico, vamos apenas manter os números que existem.
-                // Os números que foram removidos simplesmente deixam de existir.
-                msg.associados = msg.associados.filter(num => associados.some(a => a.numero === num));
-            });
-            
+            for (let i = 0; i < associados.length; i++) associados[i].numero = i + 1;
             if (await salvarDados()) {
                 showToast('Associado excluído e números reorganizados!');
                 atualizarSeletorAssociados();
@@ -2064,43 +1471,28 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                 atualizarListaPendentes();
                 popularSelectMeses();
                 atualizarRelatorios();
-            } else {
-                showToast('Erro ao excluir. Tente novamente.', 'error');
+                popularFiltrosPagamentos();
+                atualizarTabelaPagamentos();
             }
         }
         
         function atualizarListaAssociados() {
             const searchTerm = searchInput.value.toLowerCase();
             let filtrados = searchTerm ? associados.filter(a => a.nome.toLowerCase().includes(searchTerm) || a.numero.toString().includes(searchTerm)) : associados;
-            
             const totalPages = Math.ceil(filtrados.length / itemsPerPage);
             if (currentPage > totalPages) currentPage = totalPages || 1;
-            
             const start = (currentPage - 1) * itemsPerPage;
             const pagina = filtrados.slice(start, start + itemsPerPage);
-            
             associadosList.innerHTML = pagina.length ? pagina.map(a => {
                 const status = calcularStatusPagamento(a);
-                return `<tr>
-                    <td>${a.numero}</td><td>${a.nome}</td><td>${a.telefone}</td>
-                    <td>${formatarData(a.dataCadastro)}</td><td>${a.formaPagamento}</td>
-                    <td class="${status.classe}">${status.texto}</td>
-                    <td>
-                        <button class="whatsapp-btn" onclick="enviarMensagemIndividual(${a.numero})">📱</button>
-                        <button class="btn-success" onclick="irParaContribuicoes(${a.numero})">💰</button>
-                        <button class="btn-warning" onclick="editarAssociado(${a.numero})">✏️</button>
-                        <button class="btn-danger" onclick="excluirAssociado(${a.numero})">🗑️</button>
-                    </td>
-                </tr>`;
+                return `<tr><td>${a.numero}</td><td>${a.nome}</td><td>${a.telefone}</td><td>${formatarData(a.dataCadastro)}</td><td>${a.formaPagamento}</td><td class="${status.classe}">${status.texto}</td><td><button class="whatsapp-btn" onclick="enviarMensagemIndividual(${a.numero})">📱</button><button class="btn-success" onclick="irParaContribuicoes(${a.numero})">💰</button><button class="btn-warning" onclick="editarAssociado(${a.numero})">✏️</button><button class="btn-danger" onclick="excluirAssociado(${a.numero})">🗑️</button></td></tr>`;
             }).join('') : '<tr><td colspan="7" style="text-align:center;">Nenhum associado encontrado</td></tr>';
-            
             atualizarPaginacao(totalPages);
         }
         
         function atualizarSeletorAssociados() {
-            if (!associadoSelect) return;
-            associadoSelect.innerHTML = '<option value="">Selecione...</option>' + 
-                associados.map(a => `<option value="${a.numero}">${a.numero} - ${a.nome}</option>`).join('');
+            if (associadoSelect) associadoSelect.innerHTML = '<option value="">Selecione...</option>' + associados.map(a => `<option value="${a.numero}">${a.numero} - ${a.nome}</option>`).join('');
+            popularFiltrosPagamentos();
         }
         
         function selecionarAssociado() {
@@ -2108,17 +1500,11 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
             if (!numero) { associadoInfo.style.display = 'none'; selectedAssociado = null; return; }
             selectedAssociado = associados.find(a => a.numero === numero);
             if (!selectedAssociado) return;
-            
             document.getElementById('info-nome').textContent = selectedAssociado.nome;
             document.getElementById('info-numero').textContent = selectedAssociado.numero;
             document.getElementById('info-telefone').textContent = selectedAssociado.telefone;
             document.getElementById('info-data-cadastro').textContent = formatarData(selectedAssociado.dataCadastro);
-            
-            paymentHistory.innerHTML = selectedAssociado.contribuicoes?.length 
-                ? selectedAssociado.contribuicoes.sort((a,b)=>new Date(b.dataPagamento)-new Date(a.dataPagamento))
-                    .map(c => `<div class="payment-item"><div><strong>${formatarMesAno(c.mesReferencia)}</strong><br><small>${formatarData(c.dataPagamento)}</small><br><small>Obs: ${c.observacoes || '-'}</small></div><div><strong>R$ ${c.valor.toFixed(2)}</strong><br><small>${c.formaPagamento}</small></div></div>`).join('')
-                : '<p>Nenhuma contribuição</p>';
-            
+            paymentHistory.innerHTML = selectedAssociado.contribuicoes?.length ? selectedAssociado.contribuicoes.sort((a,b)=>new Date(b.dataPagamento)-new Date(a.dataPagamento)).map(c => `<div class="payment-item"><div><strong>${formatarMesAno(c.mesReferencia)}</strong><br><small>${formatarData(c.dataPagamento)}</small><br><small>Obs: ${c.observacoes || '-'}</small></div><div><strong>R$ ${c.valor.toFixed(2)}</strong><br><small>${c.formaPagamento}</small></div></div>`).join('') : '<p>Nenhuma contribuição</p>';
             document.getElementById('forma-pagamento-contrib').value = selectedAssociado.formaPagamento;
             associadoInfo.style.display = 'block';
         }
@@ -2126,7 +1512,6 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         async function registrarContribuicao(e) {
             e.preventDefault();
             if (!selectedAssociado) return alert('Selecione um associado');
-            
             const contrib = {
                 mesReferencia: document.getElementById('mes-referencia').value,
                 dataPagamento: document.getElementById('data-pagamento').value,
@@ -2135,18 +1520,17 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                 observacoes: document.getElementById('observacoes').value,
                 dataRegistro: new Date().toISOString().split('T')[0]
             };
-            
             selectedAssociado.contribuicoes = selectedAssociado.contribuicoes.filter(c => c.mesReferencia !== contrib.mesReferencia);
             selectedAssociado.contribuicoes.push(contrib);
-            
             if (await salvarDados()) {
                 selecionarAssociado();
                 atualizarListaAssociados();
                 atualizarListaPendentes();
                 popularSelectMeses();
                 atualizarRelatorios();
+                popularFiltrosPagamentos();
+                atualizarTabelaPagamentos();
                 contribuicaoForm.reset();
-                document.getElementById('forma-pagamento-contrib').value = selectedAssociado.formaPagamento;
                 showToast('Contribuição registrada!');
             }
         }
@@ -2154,55 +1538,20 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
         function atualizarListaPendentes() {
             if (!pendentesList) return;
             associadosPendentes = associados.filter(a => calcularStatusPagamento(a).mesesPendentes > 0);
-            
-            pendentesList.innerHTML = associadosPendentes.length 
-                ? associadosPendentes.map(a => {
-                    const status = calcularStatusPagamento(a);
-                    return `<div class="card" style="margin-bottom:10px;"><div style="display:flex; justify-content:space-between; align-items:center;">
-                        <div><h3>${a.nome}</h3><p>Nº: ${a.numero} | Tel: ${a.telefone}</p><p class="${status.classe}">${status.texto}</p></div>
-                        <button class="whatsapp-btn" onclick="enviarMensagemIndividual(${a.numero})">📱 Enviar</button>
-                    </div></div>`;
-                }).join('') : '<p>Nenhum pendente</p>';
-            
+            pendentesList.innerHTML = associadosPendentes.length ? associadosPendentes.map(a => {
+                const status = calcularStatusPagamento(a);
+                return `<div class="card" style="margin-bottom:10px;"><div style="display:flex; justify-content:space-between; align-items:center;"><div><h3>${a.nome}</h3><p>Nº: ${a.numero} | Tel: ${a.telefone}</p><p class="${status.classe}">${status.texto}</p></div><button class="whatsapp-btn" onclick="enviarMensagemIndividual(${a.numero})">📱 Enviar</button></div></div>`;
+            }).join('') : '<p>Nenhum pendente</p>';
             if (enviarTodosBtn) enviarTodosBtn.style.display = associadosPendentes.length ? 'inline-block' : 'none';
-            if (gerarListaBtn) gerarListaBtn.style.display = associadosPendentes.length ? 'inline-block' : 'none';
-        }
-        
-        function atualizarListaMensagensAgendadas() {
-            if (!listaMensagensAgendadas) return;
-            listaMensagensAgendadas.innerHTML = '';
-            if (!scheduledMessages.length) { mensagensAgendadasContainer.style.display = 'none'; return; }
-            
-            mensagensAgendadasContainer.style.display = 'block';
-            scheduledMessages.sort((a,b)=>new Date(a.data)-new Date(b.data)).forEach((m,i)=>{
-                listaMensagensAgendadas.innerHTML += `<div class="mensagem-agendada">
-                    <div style="display:flex; justify-content:space-between;">
-                        <div><strong>${formatarDataHora(m.data)}</strong><br><small>${m.associados.length} associados | ${m.tipo}</small></div>
-                        <button class="btn-danger" onclick="cancelarMensagemAgendada(${i})">❌</button>
-                    </div>
-                    <div style="margin-top:5px; font-size:12px;">${m.mensagem.substring(0,50)}...</div>
-                </div>`;
-            });
-        }
-        
-        async function cancelarMensagemAgendada(index) {
-            if (!confirm('Cancelar esta mensagem?')) return;
-            scheduledMessages.splice(index, 1);
-            if (await salvarDados()) {
-                atualizarListaMensagensAgendadas();
-                showToast('Mensagem cancelada');
-            }
         }
         
         function atualizarPaginacao(totalPages) {
             if (!pagination || totalPages <= 1) { pagination.innerHTML = ''; return; }
             pagination.innerHTML = '';
-            
             const prev = document.createElement('button');
             prev.className = 'page-btn'; prev.textContent = '«'; prev.disabled = currentPage === 1;
             prev.addEventListener('click', () => { if (currentPage > 1) { currentPage--; atualizarListaAssociados(); } });
             pagination.appendChild(prev);
-            
             for (let i = 1; i <= totalPages; i++) {
                 const btn = document.createElement('button');
                 btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
@@ -2210,310 +1559,28 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                 btn.addEventListener('click', () => { currentPage = i; atualizarListaAssociados(); });
                 pagination.appendChild(btn);
             }
-            
             const next = document.createElement('button');
             next.className = 'page-btn'; next.textContent = '»'; next.disabled = currentPage === totalPages;
             next.addEventListener('click', () => { if (currentPage < totalPages) { currentPage++; atualizarListaAssociados(); } });
             pagination.appendChild(next);
         }
         
-        // Funções de envio
-        function gerarListaNumeros() {
-            if (!associadosPendentes.length) return alert('Sem pendentes');
-            numerosList.innerHTML = associadosPendentes.map(a => `<div class="numero-item">${a.nome} - ${a.telefone}</div>`).join('');
-            numerosContainer.style.display = 'block';
-            linksContainer.style.display = 'none';
-            qrcodeContainer.style.display = 'none';
-            numerosContainer.scrollIntoView({ behavior: 'smooth' });
-        }
-        
-        function copiarNumeros() {
-            const texto = associadosPendentes.map(a => a.telefone.replace(/\D/g, '')).join('\n');
-            navigator.clipboard.writeText(texto).then(() => showToast('Números copiados!')).catch(() => alert('Copie manualmente: ' + texto));
-        }
-        
-        function gerarLinks() {
-            if (!associadosPendentes.length) return alert('Sem pendentes');
-            const dispositivo = getDispositivoSelecionado();
-            linksList.innerHTML = associadosPendentes.map(a => {
-                const link = gerarLinkWhatsApp(a.telefone, mensagemTemplate.value, a.nome);
-                return `<div class="numero-item"><a href="${link}" target="_blank" style="word-break:break-all;">${a.nome}: ${link}</a></div>`;
-            }).join('');
-            linksContainer.style.display = 'block';
-            qrcodeContainer.style.display = dispositivo === 'mobile' ? 'block' : 'none';
-            gerarQRCodeParaPrimeiro();
-        }
-        
-        function gerarQRCodeParaPrimeiro() {
-            if (!associadosPendentes.length || !qrcodeContainer) return;
-            qrcodePlaceholder.innerHTML = '<p style="color:#666;">Para gerar QR Code, é necessário instalar uma biblioteca como qrcode-generator.<br>Use os links acima no celular.</p>';
-        }
-        
-        function iniciarEnvioMensagens() {
-            if (!associadosPendentes.length) return alert('Sem pendentes');
-            
-            const tipo = document.querySelector('input[name="tipo-envio"]:checked').value;
-            const data = dataProgramada.value;
-            const dispositivo = getDispositivoSelecionado();
-            
-            if (data) {
-                const dataObj = new Date(data);
-                const agora = new Date();
-                if (dataObj < agora) return alert('A data programada não pode ser no passado.');
-                
-                scheduledMessages.push({
-                    data: dataObj.toISOString(),
-                    associados: associadosPendentes.map(a => a.numero),
-                    mensagem: mensagemTemplate.value,
-                    tipo: tipo,
-                    dispositivo: dispositivo
-                });
-                salvarDados().then(() => {
-                    atualizarListaMensagensAgendadas();
-                    showToast(`Mensagem programada para ${formatarDataHora(dataObj)}`);
-                });
-            } else {
-                if (tipo === 'automatico') iniciarEnvioAutomatico();
-                else gerarListaNumeros();
-            }
-        }
-        
-        function iniciarEnvioAutomatico() {
-            if (envioEmAndamento) {
-                if (confirm('Cancelar envio em andamento?')) cancelarEnvioAutomatico();
-                return;
-            }
-            if (!confirm(`Enviar para ${associadosPendentes.length} associados?`)) return;
-            
-            envioEmAndamento = true;
-            indiceEnvioAtual = 0;
-            contadorEnvio.style.display = 'block';
-            progressContainer.style.display = 'block';
-            enviarTexto.textContent = 'Enviando...';
-            enviarLoading.style.display = 'inline-block';
-            enviarTodosBtn.disabled = true;
-            
-            enviarProximaMensagem();
-        }
-        
-        function enviarProximaMensagem() {
-            if (indiceEnvioAtual >= associadosPendentes.length) { finalizarEnvio(); return; }
-            const a = associadosPendentes[indiceEnvioAtual];
-            const dispositivo = getDispositivoSelecionado();
-            
-            contadorTexto.textContent = `Enviando ${indiceEnvioAtual + 1}/${associadosPendentes.length}: ${a.nome}`;
-            const progresso = Math.round((indiceEnvioAtual / associadosPendentes.length) * 100);
-            progressBar.style.width = `${progresso}%`;
-            progressText.textContent = `${progresso}%`;
-            
-            setTimeout(() => {
-                if (dispositivo === 'mobile') {
-                    window.location.href = gerarLinkWhatsApp(a.telefone, mensagemTemplate.value, a.nome);
-                } else {
-                    window.open(gerarLinkWhatsApp(a.telefone, mensagemTemplate.value, a.nome), `wpp_${indiceEnvioAtual}`);
-                }
-                indiceEnvioAtual++;
-                if (indiceEnvioAtual < associadosPendentes.length) {
-                    intervaloEnvio = setTimeout(enviarProximaMensagem, 5000);
-                } else {
-                    setTimeout(finalizarEnvio, 5000);
-                }
-            }, 1000);
-        }
-        
-        function finalizarEnvio() {
-            envioEmAndamento = false;
-            clearTimeout(intervaloEnvio);
-            contadorTexto.textContent = `Envio concluído! ${associadosPendentes.length} mensagens.`;
-            progressBar.style.width = '100%';
-            progressText.textContent = '100%';
-            
-            setTimeout(() => {
-                enviarTodosBtn.disabled = false;
-                enviarTexto.textContent = '📱 Enviar Mensagens';
-                enviarLoading.style.display = 'none';
-                setTimeout(() => { contadorEnvio.style.display = 'none'; progressContainer.style.display = 'none'; }, 3000);
-            }, 2000);
-            
-            showToast('Envio concluído!');
-        }
-        
-        function cancelarEnvioAutomatico() {
-            envioEmAndamento = false;
-            clearTimeout(intervaloEnvio);
-            enviarTodosBtn.disabled = false;
-            enviarTexto.textContent = '📱 Enviar Mensagens';
-            enviarLoading.style.display = 'none';
-            contadorEnvio.style.display = 'none';
-            progressContainer.style.display = 'none';
-        }
-        
-        async function verificarMensagensAgendadas() {
-            const agora = new Date();
-            let enviadas = false;
-            
-            for (let i = scheduledMessages.length - 1; i >= 0; i--) {
-                const m = scheduledMessages[i];
-                if (new Date(m.data) <= agora) {
-                    const associadosEnviar = associados.filter(a => m.associados.includes(a.numero));
-                    if (associadosEnviar.length) {
-                        if (m.tipo === 'automatico') {
-                            let idx = 0;
-                            const enviar = () => {
-                                if (idx >= associadosEnviar.length) return;
-                                const a = associadosEnviar[idx];
-                                if (m.dispositivo === 'mobile') {
-                                    window.location.href = gerarLinkWhatsApp(a.telefone, m.mensagem, a.nome);
-                                } else {
-                                    window.open(gerarLinkWhatsApp(a.telefone, m.mensagem, a.nome), '_blank');
-                                }
-                                idx++;
-                                if (idx < associadosEnviar.length) setTimeout(enviar, 5000);
-                            };
-                            enviar();
-                        } else {
-                            showToast(`${associadosEnviar.length} mensagens manuais agendadas. Gere a lista.`);
-                        }
-                        scheduledMessages.splice(i, 1);
-                        enviadas = true;
-                    }
-                }
-            }
-            if (enviadas) {
-                await salvarDados();
-                atualizarListaMensagensAgendadas();
-            }
-        }
-        
-        function irParaContribuicoes(num) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelector('.tab[data-tab="contribuicoes"]').classList.add('active');
-            document.getElementById('contribuicoes-tab').classList.add('active');
-            atualizarSeletorAssociados();
-            associadoSelect.value = num;
-            selecionarAssociado();
-            
-            const hoje = new Date();
-            document.getElementById('mes-referencia').value = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
-            document.getElementById('data-pagamento').valueAsDate = hoje;
-        }
-        
-        // Funções de edição de associado
-        function editarAssociado(num) {
-            associadoEditando = associados.find(a => a.numero === num);
-            if (!associadoEditando) return;
-            
-            document.getElementById('editar-nome').value = associadoEditando.nome;
-            document.getElementById('editar-data-cadastro').value = associadoEditando.dataCadastro;
-            document.getElementById('editar-forma-pagamento').value = associadoEditando.formaPagamento;
-            document.getElementById('editar-telefone').value = associadoEditando.telefone;
-            atualizarListaContribuicoesEdicao();
-            modalEditar.style.display = 'flex';
-        }
-        
-        function atualizarListaContribuicoesEdicao() {
-            if (!contribuicoesLista || !associadoEditando) return;
-            contribuicoesLista.innerHTML = associadoEditando.contribuicoes?.length 
-                ? associadoEditando.contribuicoes.sort((a,b)=>new Date(b.mesReferencia)-new Date(a.mesReferencia))
-                    .map((c,i)=>`<div class="payment-item"><input type="checkbox" class="contrib-checkbox" data-index="${i}"> ${formatarMesAno(c.mesReferencia)} - R$ ${c.valor.toFixed(2)} - Obs: ${c.observacoes || '-'}</div>`).join('')
-                : '<p>Nenhuma contribuição</p>';
-        }
-        
-        async function salvarEdicaoAssociado(e) {
-            e.preventDefault();
-            if (!associadoEditando) return;
-            
-            associadoEditando.nome = document.getElementById('editar-nome').value;
-            associadoEditando.dataCadastro = document.getElementById('editar-data-cadastro').value;
-            associadoEditando.formaPagamento = document.getElementById('editar-forma-pagamento').value;
-            associadoEditando.telefone = document.getElementById('editar-telefone').value;
-            
-            if (await salvarDados()) {
-                modalEditar.style.display = 'none';
-                atualizarListaAssociados();
-                atualizarSeletorAssociados();
-                popularSelectMeses();
-                atualizarRelatorios();
-                showToast('Associado atualizado!');
-            }
-        }
-        
-        function abrirModalContribuicao() {
-            if (!associadoEditando) return;
-            formNovaContribuicao.reset();
-            const hoje = new Date();
-            document.getElementById('nova-data-pagamento').valueAsDate = hoje;
-            document.getElementById('nova-mes-referencia').value = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
-            modalContribuicao.style.display = 'flex';
-        }
-        
-        async function adicionarNovaContribuicao(e) {
-            e.preventDefault();
-            if (!associadoEditando) return;
-            
-            const contrib = {
-                mesReferencia: document.getElementById('nova-mes-referencia').value,
-                dataPagamento: document.getElementById('nova-data-pagamento').value,
-                formaPagamento: document.getElementById('nova-forma-pagamento').value,
-                valor: parseFloat(document.getElementById('nova-valor').value),
-                observacoes: document.getElementById('nova-observacoes').value
-            };
-            
-            associadoEditando.contribuicoes = associadoEditando.contribuicoes.filter(c => c.mesReferencia !== contrib.mesReferencia);
-            associadoEditando.contribuicoes.push(contrib);
-            
-            if (await salvarDados()) {
-                atualizarListaContribuicoesEdicao();
-                modalContribuicao.style.display = 'none';
-                showToast('Contribuição adicionada!');
-            }
-        }
-        
-        async function removerContribuicoesSelecionadas() {
-            if (!associadoEditando) return;
-            const checkboxes = document.querySelectorAll('.contrib-checkbox:checked');
-            if (!checkboxes.length) return alert('Selecione contribuições');
-            if (!confirm(`Remover ${checkboxes.length} contribuições?`)) return;
-            
-            const indices = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index)).sort((a,b)=>b-a);
-            indices.forEach(i => associadoEditando.contribuicoes.splice(i, 1));
-            
-            if (await salvarDados()) {
-                atualizarListaContribuicoesEdicao();
-                showToast('Contribuições removidas!');
-            }
-        }
-        
-        // ==================== FUNÇÕES DE RELATÓRIOS ====================
-        
         function popularSelectMeses() {
             if (!mesRelatorio) return;
             const mesesSet = new Set();
-            associados.forEach(associado => {
-                associado.contribuicoes?.forEach(contrib => {
-                    mesesSet.add(contrib.mesReferencia);
-                });
-            });
+            associados.forEach(associado => { associado.contribuicoes?.forEach(contrib => mesesSet.add(contrib.mesReferencia)); });
             const mesesOrdenados = Array.from(mesesSet).sort().reverse();
-            
             let options = '<option value="">Todos os meses</option>';
-            mesesOrdenados.forEach(mes => {
-                const [ano, mesNum] = mes.split('-');
-                const nomeMes = new Date(ano, parseInt(mesNum)-1, 1).toLocaleDateString('pt-BR', { month: 'long' });
-                options += `<option value="${mes}">${nomeMes} de ${ano}</option>`;
-            });
+            mesesOrdenados.forEach(mes => { const [ano, mesNum] = mes.split('-'); const nomeMes = new Date(ano, parseInt(mesNum)-1, 1).toLocaleDateString('pt-BR', { month: 'long' }); options += `<option value="${mes}">${nomeMes} de ${ano}</option>`; });
             mesRelatorio.innerHTML = options;
         }
         
         function getDadosRelatorio() {
             const mesFiltro = mesRelatorio.value;
-            let totalPeriodo = 0;
-            let qtdPeriodo = 0;
+            let totalPeriodo = 0, qtdPeriodo = 0;
             const formas = {};
-            const arrecadacaoPorMes = new Map(); // chave: mesAno, valor: {total, qtd}
+            const arrecadacaoPorMes = new Map();
             let totalGeral = 0;
-            
             associados.forEach(associado => {
                 associado.contribuicoes?.forEach(contrib => {
                     totalGeral += contrib.valor || 0;
@@ -2524,330 +1591,204 @@ Para mais informações acesse o link para conferir os meses pendentes: https://
                         if (!formas[forma]) formas[forma] = { qtd: 0, valor: 0 };
                         formas[forma].qtd++;
                         formas[forma].valor += contrib.valor || 0;
-                        
-                        // Agrupar por mês/ano
-                        if (!arrecadacaoPorMes.has(contrib.mesReferencia)) {
-                            arrecadacaoPorMes.set(contrib.mesReferencia, { total: 0, qtd: 0 });
-                        }
+                        if (!arrecadacaoPorMes.has(contrib.mesReferencia)) arrecadacaoPorMes.set(contrib.mesReferencia, { total: 0, qtd: 0 });
                         const mesData = arrecadacaoPorMes.get(contrib.mesReferencia);
                         mesData.total += contrib.valor || 0;
                         mesData.qtd++;
                     }
                 });
             });
-            
-            // Ordenar meses do mais recente para o mais antigo
             const mesesOrdenados = Array.from(arrecadacaoPorMes.keys()).sort().reverse();
-            const arrecadacaoMeses = mesesOrdenados.map(mes => ({
-                mes: mes,
-                total: arrecadacaoPorMes.get(mes).total,
-                qtd: arrecadacaoPorMes.get(mes).qtd,
-                media: arrecadacaoPorMes.get(mes).qtd > 0 ? arrecadacaoPorMes.get(mes).total / arrecadacaoPorMes.get(mes).qtd : 0
-            }));
-            
+            const arrecadacaoMeses = mesesOrdenados.map(mes => ({ mes: mes, total: arrecadacaoPorMes.get(mes).total, qtd: arrecadacaoPorMes.get(mes).qtd, media: arrecadacaoPorMes.get(mes).qtd > 0 ? arrecadacaoPorMes.get(mes).total / arrecadacaoPorMes.get(mes).qtd : 0 }));
             return { totalPeriodo, qtdPeriodo, formas, arrecadacaoMeses, totalGeral };
         }
         
         function atualizarRelatorios() {
             const { totalPeriodo, qtdPeriodo, formas, arrecadacaoMeses, totalGeral } = getDadosRelatorio();
-            
             arrecadacaoMes.textContent = `R$ ${totalPeriodo.toFixed(2)}`;
             arrecadacaoTotal.textContent = `R$ ${totalGeral.toFixed(2)}`;
             associadosAtivos.textContent = associados.length;
             pagamentosMes.textContent = qtdPeriodo;
-            
-            relatorioFormasPagamentoBody.innerHTML = Object.keys(formas).length
-                ? Object.entries(formas).map(([f,d]) => `<tr><td>${f}</td><td>${d.qtd}</td><td>R$ ${d.valor.toFixed(2)}</td>`).join('')
-                : '<tr><td colspan="3" style="text-align:center;">Sem dados</td></tr>';
-            
-            // Tabela de arrecadação por mês
-            relatorioArrecadacaoMesesBody.innerHTML = arrecadacaoMeses.length
-                ? arrecadacaoMeses.map(m => `<tr>
-                    <td>${formatarMesAno(m.mes)}</td>
-                    <td>R$ ${m.total.toFixed(2)}</td>
-                    <td>${m.qtd}</td>
-                    <td>R$ ${m.media.toFixed(2)}</td>
-                </tr>`).join('')
-                : '<tr><td colspan="4" style="text-align:center;">Nenhuma contribuição no período</td></tr>';
+            relatorioFormasPagamentoBody.innerHTML = Object.keys(formas).length ? Object.entries(formas).map(([f,d]) => `<tr><td>${f}</td><td>${d.qtd}</td><td>R$ ${d.valor.toFixed(2)}</td></tr>`).join('') : '<tr><td colspan="3" style="text-align:center;">Sem dados</td></tr>';
+            relatorioArrecadacaoMesesBody.innerHTML = arrecadacaoMeses.length ? arrecadacaoMeses.map(m => `<tr><td>${formatarMesAno(m.mes)}</td><td>R$ ${m.total.toFixed(2)}</td><td>${m.qtd}</td><td>R$ ${m.media.toFixed(2)}</td></tr>`).join('') : '<tr><td colspan="4" style="text-align:center;">Nenhuma contribuição no período</td></tr>';
         }
         
-        function gerarHtmlRelatorio() {
-            const { totalPeriodo, qtdPeriodo, formas, arrecadacaoMeses, totalGeral } = getDadosRelatorio();
-            const mesFiltro = mesRelatorio.value;
-            const titulo = mesFiltro ? `Relatório - ${formatarMesAno(mesFiltro)}` : 'Relatório Geral - Todos os meses';
-            const dataGeracao = new Date().toLocaleString('pt-BR');
-            
-            let html = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="UTF-8">
-                    <title>${titulo}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; margin: 40px; }
-                        h1 { color: #2c3e50; }
-                        .header { text-align: center; margin-bottom: 30px; }
-                        .info { margin-bottom: 20px; }
-                        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-                        th { background-color: #3498db; color: white; }
-                        .total { font-weight: bold; font-size: 1.2em; margin-top: 20px; }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>${titulo}</h1>
-                        <p>Gerado em: ${dataGeracao}</p>
-                    </div>
-                    <div class="info">
-                        <p><strong>Arrecadação no período:</strong> R$ ${totalPeriodo.toFixed(2)}</p>
-                        <p><strong>Arrecadação total (histórico):</strong> R$ ${totalGeral.toFixed(2)}</p>
-                        <p><strong>Associados ativos:</strong> ${associados.length}</p>
-                        <p><strong>Pagamentos no período:</strong> ${qtdPeriodo}</p>
-                    </div>
-                    
-                    <h2>Detalhamento por Forma de Pagamento</h2>
-                    <table>
-                        <thead><tr><th>Forma</th><th>Quantidade</th><th>Valor Total</th></tr></thead>
-                        <tbody>
-                            ${Object.keys(formas).length ? Object.entries(formas).map(([f,d]) => `<tr><td>${f}</td><td>${d.qtd}</td><td>R$ ${d.valor.toFixed(2)}</td></tr>`).join('') : '<tr><td colspan="3">Nenhum dado</td></tr>'}
-                        </tbody>
-                    </table>
-                    
-                    <h2>Arrecadação por Mês</h2>
-                    <table>
-                        <thead><tr><th>Mês/Ano</th><th>Total Arrecadado</th><th>Quantidade</th><th>Média por Pagamento</th></tr></thead>
-                        <tbody>
-                            ${arrecadacaoMeses.length ? arrecadacaoMeses.map(m => `<tr><td>${formatarMesAno(m.mes)}</td><td>R$ ${m.total.toFixed(2)}</td><td>${m.qtd}</td><td>R$ ${m.media.toFixed(2)}</td></tr>`).join('') : '<tr><td colspan="4">Nenhuma contribuição no período</td></tr>'}
-                        </tbody>
-                    </table>
-                </body>
-                </html>
-            `;
-            return html;
+        function exportarPDF() { const html = gerarHtmlRelatorioPagamentos(); const iframe = document.createElement('iframe'); iframe.style.position = 'absolute'; iframe.style.width = '0'; iframe.style.height = '0'; document.body.appendChild(iframe); const doc = iframe.contentWindow.document; doc.open(); doc.write(html); doc.close(); iframe.onload = () => { iframe.contentWindow.print(); setTimeout(() => document.body.removeChild(iframe), 1000); }; }
+        function exportarWord() { const html = gerarHtmlRelatorioPagamentos(); const blob = new Blob([html], { type: 'application/msword' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `relatorio_pagamentos.doc`; link.click(); URL.revokeObjectURL(link.href); showToast('Relatório exportado para Word!'); }
+        function exportarExcel() { const pagamentos = obterTodosPagamentos(); const filtrados = filtrarPagamentos(pagamentos); let csv = "Nº;Associado;Telefone;Mês Referência;Data Pagamento;Dia;Mês;Ano;Valor (R$);Forma Pagamento;Observações\n"; filtrados.forEach(p => { csv += `"${p.numero}";"${p.nome}";"${p.telefone}";"${formatarMesAno(p.mesReferencia)}";"${formatarData(p.dataPagamento)}";${p.dia};${p.mes};${p.ano};${p.valor.toFixed(2)};"${p.formaPagamento}";"${p.observacoes || ''}"\n`; }); const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `relatorio_pagamentos.csv`; link.click(); URL.revokeObjectURL(link.href); showToast('Relatório exportado para Excel!'); }
+        
+        function gerarListaNumeros() { if (!associadosPendentes.length) return alert('Sem pendentes'); numerosList.innerHTML = associadosPendentes.map(a => `<div class="numero-item">${a.nome} - ${a.telefone}</div>`).join(''); numerosContainer.style.display = 'block'; linksContainer.style.display = 'none'; qrcodeContainer.style.display = 'none'; numerosContainer.scrollIntoView({ behavior: 'smooth' }); }
+        function copiarNumeros() { const texto = associadosPendentes.map(a => a.telefone.replace(/\D/g, '')).join('\n'); navigator.clipboard.writeText(texto).then(() => showToast('Números copiados!')).catch(() => alert('Copie manualmente: ' + texto)); }
+        function gerarLinks() { if (!associadosPendentes.length) return alert('Sem pendentes'); linksList.innerHTML = associadosPendentes.map(a => { const link = gerarLinkWhatsApp(a.telefone, mensagemTemplate.value, a.nome); return `<div class="numero-item"><a href="${link}" target="_blank" style="word-break:break-all;">${a.nome}: ${link}</a></div>`; }).join(''); linksContainer.style.display = 'block'; }
+        
+        function irParaContribuicoes(num) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector('.tab[data-tab="contribuicoes"]').classList.add('active');
+            document.getElementById('contribuicoes-tab').classList.add('active');
+            atualizarSeletorAssociados();
+            associadoSelect.value = num;
+            selecionarAssociado();
+            const hoje = new Date();
+            document.getElementById('mes-referencia').value = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
+            document.getElementById('data-pagamento').valueAsDate = hoje;
         }
         
-        function exportarPDF() {
-            const htmlContent = gerarHtmlRelatorio();
-            const iframe = document.createElement('iframe');
-            iframe.style.position = 'absolute';
-            iframe.style.width = '0';
-            iframe.style.height = '0';
-            iframe.style.border = 'none';
-            document.body.appendChild(iframe);
-            const iframeDoc = iframe.contentWindow.document;
-            iframeDoc.open();
-            iframeDoc.write(htmlContent);
-            iframeDoc.close();
-            iframe.onload = () => {
-                iframe.contentWindow.print();
-                setTimeout(() => document.body.removeChild(iframe), 1000);
-            };
-            if (iframe.contentWindow.document.readyState === 'complete') {
-                iframe.contentWindow.print();
-                setTimeout(() => document.body.removeChild(iframe), 1000);
+        function editarAssociado(num) { associadoEditando = associados.find(a => a.numero === num); if (!associadoEditando) return; document.getElementById('editar-nome').value = associadoEditando.nome; document.getElementById('editar-data-cadastro').value = associadoEditando.dataCadastro; document.getElementById('editar-forma-pagamento').value = associadoEditando.formaPagamento; document.getElementById('editar-telefone').value = associadoEditando.telefone; contribuicoesLista.innerHTML = associadoEditando.contribuicoes?.length ? associadoEditando.contribuicoes.sort((a,b)=>new Date(b.mesReferencia)-new Date(a.mesReferencia)).map((c,i)=>`<div class="payment-item"><input type="checkbox" class="contrib-checkbox" data-index="${i}"> ${formatarMesAno(c.mesReferencia)} - R$ ${c.valor.toFixed(2)}</div>`).join('') : '<p>Nenhuma contribuição</p>'; modalEditar.style.display = 'flex'; }
+        async function salvarEdicaoAssociado(e) { e.preventDefault(); if (!associadoEditando) return; associadoEditando.nome = document.getElementById('editar-nome').value; associadoEditando.dataCadastro = document.getElementById('editar-data-cadastro').value; associadoEditando.formaPagamento = document.getElementById('editar-forma-pagamento').value; associadoEditando.telefone = document.getElementById('editar-telefone').value; if (await salvarDados()) { modalEditar.style.display = 'none'; atualizarListaAssociados(); atualizarSeletorAssociados(); popularSelectMeses(); atualizarRelatorios(); popularFiltrosPagamentos(); atualizarTabelaPagamentos(); showToast('Associado atualizado!'); } }
+        
+        function abrirModalContribuicao() { if (!associadoEditando) return; formNovaContribuicao.reset(); const hoje = new Date(); document.getElementById('nova-data-pagamento').valueAsDate = hoje; document.getElementById('nova-mes-referencia').value = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`; modalContribuicao.style.display = 'flex'; }
+        async function adicionarNovaContribuicao(e) { e.preventDefault(); if (!associadoEditando) return; const contrib = { mesReferencia: document.getElementById('nova-mes-referencia').value, dataPagamento: document.getElementById('nova-data-pagamento').value, formaPagamento: document.getElementById('nova-forma-pagamento').value, valor: parseFloat(document.getElementById('nova-valor').value), observacoes: document.getElementById('nova-observacoes').value }; associadoEditando.contribuicoes = associadoEditando.contribuicoes.filter(c => c.mesReferencia !== contrib.mesReferencia); associadoEditando.contribuicoes.push(contrib); if (await salvarDados()) { atualizarListaContribuicoesEdicao(); modalContribuicao.style.display = 'none'; showToast('Contribuição adicionada!'); } }
+        function atualizarListaContribuicoesEdicao() { contribuicoesLista.innerHTML = associadoEditando.contribuicoes?.length ? associadoEditando.contribuicoes.sort((a,b)=>new Date(b.mesReferencia)-new Date(a.mesReferencia)).map((c,i)=>`<div class="payment-item"><input type="checkbox" class="contrib-checkbox" data-index="${i}"> ${formatarMesAno(c.mesReferencia)} - R$ ${c.valor.toFixed(2)}</div>`).join('') : '<p>Nenhuma contribuição</p>'; }
+        async function removerContribuicoesSelecionadas() { if (!associadoEditando) return; const checkboxes = document.querySelectorAll('.contrib-checkbox:checked'); if (!checkboxes.length) return alert('Selecione contribuições'); if (!confirm(`Remover ${checkboxes.length} contribuições?`)) return; const indices = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index)).sort((a,b)=>b-a); indices.forEach(i => associadoEditando.contribuicoes.splice(i, 1)); if (await salvarDados()) { atualizarListaContribuicoesEdicao(); showToast('Contribuições removidas!'); } }
+        
+        function iniciarEnvioMensagens() { if (!associadosPendentes.length) return alert('Sem pendentes'); const tipo = document.querySelector('input[name="tipo-envio"]:checked').value; const data = dataProgramada.value; if (data) { const dataObj = new Date(data); if (dataObj < new Date()) return alert('A data programada não pode ser no passado.'); scheduledMessages.push({ data: dataObj.toISOString(), associados: associadosPendentes.map(a => a.numero), mensagem: mensagemTemplate.value, tipo: tipo, dispositivo: getDispositivoSelecionado() }); salvarDados().then(() => { atualizarListaMensagensAgendadas(); showToast(`Mensagem programada para ${formatarDataHora(dataObj)}`); }); } else { if (tipo === 'automatico') iniciarEnvioAutomatico(); else gerarListaNumeros(); } }
+        
+        function iniciarEnvioAutomatico() { if (envioEmAndamento) { if (confirm('Cancelar envio em andamento?')) cancelarEnvioAutomatico(); return; } if (!confirm(`Enviar para ${associadosPendentes.length} associados?`)) return; envioEmAndamento = true; indiceEnvioAtual = 0; contadorEnvio.style.display = 'block'; progressContainer.style.display = 'block'; enviarTexto.textContent = 'Enviando...'; enviarLoading.style.display = 'inline-block'; enviarTodosBtn.disabled = true; enviarProximaMensagem(); }
+        
+        function enviarProximaMensagem() { if (indiceEnvioAtual >= associadosPendentes.length) { finalizarEnvio(); return; } const a = associadosPendentes[indiceEnvioAtual]; contadorTexto.textContent = `Enviando ${indiceEnvioAtual + 1}/${associadosPendentes.length}: ${a.nome}`; const progresso = Math.round((indiceEnvioAtual / associadosPendentes.length) * 100); progressBar.style.width = `${progresso}%`; progressText.textContent = `${progresso}%`; setTimeout(() => { window.open(gerarLinkWhatsApp(a.telefone, mensagemTemplate.value, a.nome), `wpp_${indiceEnvioAtual}`); indiceEnvioAtual++; if (indiceEnvioAtual < associadosPendentes.length) intervaloEnvio = setTimeout(enviarProximaMensagem, 5000); else setTimeout(finalizarEnvio, 5000); }, 1000); }
+        
+        function finalizarEnvio() { envioEmAndamento = false; clearTimeout(intervaloEnvio); contadorTexto.textContent = `Envio concluído! ${associadosPendentes.length} mensagens.`; progressBar.style.width = '100%'; progressText.textContent = '100%'; setTimeout(() => { enviarTodosBtn.disabled = false; enviarTexto.textContent = '📱 Enviar Mensagens'; enviarLoading.style.display = 'none'; setTimeout(() => { contadorEnvio.style.display = 'none'; progressContainer.style.display = 'none'; }, 3000); }, 2000); showToast('Envio concluído!'); }
+        function cancelarEnvioAutomatico() { envioEmAndamento = false; clearTimeout(intervaloEnvio); enviarTodosBtn.disabled = false; enviarTexto.textContent = '📱 Enviar Mensagens'; enviarLoading.style.display = 'none'; contadorEnvio.style.display = 'none'; progressContainer.style.display = 'none'; }
+        function atualizarListaMensagensAgendadas() { if (!listaMensagensAgendadas) return; listaMensagensAgendadas.innerHTML = ''; if (!scheduledMessages.length) { mensagensAgendadasContainer.style.display = 'none'; return; } mensagensAgendadasContainer.style.display = 'block'; scheduledMessages.forEach((m,i)=>{ listaMensagensAgendadas.innerHTML += `<div class="mensagem-agendada"><div><strong>${formatarDataHora(m.data)}</strong><br><small>${m.associados.length} associados</small></div><button class="btn-danger" onclick="cancelarMensagemAgendada(${i})">❌</button></div>`; }); }
+        async function cancelarMensagemAgendada(index) { if (!confirm('Cancelar esta mensagem?')) return; scheduledMessages.splice(index, 1); if (await salvarDados()) { atualizarListaMensagensAgendadas(); showToast('Mensagem cancelada'); } }
+        async function verificarMensagensAgendadas() { const agora = new Date(); let enviadas = false; for (let i = scheduledMessages.length - 1; i >= 0; i--) { const m = scheduledMessages[i]; if (new Date(m.data) <= agora) { const associadosEnviar = associados.filter(a => m.associados.includes(a.numero)); if (associadosEnviar.length && m.tipo === 'automatico') { let idx = 0; const enviar = () => { if (idx >= associadosEnviar.length) return; const a = associadosEnviar[idx]; window.open(gerarLinkWhatsApp(a.telefone, m.mensagem, a.nome), '_blank'); idx++; if (idx < associadosEnviar.length) setTimeout(enviar, 5000); }; enviar(); } scheduledMessages.splice(i, 1); enviadas = true; } } if (enviadas) { await salvarDados(); atualizarListaMensagensAgendadas(); } }
+        
+        // Login e inicialização
+        async function loginAssociadoSubmit(e) { e.preventDefault(); await carregarDados(); const numero = parseInt(document.getElementById('numero-associado').value); const telefone = document.getElementById('telefone-login').value.replace(/\D/g, ''); const associado = associados.find(a => a.numero === numero && a.telefone.replace(/\D/g, '') === telefone); if (associado) { currentUser = associado; isAdmin = false; showMainSystem(); showToast('Login realizado com sucesso!'); } else { showToast('Associado não encontrado.', 'error'); } }
+        async function loginAdminSubmit(e) { e.preventDefault(); await carregarDados(); if (document.getElementById('senha-admin').value === 'associacao2024') { currentUser = { nome: 'Administrador' }; isAdmin = true; showMainSystem(); showToast('Login administrativo realizado!'); } else { showToast('Senha incorreta.', 'error'); } }
+        
+        function showMainSystem() {
+            loginScreen.style.display = 'none';
+            mainSystem.style.display = 'block';
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            localStorage.setItem('isAdmin', isAdmin.toString());
+            if (isAdmin) {
+                userType.textContent = 'Modo Administrador';
+                userWelcome.textContent = 'Bem-vindo, Administrador';
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'block');
+                document.querySelectorAll('.associado-only').forEach(el => el.style.display = 'none');
+                quickNavAdmin.style.display = isMobile ? 'none' : 'flex';
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.querySelector('.tab.admin-only').classList.add('active');
+                document.getElementById('cadastro-tab').classList.add('active');
+                atualizarSeletorAssociados();
+                atualizarListaAssociados();
+                atualizarListaPendentes();
+                atualizarListaMensagensAgendadas();
+                popularSelectMeses();
+                atualizarRelatorios();
+                popularFiltrosPagamentos();
+                atualizarTabelaPagamentos();
+            } else {
+                userType.textContent = 'Área do Associado';
+                userWelcome.textContent = `Bem-vindo, ${currentUser.nome}`;
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+                document.querySelectorAll('.associado-only').forEach(el => el.style.display = 'block');
+                document.getElementById('associado-info-detail').innerHTML = `<p><strong>Número:</strong> ${currentUser.numero}</p><p><strong>Nome:</strong> ${currentUser.nome}</p><p><strong>Telefone:</strong> ${currentUser.telefone}</p><p><strong>Data de Cadastro:</strong> ${formatarData(currentUser.dataCadastro)}</p><p><strong>Forma de Pagamento:</strong> ${currentUser.formaPagamento}</p>`;
+                const status = calcularStatusPagamento(currentUser);
+                document.getElementById('associado-info-detail').innerHTML += `<p><strong>Status:</strong> <span class="${status.classe}">${status.texto}</span></p>`;
+                statusDetalhes.innerHTML = '<div class="status-item"><div class="status-valor">0</div><div class="status-label">Carregando...</div></div>';
+                const contribuicoesHTML = currentUser.contribuicoes?.length ? currentUser.contribuicoes.sort((a,b)=>new Date(b.dataPagamento)-new Date(a.dataPagamento)).map(contrib => `<div class="payment-item"><div><strong>${formatarMesAno(contrib.mesReferencia)}</strong><br><small>Pago: ${formatarData(contrib.dataPagamento)}</small></div><div><strong>R$ ${contrib.valor?.toFixed(2) || '0,00'}</strong><br><small>${contrib.formaPagamento}</small></div></div>`).join('') : '<p>Nenhuma contribuição registrada.</p>';
+                document.getElementById('minhas-contribuicoes-list').innerHTML = contribuicoesHTML;
+                atualizarGradeMesesCompleta(currentUser);
             }
         }
         
-        function exportarWord() {
-            const htmlContent = gerarHtmlRelatorio();
-            const blob = new Blob([htmlContent], { type: 'application/msword' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.href = url;
-            const mesFiltro = mesRelatorio.value;
-            const nomeArquivo = mesFiltro ? `relatorio_${mesFiltro}.doc` : 'relatorio_todos_meses.doc';
-            link.download = nomeArquivo;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            showToast('Relatório exportado para Word!');
-        }
-        
-        function exportarExcel() {
-            const { arrecadacaoMeses } = getDadosRelatorio();
-            let csv = "Mês/Ano;Total Arrecadado;Quantidade de Pagamentos;Média por Pagamento\n";
-            arrecadacaoMeses.forEach(m => {
-                csv += `"${formatarMesAno(m.mes)}";${m.total.toFixed(2)};${m.qtd};${m.media.toFixed(2)}\n`;
+        function atualizarGradeMesesCompleta(associado) {
+            if (!monthsContainer) return;
+            monthsContainer.innerHTML = '';
+            const hoje = new Date();
+            const anoAtual = hoje.getFullYear();
+            const mesAtual = hoje.getMonth() + 1;
+            const dataCadastro = new Date(associado.dataCadastro + 'T12:00:00');
+            const anoCadastro = dataCadastro.getFullYear();
+            const mesCadastro = dataCadastro.getMonth() + 1;
+            const anoInicio = anoCadastro;
+            const anoFim = anoAtual + 1;
+            const anos = [];
+            for (let ano = anoFim; ano >= anoInicio; ano--) anos.push(ano);
+            const mesesAbreviados = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+            anos.forEach(ano => {
+                const yearSection = document.createElement('div'); yearSection.className = 'year-section';
+                yearSection.innerHTML = `<div class="year-title">${ano} ${ano === anoAtual ? '(Atual)' : ano > anoAtual ? '(Futuro)' : ''}</div>`;
+                const monthsGrid = document.createElement('div'); monthsGrid.className = 'months-grid';
+                for (let mes = 1; mes <= 12; mes++) {
+                    if (ano === anoCadastro && mes < mesCadastro) continue;
+                    const mesAno = `${ano}-${mes.toString().padStart(2, '0')}`;
+                    const contrib = associado.contribuicoes?.find(c => c.mesReferencia === mesAno);
+                    const monthDiv = document.createElement('div'); monthDiv.className = 'month-item';
+                    if (ano === anoAtual && mes === mesAtual) monthDiv.classList.add('atual');
+                    let status = 'futuro', statusText = 'Futuro';
+                    if (contrib) { status = 'pago'; statusText = 'Pago'; }
+                    else if (ano < anoAtual || (ano === anoAtual && mes < mesAtual)) { status = 'pendente'; statusText = 'Pendente'; }
+                    monthDiv.classList.add(status);
+                    monthDiv.innerHTML = `<div class="mes-nome">${mesesAbreviados[mes-1]}</div><div class="status-info">${statusText}</div>`;
+                    monthsGrid.appendChild(monthDiv);
+                }
+                yearSection.appendChild(monthsGrid);
+                monthsContainer.appendChild(yearSection);
             });
-            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.href = url;
-            const mesFiltro = mesRelatorio.value;
-            const nomeArquivo = mesFiltro ? `relatorio_${mesFiltro}.csv` : 'relatorio_todos_meses.csv';
-            link.download = nomeArquivo;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            showToast('Relatório exportado para Excel!');
         }
         
-        // ==================== INICIALIZAÇÃO ====================
+        function logout() { currentUser = null; isAdmin = false; localStorage.removeItem('currentUser'); localStorage.removeItem('isAdmin'); mainSystem.style.display = 'none'; loginScreen.style.display = 'block'; if (intervaloVerificacao) clearInterval(intervaloVerificacao); }
+        
         document.addEventListener('DOMContentLoaded', async function() {
             await carregarDados();
-            
             const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-                isAdmin = localStorage.getItem('isAdmin') === 'true';
-                showMainSystem();
-            }
+            if (savedUser) { currentUser = JSON.parse(savedUser); isAdmin = localStorage.getItem('isAdmin') === 'true'; showMainSystem(); }
+            if (document.getElementById('data-cadastro')) document.getElementById('data-cadastro').valueAsDate = new Date();
+            if (dataProgramada) { const amanha = new Date(); amanha.setDate(amanha.getDate() + 1); amanha.setHours(9,0,0,0); dataProgramada.value = amanha.toISOString().slice(0,16); }
             
-            if (document.getElementById('data-cadastro')) {
-                document.getElementById('data-cadastro').valueAsDate = new Date();
-            }
-            
-            if (dataProgramada) {
-                const amanha = new Date();
-                amanha.setDate(amanha.getDate() + 1);
-                amanha.setHours(9, 0, 0, 0);
-                dataProgramada.value = amanha.toISOString().slice(0, 16);
-            }
-            
-            // Event listeners de login
-            btnAcessoAssociado.addEventListener('click', () => {
-                loginAssociado.style.display = 'block';
-                loginAdmin.style.display = 'none';
-                document.getElementById('login-message').style.display = 'none';
-            });
-            
-            btnAcessoAdmin.addEventListener('click', () => {
-                loginAdmin.style.display = 'block';
-                loginAssociado.style.display = 'none';
-                document.getElementById('login-message').style.display = 'none';
-            });
-            
+            btnAcessoAssociado.addEventListener('click', () => { loginAssociado.style.display = 'block'; loginAdmin.style.display = 'none'; });
+            btnAcessoAdmin.addEventListener('click', () => { loginAdmin.style.display = 'block'; loginAssociado.style.display = 'none'; });
             loginFormAssociado.addEventListener('submit', loginAssociadoSubmit);
             loginFormAdmin.addEventListener('submit', loginAdminSubmit);
             logoutBtn.addEventListener('click', logout);
             
-            // Máscara de telefone
-            document.querySelectorAll('input[type="tel"]').forEach(input => {
-                input.addEventListener('input', function(e) {
-                    let value = e.target.value.replace(/\D/g, '');
-                    if (value.length > 11) value = value.substring(0, 11);
-                    if (value.length > 10) {
-                        value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
-                    } else if (value.length > 6) {
-                        value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
-                    } else if (value.length > 2) {
-                        value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
-                    } else if (value.length > 0) {
-                        value = value.replace(/^(\d{0,2})/, '($1');
-                    }
-                    e.target.value = value;
-                });
-            });
+            document.querySelectorAll('input[type="tel"]').forEach(input => { input.addEventListener('input', function(e) { let value = e.target.value.replace(/\D/g, ''); if (value.length > 11) value = value.substring(0,11); if (value.length > 10) value = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3'); else if (value.length > 6) value = value.replace(/^(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3'); else if (value.length > 2) value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2'); else if (value.length > 0) value = value.replace(/^(\d{0,2})/, '($1'); e.target.value = value; }); });
             
-            // Tabs
-            document.querySelectorAll('.tab').forEach((tab, index) => {
-                tab.addEventListener('click', function() {
-                    if (this.classList.contains('active')) return;
-                    
-                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    
-                    this.classList.add('active');
-                    const tabId = this.getAttribute('data-tab') + '-tab';
-                    document.getElementById(tabId).classList.add('active');
-                    
-                    if (this.getAttribute('data-tab') === 'contribuicoes') {
-                        atualizarSeletorAssociados();
-                    } else if (this.getAttribute('data-tab') === 'consulta') {
-                        atualizarListaAssociados();
-                    } else if (this.getAttribute('data-tab') === 'mensagens') {
-                        atualizarListaPendentes();
-                        atualizarListaMensagensAgendadas();
-                    } else if (this.getAttribute('data-tab') === 'minhas-contribuicoes' && currentUser) {
-                        loadAssociadoData();
-                    } else if (this.getAttribute('data-tab') === 'relatorios') {
-                        popularSelectMeses();
-                        atualizarRelatorios();
-                    }
-                    
-                    currentTabIndex = index;
-                });
-            });
+            document.querySelectorAll('.tab').forEach((tab, index) => { tab.addEventListener('click', function() { if (this.classList.contains('active')) return; document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); this.classList.add('active'); const tabId = this.getAttribute('data-tab') + '-tab'; document.getElementById(tabId).classList.add('active'); if (this.getAttribute('data-tab') === 'contribuicoes') atualizarSeletorAssociados(); else if (this.getAttribute('data-tab') === 'consulta') atualizarListaAssociados(); else if (this.getAttribute('data-tab') === 'mensagens') atualizarListaPendentes(); else if (this.getAttribute('data-tab') === 'pagamentos') { popularFiltrosPagamentos(); atualizarTabelaPagamentos(); } else if (this.getAttribute('data-tab') === 'minhas-contribuicoes' && currentUser && !isAdmin) loadAssociadoData(); else if (this.getAttribute('data-tab') === 'relatorios') { popularSelectMeses(); atualizarRelatorios(); } }); });
             
-            // Event listeners principais
-            if (cadastroForm) cadastroForm.addEventListener('submit', cadastrarAssociado);
-            if (searchInput) searchInput.addEventListener('input', atualizarListaAssociados);
-            if (gerarListaBtn) gerarListaBtn.addEventListener('click', gerarListaNumeros);
-            if (enviarTodosBtn) enviarTodosBtn.addEventListener('click', iniciarEnvioMensagens);
-            if (associadoSelect) associadoSelect.addEventListener('change', selecionarAssociado);
-            if (contribuicaoForm) contribuicaoForm.addEventListener('submit', registrarContribuicao);
-            if (formEditar) formEditar.addEventListener('submit', salvarEdicaoAssociado);
-            if (btnCancelarEdicao) btnCancelarEdicao.addEventListener('click', () => modalEditar.style.display = 'none');
-            if (btnAdicionarContribuicao) btnAdicionarContribuicao.addEventListener('click', abrirModalContribuicao);
-            if (btnRemoverContribuicao) btnRemoverContribuicao.addEventListener('click', removerContribuicoesSelecionadas);
-            if (formNovaContribuicao) formNovaContribuicao.addEventListener('submit', adicionarNovaContribuicao);
-            if (btnCancelarContribuicao) btnCancelarContribuicao.addEventListener('click', () => modalContribuicao.style.display = 'none');
-            if (mesRelatorio) mesRelatorio.addEventListener('change', atualizarRelatorios);
-            if (btnExportarPdf) btnExportarPdf.addEventListener('click', exportarPDF);
-            if (btnExportarWord) btnExportarWord.addEventListener('click', exportarWord);
-            if (btnExportarExcel) btnExportarExcel.addEventListener('click', exportarExcel);
+            cadastroForm?.addEventListener('submit', cadastrarAssociado);
+            searchInput?.addEventListener('input', () => { currentPage = 1; atualizarListaAssociados(); });
+            gerarListaBtn?.addEventListener('click', gerarListaNumeros);
+            enviarTodosBtn?.addEventListener('click', iniciarEnvioMensagens);
+            associadoSelect?.addEventListener('change', selecionarAssociado);
+            contribuicaoForm?.addEventListener('submit', registrarContribuicao);
+            formEditar?.addEventListener('submit', salvarEdicaoAssociado);
+            btnCancelarEdicao?.addEventListener('click', () => modalEditar.style.display = 'none');
+            btnAdicionarContribuicao?.addEventListener('click', abrirModalContribuicao);
+            btnRemoverContribuicao?.addEventListener('click', removerContribuicoesSelecionadas);
+            formNovaContribuicao?.addEventListener('submit', adicionarNovaContribuicao);
+            btnCancelarContribuicao?.addEventListener('click', () => modalContribuicao.style.display = 'none');
+            mesRelatorio?.addEventListener('change', atualizarRelatorios);
+            btnExportarPdf?.addEventListener('click', exportarPDF);
+            btnExportarWord?.addEventListener('click', exportarWord);
+            btnExportarExcel?.addEventListener('click', exportarExcel);
             
-            // Opções de envio
-            document.querySelectorAll('input[name="tipo-envio"]').forEach(option => {
-                option.addEventListener('change', function() {
-                    document.getElementById('info-manual').style.display = this.value === 'manual' ? 'block' : 'none';
-                    document.getElementById('info-automatico').style.display = this.value === 'automatico' ? 'block' : 'none';
-                    enviarTodosBtn.textContent = this.value === 'automatico' ? '🚀 Iniciar Envio Automático' : '📱 Enviar Mensagens';
-                });
-            });
-            document.getElementById('info-manual').style.display = 'block';
+            document.querySelectorAll('input[name="tipo-envio"]').forEach(option => { option.addEventListener('change', function() { document.getElementById('info-manual').style.display = this.value === 'manual' ? 'block' : 'none'; document.getElementById('info-automatico').style.display = this.value === 'automatico' ? 'block' : 'none'; }); });
+            copiarNumerosBtn?.addEventListener('click', copiarNumeros);
+            gerarLinksBtn?.addEventListener('click', gerarLinks);
+            abrirWhatsappBtn?.addEventListener('click', () => { if (isMobile) window.location.href = 'https://wa.me'; else window.open('https://web.whatsapp.com', '_blank'); });
+            enviarAudioBtn?.addEventListener('click', function() { if (!associadosPendentes.length) return alert('Sem pendentes'); if (associadosPendentes.length === 1) { const a = associadosPendentes[0]; enviarAudio(a.telefone, mensagemTemplate.value, a.nome); } else { if (confirm(`Enviar áudio para todos os ${associadosPendentes.length} pendentes?`)) { associadosPendentes.forEach((a, idx) => { setTimeout(() => { enviarAudio(a.telefone, mensagemTemplate.value, a.nome); }, idx * 2000); }); } else { const a = associadosPendentes[0]; enviarAudio(a.telefone, mensagemTemplate.value, a.nome); } } });
             
-            // Botões de ação
-            if (copiarNumerosBtn) copiarNumerosBtn.addEventListener('click', copiarNumeros);
-            if (gerarLinksBtn) gerarLinksBtn.addEventListener('click', gerarLinks);
-            if (abrirWhatsappBtn) abrirWhatsappBtn.addEventListener('click', () => {
-                if (isMobile) window.location.href = 'https://wa.me';
-                else window.open('https://web.whatsapp.com', '_blank');
-            });
+            // Eventos da nova aba de pagamentos
+            aplicarFiltrosBtn?.addEventListener('click', atualizarFiltrosPagamentos);
+            limparFiltrosBtn?.addEventListener('click', limparFiltrosPagamentos);
+            btnExportarPagamentosPdf?.addEventListener('click', exportarPagamentosPDF);
+            btnExportarPagamentosWord?.addEventListener('click', exportarPagamentosWord);
+            btnExportarPagamentosExcel?.addEventListener('click', exportarPagamentosExcel);
             
-            // Botão de áudio
-            if (enviarAudioBtn) {
-                enviarAudioBtn.addEventListener('click', function() {
-                    if (!associadosPendentes.length) return alert('Sem pendentes');
-                    if (associadosPendentes.length === 1) {
-                        const a = associadosPendentes[0];
-                        enviarAudio(a.telefone, mensagemTemplate.value, a.nome);
-                    } else {
-                        if (confirm(`Enviar áudio para todos os ${associadosPendentes.length} pendentes?`)) {
-                            associadosPendentes.forEach((a, idx) => {
-                                setTimeout(() => {
-                                    enviarAudio(a.telefone, mensagemTemplate.value, a.nome);
-                                }, idx * 2000);
-                            });
-                        } else {
-                            const a = associadosPendentes[0];
-                            enviarAudio(a.telefone, mensagemTemplate.value, a.nome);
-                        }
-                    }
-                });
-            }
-            
-            // FAB
-            if (fabWhatsapp) {
-                fabWhatsapp.addEventListener('click', () => {
-                    document.querySelector('.tab[data-tab="mensagens"]')?.click();
-                });
-            }
-            if (isMobile) {
-                fabWhatsapp.style.display = 'flex';
-            }
+            if (fabWhatsapp && isMobile) fabWhatsapp.style.display = 'flex';
+            if (fabWhatsapp) fabWhatsapp.addEventListener('click', () => { document.querySelector('.tab[data-tab="mensagens"]')?.click(); });
             
             iniciarVerificacaoMensagensAgendadas();
             verificarMensagensAgendadas();
         });
         
-        function iniciarVerificacaoMensagensAgendadas() {
-            if (intervaloVerificacao) clearInterval(intervaloVerificacao);
-            intervaloVerificacao = setInterval(verificarMensagensAgendadas, 30000);
-        }
+        function iniciarVerificacaoMensagensAgendadas() { if (intervaloVerificacao) clearInterval(intervaloVerificacao); intervaloVerificacao = setInterval(verificarMensagensAgendadas, 30000); }
     </script>
 </body>
 </html>
