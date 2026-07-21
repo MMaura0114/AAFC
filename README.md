@@ -38,7 +38,7 @@ Sistema web completo para gerenciamento de associações, desenvolvido em HTML, 
 ## 🚀 Como Usar
 
 ### Acesso Online
-O sistema está disponível em: [https://SEU-USUARIO.github.io/sistema-associados](https://SEU-USUARIO.github.io/sistema-associados)
+O sistema está disponível em: [https://SEU-USUARIO.github.io/AAFC](https://mmaura0114.github.io/AAFC/)
 
 ### Acesso Local
 1. Baixe o arquivo `index.html`
