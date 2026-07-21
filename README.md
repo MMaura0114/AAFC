@@ -45,7 +45,7 @@ O sistema está disponível em: [https://SEU-USUARIO.github.io/AAFC](https://mma
 2. Abra em qualquer navegador moderno
 
 ### Para Administradores
-**Senha padrão:** `admin123`
+**Senha padrão:** `XXXX`
 
 ## 🛠️ Tecnologias
 
