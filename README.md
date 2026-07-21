@@ -41,8 +41,8 @@ Sistema web completo para gerenciamento de associações, desenvolvido em HTML, 
 O sistema está disponível em: [https://SEU-USUARIO.github.io/AAFC](https://mmaura0114.github.io/AAFC/)
 
 ### Acesso Local
-1. Baixe o arquivo `index.html`
-2. Abra em qualquer navegador moderno
+1. Baixe o arquivo `index.html`,`script.js` e o `style.css`
+3. Abra em qualquer navegador moderno
 
 ### Para Administradores
 **Senha padrão:** `XXXX`
