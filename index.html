@@ -193,8 +193,16 @@
                         <div id="upload-status" class="upload-status"></div>
                         <small>🔊 O áudio será hospedado temporariamente (por 30 dias) no tmpfiles.org. O link será enviado aos associados pendentes.</small>
                     </div>
-                    
-                    <div class="form-group"><label for="mensagem-template">Modelo de Mensagem</label><textarea id="mensagem-template" rows="4">Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. Esta é uma mensagem automática enviada pelo sistema de gerenciamento da Associação de Agricultores/as Familiares de Cacimba. Lembrando que houve atualização do valor de R$ 10,00 para R$ 11,00 como está descrito no edital de fundação. Para mais informações acesse o link para conferir os meses pendentes: https://mmaura0114.github.io/AAFC/ para acessar digite seu número de acesso Nº e telefone.</textarea><small>Use [NOME] para inserir o nome do associado.</small></div>
+
+<!--mensagem de Alerta de lembrete-->
+
+                    <div class="form-group"><label for="mensagem-template">Modelo de Mensagem</label><textarea id="mensagem-template" rows="4">
+                        Olá associado/a, este é um lembrete amigável da sua mensalidade pendente. 
+                        Esta é uma mensagem automática enviada pelo sistema de gerenciamento da Associação de Agricultores/as Familiares de Cacimba. 
+                        Lembrando que houve atualização do valor de R$ 10,00 para R$ 11,00 como está descrito no edital de fundação. 
+                        Para mais informações acesse o link para conferir os meses pendentes: https://mmaura0114.github.io/AAFC/ para acessar.
+                        Digite seu número de acesso Nº e telefone.</textarea><small>Use [NOME] para inserir o nome do associado.</small></div>
+
                     <div class="form-group"><label for="data-programada">Programar Envio (Opcional)</label><input type="datetime-local" id="data-programada"><small>Deixe em branco para enviar agora</small></div>
                     <div class="enviar-options"><label class="enviar-option"><input type="radio" name="tipo-envio" value="manual" checked> <div><strong>Envio Manual</strong><p style="font-size: 14px;">Copie e cole os números manualmente</p></div></label><label class="enviar-option"><input type="radio" name="tipo-envio" value="automatico"> <div><strong>Envio Automático</strong><p style="font-size: 14px;">Abre uma janela para cada número (autorização necessária)</p></div></label></div>
                     <div class="device-selector"><label class="device-option"><input type="radio" name="dispositivo" value="web" checked> <span>💻 WhatsApp Web (PC)</span></label><label class="device-option"><input type="radio" name="dispositivo" value="mobile"> <span>📱 WhatsApp Mobile (Celular)</span></label></div>
