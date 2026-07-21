@@ -694,3 +694,178 @@ tr:hover {
 .details-panel p {
     margin-bottom: 5px;
 }
+
+/* ===== ESTILOS PARA MÍDIA ===== */
+.drop-zone {
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: #fafafa;
+    margin-bottom: 10px;
+}
+
+.drop-zone:hover {
+    border-color: var(--secondary-color);
+    background: #f0f7ff;
+}
+
+.drop-zone.dragover {
+    border-color: var(--success-color);
+    background: #e8f5e9;
+    transform: scale(1.02);
+}
+
+.drop-zone-content {
+    pointer-events: none;
+}
+
+.drop-zone-content span {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.file-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin: 10px 0;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    border: 1px solid #e9ecef;
+}
+
+.file-item .file-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.file-item .file-info .file-icon {
+    font-size: 24px;
+}
+
+.file-item .file-info .file-name {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-item .file-info .file-size {
+    font-size: 12px;
+    color: #666;
+}
+
+.file-item .file-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.file-item .file-actions button {
+    padding: 5px 10px;
+    font-size: 12px;
+    margin: 0;
+    width: auto;
+}
+
+.media-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.media-preview-item {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    position: relative;
+    aspect-ratio: 1;
+}
+
+.media-preview-item img,
+.media-preview-item video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.media-preview-item audio {
+    width: 100%;
+    height: 50px;
+    margin-top: 20px;
+}
+
+.media-preview-item .file-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 5px;
+    font-size: 11px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.upload-progress {
+    margin-top: 10px;
+}
+
+.upload-progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.upload-progress-bar .progress-fill {
+    height: 100%;
+    background: var(--success-color);
+    transition: width 0.3s;
+    width: 0%;
+}
+
+.upload-progress-text {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.media-controls button {
+    margin-bottom: 0;
+}
+
+@media (max-width: 480px) {
+    .file-item {
+        flex-wrap: wrap;
+    }
+    
+    .file-item .file-actions {
+        width: 100%;
+        margin-top: 5px;
+        justify-content: flex-end;
+    }
+    
+    .media-preview-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+}

@@ -1,3 +1,4 @@
+// script.js - Versão atualizada com melhorias
 // ==================== CONFIGURAÇÃO ====================
 const JSONBIN_API_KEY = '$2a$10$8yB70Rb7oLrLXy0Ge3JuzOA1xxB56R1tJZS4NDJ0m.CRg4mADoB0m';
 const JSONBIN_BIN_ID = '691d1701ae596e708f61d4c6';
@@ -25,46 +26,13 @@ let mediaRecorder = null;
 let audioChunks = [];
 let audioBlob = null;
 let audioUrl = null;
+
+// Variáveis de mídia
+let selectedFiles = [];
+let uploadedMediaUrls = [];
+let isUploadingMedia = false;
+
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-// Elementos DOM
-const loginScreen = document.getElementById('login-screen');
-const mainSystem = document.getElementById('main-system');
-const userWelcome = document.getElementById('user-welcome');
-const userType = document.getElementById('user-type');
-const logoutBtn = document.getElementById('logout-btn');
-const toastMessage = document.getElementById('toast-message');
-const mensagemTemplate = document.getElementById('mensagem-template');
-const associadoSelect = document.getElementById('associado-select');
-const associadoInfo = document.getElementById('associado-info');
-const contribuicaoForm = document.getElementById('contribuicao-form');
-const paymentHistory = document.getElementById('payment-history');
-const monthsContainer = document.getElementById('months-container');
-const dataProgramada = document.getElementById('data-programada');
-const modalEditar = document.getElementById('modal-editar');
-const formEditar = document.getElementById('form-editar');
-const contribuicoesLista = document.getElementById('contribuicoes-lista');
-const modalContribuicao = document.getElementById('modal-contribuicao');
-const formNovaContribuicao = document.getElementById('form-nova-contribuicao');
-
-// Elementos de áudio
-const btnAutorizarWhatsapp = document.getElementById('btn-autorizar-whatsapp');
-const authStatusBadge = document.getElementById('auth-status-badge');
-const btnRecordAudio = document.getElementById('btn-record-audio');
-const btnStopRecording = document.getElementById('btn-stop-recording');
-const btnPlayRecorded = document.getElementById('btn-play-recorded');
-const btnSendAudioRecorded = document.getElementById('btn-send-audio-recorded');
-const audioStatus = document.getElementById('audio-status');
-const audioPlayerContainer = document.getElementById('audio-player-container');
-const recordedAudio = document.getElementById('recorded-audio');
-const uploadStatusDiv = document.getElementById('upload-status');
-const enviarAutomaticoBtn = document.getElementById('enviar-automatico-btn');
-const pararEnvioBtn = document.getElementById('parar-envio-btn');
-const contadorEnvioDiv = document.getElementById('contador-envio');
-const progressContainerDiv = document.getElementById('progress-container');
-const progressBar = document.getElementById('progress-bar');
-const progressText = document.getElementById('progress-text');
-const contadorTexto = document.getElementById('contador-texto');
 
 // ==================== FUNÇÕES AUXILIARES ====================
 function formatarData(data) { 
@@ -81,11 +49,36 @@ function formatarValor(valor) {
     return `R$ ${(valor || 0).toFixed(2)}`; 
 }
 
+function formatarDataHora(d) {
+    return d ? new Date(d).toLocaleString('pt-BR') : '-';
+}
+
+function formatFileSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function getFileIcon(fileType) {
+    if (fileType.startsWith('image/')) return '🖼️';
+    if (fileType.startsWith('audio/')) return '🎵';
+    if (fileType.startsWith('video/')) return '🎬';
+    return '📄';
+}
+
+function getFileEmoji(fileType) {
+    if (fileType.startsWith('image/')) return '📷';
+    if (fileType.startsWith('audio/')) return '🔊';
+    if (fileType.startsWith('video/')) return '🎬';
+    return '📎';
+}
+
 function showToast(message, type = 'success') {
-    toastMessage.textContent = message;
-    toastMessage.className = `toast-message alert-${type}`;
-    toastMessage.style.display = 'block';
-    setTimeout(() => { toastMessage.style.display = 'none'; }, 3000);
+    const toast = document.getElementById('toast-message');
+    toast.textContent = message;
+    toast.className = `toast-message alert-${type}`;
+    toast.style.display = 'block';
+    setTimeout(() => { toast.style.display = 'none'; }, 3000);
 }
 
 async function carregarDados() {
@@ -125,14 +118,16 @@ function getDispositivoSelecionado() {
     return isMobile ? 'mobile' : 'web';
 }
 
-function gerarLinkWhatsApp(telefone, mensagem, nome = '') {
-    const mensagemPersonalizada = mensagem.replace('[NOME]', nome);
+function gerarLinkWhatsApp(telefone, mensagem, nome = '', numero = '') {
+    let mensagemPersonalizada = mensagem
+        .replace(/\[NOME\]/g, nome || '')
+        .replace(/\[NUMERO\]/g, numero || '');
     const telefoneLimpo = telefone.replace(/\D/g, '');
     return `https://wa.me/55${telefoneLimpo}?text=${encodeURIComponent(mensagemPersonalizada)}`;
 }
 
-function enviarWhatsAppUniversal(telefone, mensagem, nome = '') {
-    const link = gerarLinkWhatsApp(telefone, mensagem, nome);
+function enviarWhatsAppUniversal(telefone, mensagem, nome = '', numero = '') {
+    const link = gerarLinkWhatsApp(telefone, mensagem, nome, numero);
     if (isMobile) window.location.href = link;
     else window.open(link, '_blank');
 }
@@ -140,31 +135,22 @@ function enviarWhatsAppUniversal(telefone, mensagem, nome = '') {
 function enviarMensagemIndividual(numeroAssociado) {
     const associado = associados.find(a => a.numero === numeroAssociado);
     if (!associado) return;
-    enviarWhatsAppUniversal(associado.telefone, mensagemTemplate.value, associado.nome);
+    enviarWhatsAppUniversal(
+        associado.telefone, 
+        mensagemTemplate.value, 
+        associado.nome,
+        associado.numero.toString()
+    );
 }
 
-function enviarAudio(telefone, texto, nome = '') {
-    const textoPersonalizado = texto.replace('[NOME]', nome);
-    const mensagemAudio = `🔊 *Mensagem de áudio para você:*\n\n"${textoPersonalizado}"\n\n(Esta é uma mensagem de texto. Se você não sabe ler, peça a alguém para ler em voz alta para você.)`;
-    const link = gerarLinkWhatsApp(telefone, mensagemAudio, '');
-    if (isMobile) window.location.href = link;
-    else window.open(link, '_blank');
-}
-
-function enviarLinkAudioGravado(telefone, linkAudio, nome) {
-    const msg = `🎤 *MENSAGEM DE VOZ PARA ${nome.toUpperCase()}* 🎤\nClique para ouvir: ${linkAudio}\n(Se não conseguir ouvir, peça ajuda)`;
-    const link = gerarLinkWhatsApp(telefone, msg, '');
-    if (isMobile) window.location.href = link;
-    else window.open(link, '_blank');
-}
-
-// ==================== UPLOAD DE ÁUDIO ====================
+// ==================== FUNÇÕES DE ÁUDIO ====================
 async function uploadAudioToTmpFiles(blob) {
     const formData = new FormData();
     formData.append('file', blob, 'mensagem_voz.webm');
     
     try {
-        uploadStatusDiv.innerHTML = '<span class="loading"></span> Enviando áudio...';
+        const statusDiv = document.getElementById('upload-status');
+        if (statusDiv) statusDiv.innerHTML = '<span class="loading"></span> Enviando áudio...';
         const response = await fetch('https://tmpfiles.org/api/v1/upload', {
             method: 'POST',
             body: formData
@@ -172,16 +158,24 @@ async function uploadAudioToTmpFiles(blob) {
         const data = await response.json();
         if (data.status === 'success' && data.data.url) {
             const directUrl = data.data.url.replace('/dl/', '/download/') + '?download=1';
-            uploadStatusDiv.innerHTML = `✅ Áudio enviado! <a href="${directUrl}" target="_blank">Link permanente (30 dias)</a>`;
+            if (statusDiv) statusDiv.innerHTML = `✅ Áudio enviado! <a href="${directUrl}" target="_blank">Link permanente (30 dias)</a>`;
             return directUrl;
         } else {
             throw new Error('Falha no upload');
         }
     } catch (err) {
         console.error(err);
-        uploadStatusDiv.innerHTML = '❌ Erro no upload. Tente novamente.';
+        const statusDiv = document.getElementById('upload-status');
+        if (statusDiv) statusDiv.innerHTML = '❌ Erro no upload. Tente novamente.';
         return null;
     }
+}
+
+function enviarLinkAudioGravado(telefone, linkAudio, nome, numero) {
+    const msg = `🎤 *MENSAGEM DE VOZ PARA ${nome.toUpperCase()}* (Nº ${numero}) 🎤\nClique para ouvir: ${linkAudio}\n(Se não conseguir ouvir, peça ajuda)`;
+    const link = gerarLinkWhatsApp(telefone, msg, '', '');
+    if (isMobile) window.location.href = link;
+    else window.open(link, '_blank');
 }
 
 async function enviarAudioGravadoParaPendentes() {
@@ -204,11 +198,276 @@ async function enviarAudioGravadoParaPendentes() {
     if (confirm(`Enviar link do áudio para ${associadosPendentes.length} associados pendentes?`)) {
         for (let i = 0; i < associadosPendentes.length; i++) {
             setTimeout(() => {
-                enviarLinkAudioGravado(associadosPendentes[i].telefone, audioPublicUrl, associadosPendentes[i].nome);
+                enviarLinkAudioGravado(
+                    associadosPendentes[i].telefone, 
+                    audioPublicUrl, 
+                    associadosPendentes[i].nome,
+                    associadosPendentes[i].numero.toString()
+                );
             }, i * 2000);
         }
         showToast(`Enviando links do áudio para ${associadosPendentes.length} associados...`);
     }
+}
+
+// ==================== FUNÇÕES DE MÍDIA MELHORADAS ====================
+function initMediaFunctions() {
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    
+    if (!dropZone) return;
+    
+    dropZone.addEventListener('click', () => fileInput.click());
+    
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        handleFiles(e.dataTransfer.files);
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+        fileInput.value = '';
+    });
+}
+
+function handleFiles(files) {
+    const maxSize = 25 * 1024 * 1024;
+    const validTypes = ['image/', 'audio/', 'video/'];
+    
+    Array.from(files).forEach(file => {
+        const isValidType = validTypes.some(type => file.type.startsWith(type));
+        if (!isValidType) {
+            showToast(`Arquivo "${file.name}" não é suportado.`, 'error');
+            return;
+        }
+        
+        if (file.size > maxSize) {
+            showToast(`Arquivo "${file.name}" excede 25MB.`, 'error');
+            return;
+        }
+        
+        const exists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
+        if (exists) {
+            showToast(`Arquivo "${file.name}" já foi adicionado.`, 'warning');
+            return;
+        }
+        
+        selectedFiles.push(file);
+    });
+    
+    atualizarListaArquivos();
+    atualizarPreview();
+}
+
+function atualizarListaArquivos() {
+    const fileList = document.getElementById('file-list');
+    if (!fileList) return;
+    
+    if (selectedFiles.length === 0) {
+        fileList.innerHTML = '';
+        return;
+    }
+    
+    fileList.innerHTML = selectedFiles.map((file, index) => {
+        const icon = getFileIcon(file.type);
+        const size = formatFileSize(file.size);
+        return `
+            <div class="file-item">
+                <div class="file-info">
+                    <span class="file-icon">${icon}</span>
+                    <span class="file-name" title="${file.name}">${file.name}</span>
+                    <span class="file-size">(${size})</span>
+                </div>
+                <div class="file-actions">
+                    <button class="btn-danger" onclick="removerArquivo(${index})" style="padding: 3px 8px; font-size: 12px;">✕</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function removerArquivo(index) {
+    selectedFiles.splice(index, 1);
+    atualizarListaArquivos();
+    atualizarPreview();
+}
+
+function atualizarPreview() {
+    const container = document.getElementById('media-preview-container');
+    const preview = document.getElementById('media-preview');
+    if (!container || !preview) return;
+    
+    if (selectedFiles.length === 0) {
+        container.style.display = 'none';
+        return;
+    }
+    
+    container.style.display = 'block';
+    
+    preview.innerHTML = selectedFiles.map((file, index) => {
+        const url = URL.createObjectURL(file);
+        const type = file.type;
+        
+        if (type.startsWith('image/')) {
+            return `
+                <div class="media-preview-item">
+                    <img src="${url}" alt="${file.name}" loading="lazy">
+                    <div class="file-label">${file.name}</div>
+                </div>
+            `;
+        } else if (type.startsWith('video/')) {
+            return `
+                <div class="media-preview-item">
+                    <video src="${url}" controls muted></video>
+                    <div class="file-label">${file.name}</div>
+                </div>
+            `;
+        } else if (type.startsWith('audio/')) {
+            return `
+                <div class="media-preview-item" style="aspect-ratio: auto; padding: 10px; display: flex; flex-direction: column; justify-content: center;">
+                    <audio src="${url}" controls style="width: 100%;"></audio>
+                    <div class="file-label" style="position: static; background: none; color: #333; margin-top: 5px;">${file.name}</div>
+                </div>
+            `;
+        }
+        return '';
+    }).join('');
+}
+
+async function uploadMediaFiles() {
+    if (selectedFiles.length === 0) {
+        showToast('Selecione arquivos para enviar.', 'warning');
+        return;
+    }
+    
+    if (isUploadingMedia) {
+        showToast('Upload em andamento... Aguarde.', 'warning');
+        return;
+    }
+    
+    isUploadingMedia = true;
+    uploadedMediaUrls = [];
+    const statusDiv = document.getElementById('media-upload-status');
+    statusDiv.innerHTML = '<span class="loading"></span> Enviando arquivos...';
+    
+    const totalFiles = selectedFiles.length;
+    let uploadedCount = 0;
+    
+    for (const file of selectedFiles) {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const response = await fetch('https://tmpfiles.org/api/v1/upload', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success' && data.data.url) {
+                // Usar o link direto para download (melhor para preview no WhatsApp)
+                const directUrl = data.data.url.replace('/dl/', '/download/') + '?download=1';
+                uploadedMediaUrls.push({
+                    name: file.name,
+                    type: file.type,
+                    url: directUrl,
+                    originalUrl: data.data.url
+                });
+                uploadedCount++;
+                statusDiv.innerHTML = `Enviando... ${uploadedCount}/${totalFiles} arquivos`;
+            } else {
+                throw new Error('Falha no upload');
+            }
+        } catch (err) {
+            console.error('Erro no upload:', err);
+            showToast(`Erro ao enviar "${file.name}"`, 'error');
+        }
+    }
+    
+    isUploadingMedia = false;
+    
+    if (uploadedMediaUrls.length > 0) {
+        statusDiv.innerHTML = `
+            ✅ ${uploadedMediaUrls.length} arquivo(s) enviados com sucesso!
+            ${uploadedMediaUrls.map(f => `<br><small><a href="${f.url}" target="_blank">${f.name}</a> ${f.type.startsWith('image/') ? '🖼️' : f.type.startsWith('video/') ? '🎬' : '🔊'}</small>`).join('')}
+        `;
+        showToast(`${uploadedMediaUrls.length} arquivo(s) enviados!`);
+    } else {
+        statusDiv.innerHTML = '❌ Nenhum arquivo foi enviado. Tente novamente.';
+        showToast('Falha no upload dos arquivos.', 'error');
+    }
+}
+
+/**
+ * Envia mensagem com mídia para os associados pendentes
+ * A mensagem é personalizada com [NOME] e [NUMERO]
+ */
+async function enviarMidiaParaPendentes() {
+    if (uploadedMediaUrls.length === 0) {
+        showToast('Envie os arquivos primeiro.', 'warning');
+        return;
+    }
+    
+    if (associadosPendentes.length === 0) {
+        showToast('Sem associados pendentes.', 'warning');
+        return;
+    }
+    
+    // Construir lista de links com emojis para melhor visualização
+    let mediaLinks = uploadedMediaUrls.map(f => {
+        const icon = getFileEmoji(f.type);
+        return `${icon} ${f.name}: ${f.url}`;
+    }).join('\n');
+    
+    if (!confirm(`Enviar ${uploadedMediaUrls.length} arquivo(s) para ${associadosPendentes.length} associados pendentes?`)) return;
+    
+    const template = mensagemTemplate.value;
+    
+    for (let i = 0; i < associadosPendentes.length; i++) {
+        setTimeout(() => {
+            const a = associadosPendentes[i];
+            // Personalizar mensagem com nome e número
+            let msgPersonalizada = template
+                .replace(/\[NOME\]/g, a.nome)
+                .replace(/\[NUMERO\]/g, a.numero.toString());
+            
+            // Adicionar os links da mídia no final
+            const mensagemCompleta = `${msgPersonalizada}\n\n📎 *Arquivos Anexados:*\n${mediaLinks}`;
+            
+            enviarWhatsAppUniversal(a.telefone, mensagemCompleta, a.nome, a.numero.toString());
+        }, i * 2000);
+    }
+    
+    showToast(`Enviando mídia para ${associadosPendentes.length} associados...`);
+}
+
+function limparArquivos() {
+    if (selectedFiles.length === 0 && uploadedMediaUrls.length === 0) {
+        showToast('Nenhum arquivo para limpar.', 'warning');
+        return;
+    }
+    
+    if (!confirm('Remover todos os arquivos selecionados e enviados?')) return;
+    
+    selectedFiles = [];
+    uploadedMediaUrls = [];
+    document.getElementById('file-list').innerHTML = '';
+    document.getElementById('media-preview-container').style.display = 'none';
+    document.getElementById('media-upload-status').innerHTML = '';
+    document.getElementById('media-preview').innerHTML = '';
+    
+    showToast('Arquivos removidos.');
 }
 
 // ==================== AUTORIZAÇÃO ====================
@@ -327,9 +586,17 @@ function enviarProximaAuto() {
     const perc = Math.round((indiceEnvioAtual / associadosPendentes.length) * 100);
     progressBar.style.width = `${perc}%`;
     progressText.textContent = `${perc}%`;
-    const link = gerarLinkWhatsApp(a.telefone, mensagemTemplate.value, a.nome);
+    
+    // Personalizar mensagem com nome e número
+    const msgPersonalizada = mensagemTemplate.value
+        .replace(/\[NOME\]/g, a.nome)
+        .replace(/\[NUMERO\]/g, a.numero.toString());
+    
+    const link = gerarLinkWhatsApp(a.telefone, msgPersonalizada, a.nome, a.numero.toString());
+    
     if (dispositivoAutorizado === 'mobile') window.location.href = link;
     else window.open(link, '_blank');
+    
     indiceEnvioAtual++;
     if (indiceEnvioAtual < associadosPendentes.length) {
         intervaloEnvio = setTimeout(enviarProximaAuto, 5000);
@@ -568,17 +835,17 @@ function atualizarListaPendentes() {
             associadosPendentes.map(a => {
                 const status = calcularStatusPagamento(a);
                 return `<div class="card" style="margin-bottom:10px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
                         <div>
-                            <h3>${a.nome}</h3>
-                            <p>Nº: ${a.numero} | Tel: ${a.telefone}</p>
+                            <h3>${a.nome} (Nº ${a.numero})</h3>
+                            <p>Tel: ${a.telefone}</p>
                             <p class="${status.classe}">${status.texto}</p>
                         </div>
                         <button class="whatsapp-btn" onclick="enviarMensagemIndividual(${a.numero})">📱 Enviar</button>
                     </div>
                 </div>`;
             }).join('') : 
-            '<p>Nenhum pendente</p>';
+            '<p>✅ Todos os associados estão em dia!</p>';
     }
 }
 
@@ -1041,10 +1308,6 @@ function atualizarListaMensagensAgendadas() {
     `).join('');
 }
 
-function formatarDataHora(d) {
-    return d ? new Date(d).toLocaleString('pt-BR') : '-';
-}
-
 async function cancelarMensagemAgendada(index) {
     if (!confirm('Cancelar esta mensagem?')) return;
     scheduledMessages.splice(index, 1);
@@ -1066,7 +1329,10 @@ async function verificarMensagensAgendadas() {
                 const enviar = () => {
                     if (idx >= associadosEnviar.length) return;
                     const a = associadosEnviar[idx];
-                    window.open(gerarLinkWhatsApp(a.telefone, m.mensagem, a.nome), '_blank');
+                    const msgPersonalizada = m.mensagem
+                        .replace(/\[NOME\]/g, a.nome)
+                        .replace(/\[NUMERO\]/g, a.numero.toString());
+                    window.open(gerarLinkWhatsApp(a.telefone, msgPersonalizada, a.nome, a.numero.toString()), '_blank');
                     idx++;
                     if (idx < associadosEnviar.length) setTimeout(enviar, 5000);
                 };
@@ -1090,7 +1356,7 @@ function iniciarVerificacaoMensagensAgendadas() {
 function gerarListaNumeros() {
     if (!associadosPendentes.length) return alert('Sem pendentes');
     document.getElementById('numeros-list').innerHTML = associadosPendentes.map(a => 
-        `<div class="numero-item">${a.nome} - ${a.telefone}</div>`
+        `<div class="numero-item">${a.nome} (Nº ${a.numero}) - ${a.telefone}</div>`
     ).join('');
     document.getElementById('numeros-container').style.display = 'block';
     document.getElementById('links-container').style.display = 'none';
@@ -1105,8 +1371,11 @@ function copiarNumeros() {
 function gerarLinks() {
     if (!associadosPendentes.length) return alert('Sem pendentes');
     document.getElementById('links-list').innerHTML = associadosPendentes.map(a => {
-        const link = gerarLinkWhatsApp(a.telefone, mensagemTemplate.value, a.nome);
-        return `<div class="numero-item"><a href="${link}" target="_blank" style="word-break:break-all;">${a.nome}: ${link}</a></div>`;
+        const msgPersonalizada = mensagemTemplate.value
+            .replace(/\[NOME\]/g, a.nome)
+            .replace(/\[NUMERO\]/g, a.numero.toString());
+        const link = gerarLinkWhatsApp(a.telefone, msgPersonalizada, a.nome, a.numero.toString());
+        return `<div class="numero-item"><a href="${link}" target="_blank" style="word-break:break-all;">${a.nome} (Nº ${a.numero}): ${link}</a></div>`;
     }).join('');
     document.getElementById('links-container').style.display = 'block';
 }
@@ -1164,6 +1433,7 @@ function showMainSystem() {
         atualizarRelatorios();
         popularFiltrosPagamentos();
         atualizarTabelaPagamentos();
+        setTimeout(initMediaFunctions, 100);
     } else {
         userType.textContent = 'Área do Associado';
         userWelcome.textContent = `Bem-vindo, ${currentUser.nome}`;
@@ -1241,6 +1511,46 @@ function logout() {
     if (intervaloVerificacao) clearInterval(intervaloVerificacao);
 }
 
+// ==================== ELEMENTOS DOM ====================
+const loginScreen = document.getElementById('login-screen');
+const mainSystem = document.getElementById('main-system');
+const userWelcome = document.getElementById('user-welcome');
+const userType = document.getElementById('user-type');
+const logoutBtn = document.getElementById('logout-btn');
+const toastMessage = document.getElementById('toast-message');
+const mensagemTemplate = document.getElementById('mensagem-template');
+const associadoSelect = document.getElementById('associado-select');
+const associadoInfo = document.getElementById('associado-info');
+const contribuicaoForm = document.getElementById('contribuicao-form');
+const paymentHistory = document.getElementById('payment-history');
+const monthsContainer = document.getElementById('months-container');
+const dataProgramada = document.getElementById('data-programada');
+const modalEditar = document.getElementById('modal-editar');
+const formEditar = document.getElementById('form-editar');
+const contribuicoesLista = document.getElementById('contribuicoes-lista');
+const modalContribuicao = document.getElementById('modal-contribuicao');
+const formNovaContribuicao = document.getElementById('form-nova-contribuicao');
+const statusDetalhes = document.getElementById('status-detalhes');
+
+// Elementos de áudio
+const btnAutorizarWhatsapp = document.getElementById('btn-autorizar-whatsapp');
+const authStatusBadge = document.getElementById('auth-status-badge');
+const btnRecordAudio = document.getElementById('btn-record-audio');
+const btnStopRecording = document.getElementById('btn-stop-recording');
+const btnPlayRecorded = document.getElementById('btn-play-recorded');
+const btnSendAudioRecorded = document.getElementById('btn-send-audio-recorded');
+const audioStatus = document.getElementById('audio-status');
+const audioPlayerContainer = document.getElementById('audio-player-container');
+const recordedAudio = document.getElementById('recorded-audio');
+const uploadStatusDiv = document.getElementById('upload-status');
+const enviarAutomaticoBtn = document.getElementById('enviar-automatico-btn');
+const pararEnvioBtn = document.getElementById('parar-envio-btn');
+const contadorEnvioDiv = document.getElementById('contador-envio');
+const progressContainerDiv = document.getElementById('progress-container');
+const progressBar = document.getElementById('progress-bar');
+const progressText = document.getElementById('progress-text');
+const contadorTexto = document.getElementById('contador-texto');
+
 // ==================== EVENTOS ====================
 document.addEventListener('DOMContentLoaded', async function() {
     await carregarDados();
@@ -1300,12 +1610,13 @@ document.addEventListener('DOMContentLoaded', async function() {
             document.getElementById(tabId).classList.add('active');
             if (this.getAttribute('data-tab') === 'contribuicoes') atualizarSeletorAssociados();
             else if (this.getAttribute('data-tab') === 'consulta') atualizarListaAssociados();
-            else if (this.getAttribute('data-tab') === 'mensagens') atualizarListaPendentes();
-            else if (this.getAttribute('data-tab') === 'pagamentos') {
+            else if (this.getAttribute('data-tab') === 'mensagens') {
+                atualizarListaPendentes();
+                setTimeout(initMediaFunctions, 100);
+            } else if (this.getAttribute('data-tab') === 'pagamentos') {
                 popularFiltrosPagamentos();
                 atualizarTabelaPagamentos();
             } else if (this.getAttribute('data-tab') === 'minhas-contribuicoes' && currentUser && !isAdmin) {
-                // recarregar dados
                 atualizarGradeMesesCompleta(currentUser);
             } else if (this.getAttribute('data-tab') === 'relatorios') {
                 popularSelectMeses();
@@ -1333,7 +1644,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('enviar-todos-btn').addEventListener('click', () => {
         if (associadosPendentes.length) {
             associadosPendentes.forEach((a, i) => {
-                setTimeout(() => enviarWhatsAppUniversal(a.telefone, mensagemTemplate.value, a.nome), i * 2000);
+                setTimeout(() => {
+                    const msgPersonalizada = mensagemTemplate.value
+                        .replace(/\[NOME\]/g, a.nome)
+                        .replace(/\[NUMERO\]/g, a.numero.toString());
+                    enviarWhatsAppUniversal(a.telefone, msgPersonalizada, a.nome, a.numero.toString());
+                }, i * 2000);
             });
             showToast('Iniciando envio manual...');
         }
@@ -1342,9 +1658,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('enviar-audio-btn').addEventListener('click', () => {
         if (associadosPendentes.length) {
             associadosPendentes.forEach((a, i) => {
-                setTimeout(() => enviarAudio(a.telefone, mensagemTemplate.value, a.nome), i * 2000);
+                setTimeout(() => {
+                    const msgPersonalizada = mensagemTemplate.value
+                        .replace(/\[NOME\]/g, a.nome)
+                        .replace(/\[NUMERO\]/g, a.numero.toString());
+                    enviarWhatsAppUniversal(a.telefone, msgPersonalizada, a.nome, a.numero.toString());
+                }, i * 2000);
             });
-            showToast('Enviando áudio texto...');
+            showToast('Enviando mensagens...');
         }
     });
     
@@ -1394,6 +1715,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     btnSendAudioRecorded.addEventListener('click', enviarAudioGravadoParaPendentes);
     enviarAutomaticoBtn.addEventListener('click', iniciarEnvioAutomatico);
     pararEnvioBtn.addEventListener('click', pararEnvio);
+    
+    // Eventos de mídia
+    const btnUpload = document.getElementById('btn-upload-media');
+    const btnClear = document.getElementById('btn-clear-media');
+    const btnSend = document.getElementById('btn-send-media');
+    if (btnUpload) btnUpload.addEventListener('click', uploadMediaFiles);
+    if (btnClear) btnClear.addEventListener('click', limparArquivos);
+    if (btnSend) btnSend.addEventListener('click', enviarMidiaParaPendentes);
     
     // Eventos de pagamentos
     document.getElementById('aplicar-filtros-pag').addEventListener('click', aplicarFiltros);
