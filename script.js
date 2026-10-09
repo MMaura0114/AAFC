@@ -1,4 +1,3 @@
-// script.js - Versão atualizada com melhorias
 // ==================== CONFIGURAÇÃO ====================
 const JSONBIN_API_KEY = '$2a$10$8yB70Rb7oLrLXy0Ge3JuzOA1xxB56R1tJZS4NDJ0m.CRg4mADoB0m';
 const JSONBIN_BIN_ID = '691d1701ae596e708f61d4c6';
@@ -35,23 +34,29 @@ let isUploadingMedia = false;
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 // ==================== FUNÇÕES AUXILIARES ====================
-function formatarData(data) { 
-    return data ? new Date(data).toLocaleDateString('pt-BR') : '-'; 
+// ✅ MELHORIA 2: Parse local de datas (evita erro de 1 dia)
+function parseDateLocal(dateStr) {
+    if (!dateStr) return null;
+    const parts = String(dateStr).split('-');
+    if (parts.length !== 3) return new Date(dateStr);
+    return new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
 }
 
-function formatarMesAno(mesAno) { 
-    if (!mesAno) return '-'; 
+function formatarData(data) {
+    if (!data) return '-';
+    const parts = String(data).split('-');
+    if (parts.length !== 3) return data;
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+}
+
+function formatarMesAno(mesAno) {
+    if (!mesAno) return '-';
     const [ano, mes] = mesAno.split('-').map(Number);
-    return new Date(ano, mes - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' }); 
+    return new Date(ano, mes - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
 }
 
-function formatarValor(valor) { 
-    return `R$ ${(valor || 0).toFixed(2)}`; 
-}
-
-function formatarDataHora(d) {
-    return d ? new Date(d).toLocaleString('pt-BR') : '-';
-}
+function formatarValor(valor) { return `R$ ${(valor || 0).toFixed(2)}`; }
+function formatarDataHora(d) { return d ? new Date(d).toLocaleString('pt-BR') : '-'; }
 
 function formatFileSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
@@ -101,7 +106,7 @@ async function salvarDados() {
         const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json', 'X-Master-Key': JSONBIN_API_KEY },
-            body: JSON.stringify({ associados: associados, scheduledMessages: scheduledMessages })
+            body: JSON.stringify({ associados, scheduledMessages })
         });
         if (!response.ok) throw new Error('Erro ao salvar dados');
         return true;
@@ -113,8 +118,8 @@ async function salvarDados() {
 }
 
 function getDispositivoSelecionado() {
-    const dispositivoRadios = document.querySelectorAll('input[name="dispositivo"]');
-    for (let radio of dispositivoRadios) if (radio.checked) return radio.value;
+    const radios = document.querySelectorAll('input[name="dispositivo"]');
+    for (let radio of radios) if (radio.checked) return radio.value;
     return isMobile ? 'mobile' : 'web';
 }
 
@@ -135,34 +140,23 @@ function enviarWhatsAppUniversal(telefone, mensagem, nome = '', numero = '') {
 function enviarMensagemIndividual(numeroAssociado) {
     const associado = associados.find(a => a.numero === numeroAssociado);
     if (!associado) return;
-    enviarWhatsAppUniversal(
-        associado.telefone, 
-        mensagemTemplate.value, 
-        associado.nome,
-        associado.numero.toString()
-    );
+    enviarWhatsAppUniversal(associado.telefone, mensagemTemplate.value, associado.nome, associado.numero.toString());
 }
 
-// ==================== FUNÇÕES DE ÁUDIO ====================
+// ==================== ÁUDIO ====================
 async function uploadAudioToTmpFiles(blob) {
     const formData = new FormData();
     formData.append('file', blob, 'mensagem_voz.webm');
-    
     try {
         const statusDiv = document.getElementById('upload-status');
         if (statusDiv) statusDiv.innerHTML = '<span class="loading"></span> Enviando áudio...';
-        const response = await fetch('https://tmpfiles.org/api/v1/upload', {
-            method: 'POST',
-            body: formData
-        });
+        const response = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: formData });
         const data = await response.json();
         if (data.status === 'success' && data.data.url) {
             const directUrl = data.data.url.replace('/dl/', '/download/') + '?download=1';
             if (statusDiv) statusDiv.innerHTML = `✅ Áudio enviado! <a href="${directUrl}" target="_blank">Link permanente (30 dias)</a>`;
             return directUrl;
-        } else {
-            throw new Error('Falha no upload');
-        }
+        } else throw new Error('Falha no upload');
     } catch (err) {
         console.error(err);
         const statusDiv = document.getElementById('upload-status');
@@ -179,92 +173,44 @@ function enviarLinkAudioGravado(telefone, linkAudio, nome, numero) {
 }
 
 async function enviarAudioGravadoParaPendentes() {
-    if (!audioBlob) { 
-        showToast('Grave um áudio primeiro', 'error'); 
-        return; 
-    }
-    if (associadosPendentes.length === 0) { 
-        showToast('Sem pendentes', 'error'); 
-        return; 
-    }
-    
+    if (!audioBlob) { showToast('Grave um áudio primeiro', 'error'); return; }
+    if (associadosPendentes.length === 0) { showToast('Sem pendentes', 'error'); return; }
     showToast('Enviando áudio para servidor... Aguarde');
     const audioPublicUrl = await uploadAudioToTmpFiles(audioBlob);
-    if (!audioPublicUrl) {
-        showToast('Falha no upload do áudio. Tente novamente.', 'error');
-        return;
-    }
-    
+    if (!audioPublicUrl) { showToast('Falha no upload do áudio.', 'error'); return; }
     if (confirm(`Enviar link do áudio para ${associadosPendentes.length} associados pendentes?`)) {
         for (let i = 0; i < associadosPendentes.length; i++) {
             setTimeout(() => {
-                enviarLinkAudioGravado(
-                    associadosPendentes[i].telefone, 
-                    audioPublicUrl, 
-                    associadosPendentes[i].nome,
-                    associadosPendentes[i].numero.toString()
-                );
+                enviarLinkAudioGravado(associadosPendentes[i].telefone, audioPublicUrl, associadosPendentes[i].nome, associadosPendentes[i].numero.toString());
             }, i * 2000);
         }
-        showToast(`Enviando links do áudio para ${associadosPendentes.length} associados...`);
+        showToast(`Enviando links do áudio...`);
     }
 }
 
-// ==================== FUNÇÕES DE MÍDIA MELHORADAS ====================
+// ==================== MÍDIA ====================
 function initMediaFunctions() {
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
-    
     if (!dropZone) return;
-    
     dropZone.addEventListener('click', () => fileInput.click());
-    
-    dropZone.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropZone.classList.add('dragover');
-    });
-    
-    dropZone.addEventListener('dragleave', () => {
-        dropZone.classList.remove('dragover');
-    });
-    
-    dropZone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropZone.classList.remove('dragover');
-        handleFiles(e.dataTransfer.files);
-    });
-    
-    fileInput.addEventListener('change', (e) => {
-        handleFiles(e.target.files);
-        fileInput.value = '';
-    });
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => { e.preventDefault(); dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files); });
+    fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); fileInput.value = ''; });
 }
 
 function handleFiles(files) {
     const maxSize = 25 * 1024 * 1024;
     const validTypes = ['image/', 'audio/', 'video/'];
-    
     Array.from(files).forEach(file => {
         const isValidType = validTypes.some(type => file.type.startsWith(type));
-        if (!isValidType) {
-            showToast(`Arquivo "${file.name}" não é suportado.`, 'error');
-            return;
-        }
-        
-        if (file.size > maxSize) {
-            showToast(`Arquivo "${file.name}" excede 25MB.`, 'error');
-            return;
-        }
-        
+        if (!isValidType) { showToast(`Arquivo "${file.name}" não é suportado.`, 'error'); return; }
+        if (file.size > maxSize) { showToast(`Arquivo "${file.name}" excede 25MB.`, 'error'); return; }
         const exists = selectedFiles.some(f => f.name === file.name && f.size === file.size);
-        if (exists) {
-            showToast(`Arquivo "${file.name}" já foi adicionado.`, 'warning');
-            return;
-        }
-        
+        if (exists) { showToast(`Arquivo "${file.name}" já foi adicionado.`, 'warning'); return; }
         selectedFiles.push(file);
     });
-    
     atualizarListaArquivos();
     atualizarPreview();
 }
@@ -272,27 +218,20 @@ function handleFiles(files) {
 function atualizarListaArquivos() {
     const fileList = document.getElementById('file-list');
     if (!fileList) return;
-    
-    if (selectedFiles.length === 0) {
-        fileList.innerHTML = '';
-        return;
-    }
-    
+    if (selectedFiles.length === 0) { fileList.innerHTML = ''; return; }
     fileList.innerHTML = selectedFiles.map((file, index) => {
         const icon = getFileIcon(file.type);
         const size = formatFileSize(file.size);
-        return `
-            <div class="file-item">
-                <div class="file-info">
-                    <span class="file-icon">${icon}</span>
-                    <span class="file-name" title="${file.name}">${file.name}</span>
-                    <span class="file-size">(${size})</span>
-                </div>
-                <div class="file-actions">
-                    <button class="btn-danger" onclick="removerArquivo(${index})" style="padding: 3px 8px; font-size: 12px;">✕</button>
-                </div>
+        return `<div class="file-item">
+            <div class="file-info">
+                <span class="file-icon">${icon}</span>
+                <span class="file-name" title="${file.name}">${file.name}</span>
+                <span class="file-size">(${size})</span>
             </div>
-        `;
+            <div class="file-actions">
+                <button class="btn-danger" onclick="removerArquivo(${index})" style="padding: 3px 8px; font-size: 12px;">✕</button>
+            </div>
+        </div>`;
     }).join('');
 }
 
@@ -306,167 +245,84 @@ function atualizarPreview() {
     const container = document.getElementById('media-preview-container');
     const preview = document.getElementById('media-preview');
     if (!container || !preview) return;
-    
-    if (selectedFiles.length === 0) {
-        container.style.display = 'none';
-        return;
-    }
-    
+    if (selectedFiles.length === 0) { container.style.display = 'none'; return; }
     container.style.display = 'block';
-    
-    preview.innerHTML = selectedFiles.map((file, index) => {
+    preview.innerHTML = selectedFiles.map((file) => {
         const url = URL.createObjectURL(file);
         const type = file.type;
-        
         if (type.startsWith('image/')) {
-            return `
-                <div class="media-preview-item">
-                    <img src="${url}" alt="${file.name}" loading="lazy">
-                    <div class="file-label">${file.name}</div>
-                </div>
-            `;
+            return `<div class="media-preview-item"><img src="${url}" alt="${file.name}" loading="lazy"><div class="file-label">${file.name}</div></div>`;
         } else if (type.startsWith('video/')) {
-            return `
-                <div class="media-preview-item">
-                    <video src="${url}" controls muted></video>
-                    <div class="file-label">${file.name}</div>
-                </div>
-            `;
+            return `<div class="media-preview-item"><video src="${url}" controls muted></video><div class="file-label">${file.name}</div></div>`;
         } else if (type.startsWith('audio/')) {
-            return `
-                <div class="media-preview-item" style="aspect-ratio: auto; padding: 10px; display: flex; flex-direction: column; justify-content: center;">
-                    <audio src="${url}" controls style="width: 100%;"></audio>
-                    <div class="file-label" style="position: static; background: none; color: #333; margin-top: 5px;">${file.name}</div>
-                </div>
-            `;
+            return `<div class="media-preview-item" style="aspect-ratio: auto; padding: 10px; display: flex; flex-direction: column; justify-content: center;"><audio src="${url}" controls style="width: 100%;"></audio><div class="file-label" style="position: static; background: none; color: #333; margin-top: 5px;">${file.name}</div></div>`;
         }
         return '';
     }).join('');
 }
 
 async function uploadMediaFiles() {
-    if (selectedFiles.length === 0) {
-        showToast('Selecione arquivos para enviar.', 'warning');
-        return;
-    }
-    
-    if (isUploadingMedia) {
-        showToast('Upload em andamento... Aguarde.', 'warning');
-        return;
-    }
-    
+    if (selectedFiles.length === 0) { showToast('Selecione arquivos para enviar.', 'warning'); return; }
+    if (isUploadingMedia) { showToast('Upload em andamento... Aguarde.', 'warning'); return; }
     isUploadingMedia = true;
     uploadedMediaUrls = [];
     const statusDiv = document.getElementById('media-upload-status');
     statusDiv.innerHTML = '<span class="loading"></span> Enviando arquivos...';
-    
     const totalFiles = selectedFiles.length;
     let uploadedCount = 0;
-    
     for (const file of selectedFiles) {
         try {
             const formData = new FormData();
             formData.append('file', file);
-            
-            const response = await fetch('https://tmpfiles.org/api/v1/upload', {
-                method: 'POST',
-                body: formData
-            });
-            
+            const response = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: formData });
             const data = await response.json();
-            
             if (data.status === 'success' && data.data.url) {
-                // Usar o link direto para download (melhor para preview no WhatsApp)
                 const directUrl = data.data.url.replace('/dl/', '/download/') + '?download=1';
-                uploadedMediaUrls.push({
-                    name: file.name,
-                    type: file.type,
-                    url: directUrl,
-                    originalUrl: data.data.url
-                });
+                uploadedMediaUrls.push({ name: file.name, type: file.type, url: directUrl, originalUrl: data.data.url });
                 uploadedCount++;
                 statusDiv.innerHTML = `Enviando... ${uploadedCount}/${totalFiles} arquivos`;
-            } else {
-                throw new Error('Falha no upload');
-            }
+            } else throw new Error('Falha no upload');
         } catch (err) {
             console.error('Erro no upload:', err);
             showToast(`Erro ao enviar "${file.name}"`, 'error');
         }
     }
-    
     isUploadingMedia = false;
-    
     if (uploadedMediaUrls.length > 0) {
-        statusDiv.innerHTML = `
-            ✅ ${uploadedMediaUrls.length} arquivo(s) enviados com sucesso!
-            ${uploadedMediaUrls.map(f => `<br><small><a href="${f.url}" target="_blank">${f.name}</a> ${f.type.startsWith('image/') ? '🖼️' : f.type.startsWith('video/') ? '🎬' : '🔊'}</small>`).join('')}
-        `;
+        statusDiv.innerHTML = `✅ ${uploadedMediaUrls.length} arquivo(s) enviados com sucesso!${uploadedMediaUrls.map(f => `<br><small><a href="${f.url}" target="_blank">${f.name}</a></small>`).join('')}`;
         showToast(`${uploadedMediaUrls.length} arquivo(s) enviados!`);
     } else {
-        statusDiv.innerHTML = '❌ Nenhum arquivo foi enviado. Tente novamente.';
+        statusDiv.innerHTML = '❌ Nenhum arquivo foi enviado.';
         showToast('Falha no upload dos arquivos.', 'error');
     }
 }
 
-/**
- * Envia mensagem com mídia para os associados pendentes
- * A mensagem é personalizada com [NOME] e [NUMERO]
- */
 async function enviarMidiaParaPendentes() {
-    if (uploadedMediaUrls.length === 0) {
-        showToast('Envie os arquivos primeiro.', 'warning');
-        return;
-    }
-    
-    if (associadosPendentes.length === 0) {
-        showToast('Sem associados pendentes.', 'warning');
-        return;
-    }
-    
-    // Construir lista de links com emojis para melhor visualização
-    let mediaLinks = uploadedMediaUrls.map(f => {
-        const icon = getFileEmoji(f.type);
-        return `${icon} ${f.name}: ${f.url}`;
-    }).join('\n');
-    
+    if (uploadedMediaUrls.length === 0) { showToast('Envie os arquivos primeiro.', 'warning'); return; }
+    if (associadosPendentes.length === 0) { showToast('Sem associados pendentes.', 'warning'); return; }
+    let mediaLinks = uploadedMediaUrls.map(f => `${getFileEmoji(f.type)} ${f.name}: ${f.url}`).join('\n');
     if (!confirm(`Enviar ${uploadedMediaUrls.length} arquivo(s) para ${associadosPendentes.length} associados pendentes?`)) return;
-    
     const template = mensagemTemplate.value;
-    
     for (let i = 0; i < associadosPendentes.length; i++) {
         setTimeout(() => {
             const a = associadosPendentes[i];
-            // Personalizar mensagem com nome e número
-            let msgPersonalizada = template
-                .replace(/\[NOME\]/g, a.nome)
-                .replace(/\[NUMERO\]/g, a.numero.toString());
-            
-            // Adicionar os links da mídia no final
+            let msgPersonalizada = template.replace(/\[NOME\]/g, a.nome).replace(/\[NUMERO\]/g, a.numero.toString());
             const mensagemCompleta = `${msgPersonalizada}\n\n📎 *Arquivos Anexados:*\n${mediaLinks}`;
-            
             enviarWhatsAppUniversal(a.telefone, mensagemCompleta, a.nome, a.numero.toString());
         }, i * 2000);
     }
-    
     showToast(`Enviando mídia para ${associadosPendentes.length} associados...`);
 }
 
 function limparArquivos() {
-    if (selectedFiles.length === 0 && uploadedMediaUrls.length === 0) {
-        showToast('Nenhum arquivo para limpar.', 'warning');
-        return;
-    }
-    
+    if (selectedFiles.length === 0 && uploadedMediaUrls.length === 0) { showToast('Nenhum arquivo para limpar.', 'warning'); return; }
     if (!confirm('Remover todos os arquivos selecionados e enviados?')) return;
-    
     selectedFiles = [];
     uploadedMediaUrls = [];
     document.getElementById('file-list').innerHTML = '';
     document.getElementById('media-preview-container').style.display = 'none';
     document.getElementById('media-upload-status').innerHTML = '';
     document.getElementById('media-preview').innerHTML = '';
-    
     showToast('Arquivos removidos.');
 }
 
@@ -491,10 +347,7 @@ function autorizarWhatsapp() {
     const radios = document.querySelectorAll('input[name="auth-device"]');
     let selected = null;
     for (let r of radios) if (r.checked) { selected = r.value; break; }
-    if (!selected) { 
-        showToast('Selecione um dispositivo', 'error'); 
-        return; 
-    }
+    if (!selected) { showToast('Selecione um dispositivo', 'error'); return; }
     localStorage.setItem('whatsappAutorizado', 'true');
     localStorage.setItem('dispositivoAutorizado', selected);
     whatsappAutorizado = true;
@@ -528,9 +381,7 @@ async function iniciarGravacao() {
         btnRecordAudio.disabled = true;
         btnStopRecording.disabled = false;
         btnRecordAudio.classList.add('pulse-animation');
-    } catch (e) { 
-        showToast('Erro ao acessar microfone', 'error'); 
-    }
+    } catch (e) { showToast('Erro ao acessar microfone', 'error'); }
 }
 
 function pararGravacao() {
@@ -543,28 +394,16 @@ function pararGravacao() {
     }
 }
 
-function reproduzirAudio() { 
-    if (recordedAudio.src) recordedAudio.play(); 
-    else showToast('Nenhum áudio', 'error'); 
+function reproduzirAudio() {
+    if (recordedAudio.src) recordedAudio.play();
+    else showToast('Nenhum áudio', 'error');
 }
 
 // ==================== ENVIO AUTOMÁTICO ====================
 function iniciarEnvioAutomatico() {
-    if (!whatsappAutorizado) { 
-        showToast('Autorize o WhatsApp primeiro', 'error'); 
-        return; 
-    }
-    if (envioEmAndamento) { 
-        if (confirm('Envio em andamento. Parar e reiniciar?')) { 
-            pararEnvio(); 
-            setTimeout(iniciarEnvioAutomatico, 500); 
-        } 
-        return; 
-    }
-    if (associadosPendentes.length === 0) { 
-        showToast('Sem pendentes', 'error'); 
-        return; 
-    }
+    if (!whatsappAutorizado) { showToast('Autorize o WhatsApp primeiro', 'error'); return; }
+    if (envioEmAndamento) { if (confirm('Envio em andamento. Parar e reiniciar?')) { pararEnvio(); setTimeout(iniciarEnvioAutomatico, 500); } return; }
+    if (associadosPendentes.length === 0) { showToast('Sem pendentes', 'error'); return; }
     if (!confirm(`Enviar para ${associadosPendentes.length} associados?`)) return;
     envioEmAndamento = true;
     indiceEnvioAtual = 0;
@@ -577,32 +416,19 @@ function iniciarEnvioAutomatico() {
 
 function enviarProximaAuto() {
     if (!envioEmAndamento) return;
-    if (indiceEnvioAtual >= associadosPendentes.length) { 
-        finalizarEnvioAuto(); 
-        return; 
-    }
+    if (indiceEnvioAtual >= associadosPendentes.length) { finalizarEnvioAuto(); return; }
     const a = associadosPendentes[indiceEnvioAtual];
     contadorTexto.textContent = `Enviando ${indiceEnvioAtual + 1}/${associadosPendentes.length}: ${a.nome}`;
     const perc = Math.round((indiceEnvioAtual / associadosPendentes.length) * 100);
     progressBar.style.width = `${perc}%`;
     progressText.textContent = `${perc}%`;
-    
-    // Personalizar mensagem com nome e número
-    const msgPersonalizada = mensagemTemplate.value
-        .replace(/\[NOME\]/g, a.nome)
-        .replace(/\[NUMERO\]/g, a.numero.toString());
-    
+    const msgPersonalizada = mensagemTemplate.value.replace(/\[NOME\]/g, a.nome).replace(/\[NUMERO\]/g, a.numero.toString());
     const link = gerarLinkWhatsApp(a.telefone, msgPersonalizada, a.nome, a.numero.toString());
-    
     if (dispositivoAutorizado === 'mobile') window.location.href = link;
     else window.open(link, '_blank');
-    
     indiceEnvioAtual++;
-    if (indiceEnvioAtual < associadosPendentes.length) {
-        intervaloEnvio = setTimeout(enviarProximaAuto, 5000);
-    } else {
-        setTimeout(finalizarEnvioAuto, 5000);
-    }
+    if (indiceEnvioAtual < associadosPendentes.length) intervaloEnvio = setTimeout(enviarProximaAuto, 5000);
+    else setTimeout(finalizarEnvioAuto, 5000);
 }
 
 function finalizarEnvioAuto() {
@@ -614,10 +440,7 @@ function finalizarEnvioAuto() {
     setTimeout(() => {
         enviarAutomaticoBtn.disabled = false;
         pararEnvioBtn.disabled = true;
-        setTimeout(() => {
-            contadorEnvioDiv.style.display = 'none';
-            progressContainerDiv.style.display = 'none';
-        }, 3000);
+        setTimeout(() => { contadorEnvioDiv.style.display = 'none'; progressContainerDiv.style.display = 'none'; }, 3000);
     }, 2000);
     showToast('Envio automático finalizado');
 }
@@ -633,12 +456,12 @@ function pararEnvio() {
     }
 }
 
-// ==================== FUNÇÕES DE STATUS ====================
+// ==================== STATUS ====================
 function calcularStatusPagamento(associado) {
     const hoje = new Date();
     const anoAtual = hoje.getFullYear();
     const mesAtual = hoje.getMonth() + 1;
-    const dataCadastro = new Date(associado.dataCadastro);
+    const dataCadastro = parseDateLocal(associado.dataCadastro);
     const anoCadastro = dataCadastro.getFullYear();
     const mesCadastro = dataCadastro.getMonth() + 1;
     let totalMeses = 0, mesesPagos = 0;
@@ -653,12 +476,12 @@ function calcularStatusPagamento(associado) {
     }
     const pendentes = totalMeses - mesesPagos;
     const percentual = totalMeses > 0 ? Math.round((mesesPagos / totalMeses) * 100) : 0;
-    return pendentes === 0 ? 
+    return pendentes === 0 ?
         { texto: `Em dia (${mesesPagos}/${totalMeses} - ${percentual}%)`, classe: 'status-pago', mesesPendentes: 0 } :
         { texto: `${pendentes} atrasados (${mesesPagos}/${totalMeses} - ${percentual}%)`, classe: 'status-pendente', mesesPendentes: pendentes };
 }
 
-// ==================== FUNÇÕES ADMIN ====================
+// ==================== CADASTRO ====================
 async function cadastrarAssociado(e) {
     e.preventDefault();
     const novoAssociado = {
@@ -706,15 +529,15 @@ async function excluirAssociado(numero) {
 
 function atualizarListaAssociados() {
     const searchTerm = document.getElementById('search-input').value.toLowerCase();
-    let filtrados = searchTerm ? 
-        associados.filter(a => a.nome.toLowerCase().includes(searchTerm) || a.numero.toString().includes(searchTerm)) : 
+    let filtrados = searchTerm ?
+        associados.filter(a => a.nome.toLowerCase().includes(searchTerm) || a.numero.toString().includes(searchTerm)) :
         associados;
     const totalPages = Math.ceil(filtrados.length / itemsPerPage);
     if (currentPage > totalPages) currentPage = totalPages || 1;
     const start = (currentPage - 1) * itemsPerPage;
     const pagina = filtrados.slice(start, start + itemsPerPage);
     const tbody = document.getElementById('associados-list');
-    tbody.innerHTML = pagina.length ? 
+    tbody.innerHTML = pagina.length ?
         pagina.map(a => {
             const status = calcularStatusPagamento(a);
             return `<tr>
@@ -731,7 +554,7 @@ function atualizarListaAssociados() {
                     <button class="btn-danger" onclick="excluirAssociado(${a.numero})">🗑️</button>
                 </td>
             </tr>`;
-        }).join('') : 
+        }).join('') :
         '<tr><td colspan="7" style="text-align:center;">Nenhum associado encontrado</td></tr>';
     atualizarPaginacao(totalPages);
 }
@@ -741,9 +564,7 @@ function atualizarPaginacao(totalPages) {
     if (!pagination || totalPages <= 1) { pagination.innerHTML = ''; return; }
     pagination.innerHTML = '';
     const prev = document.createElement('button');
-    prev.className = 'page-btn';
-    prev.textContent = '«';
-    prev.disabled = currentPage === 1;
+    prev.className = 'page-btn'; prev.textContent = '«'; prev.disabled = currentPage === 1;
     prev.addEventListener('click', () => { if (currentPage > 1) { currentPage--; atualizarListaAssociados(); } });
     pagination.appendChild(prev);
     for (let i = 1; i <= totalPages; i++) {
@@ -754,16 +575,14 @@ function atualizarPaginacao(totalPages) {
         pagination.appendChild(btn);
     }
     const next = document.createElement('button');
-    next.className = 'page-btn';
-    next.textContent = '»';
-    next.disabled = currentPage === totalPages;
+    next.className = 'page-btn'; next.textContent = '»'; next.disabled = currentPage === totalPages;
     next.addEventListener('click', () => { if (currentPage < totalPages) { currentPage++; atualizarListaAssociados(); } });
     pagination.appendChild(next);
 }
 
 function atualizarSeletorAssociados() {
     if (associadoSelect) {
-        associadoSelect.innerHTML = '<option value="">Selecione...</option>' + 
+        associadoSelect.innerHTML = '<option value="">Selecione...</option>' +
             associados.map(a => `<option value="${a.numero}">${a.numero} - ${a.nome}</option>`).join('');
     }
     popularFiltrosPagamentos();
@@ -771,19 +590,15 @@ function atualizarSeletorAssociados() {
 
 function selecionarAssociado() {
     const numero = parseInt(associadoSelect.value);
-    if (!numero) { 
-        associadoInfo.style.display = 'none'; 
-        selectedAssociado = null; 
-        return; 
-    }
+    if (!numero) { associadoInfo.style.display = 'none'; selectedAssociado = null; return; }
     selectedAssociado = associados.find(a => a.numero === numero);
     if (!selectedAssociado) return;
     document.getElementById('info-nome').textContent = selectedAssociado.nome;
     document.getElementById('info-numero').textContent = selectedAssociado.numero;
     document.getElementById('info-telefone').textContent = selectedAssociado.telefone;
     document.getElementById('info-data-cadastro').textContent = formatarData(selectedAssociado.dataCadastro);
-    paymentHistory.innerHTML = selectedAssociado.contribuicoes?.length ? 
-        selectedAssociado.contribuicoes.sort((a, b) => new Date(b.dataPagamento) - new Date(a.dataPagamento)).map(c => 
+    paymentHistory.innerHTML = selectedAssociado.contribuicoes?.length ?
+        selectedAssociado.contribuicoes.sort((a, b) => new Date(b.dataPagamento) - new Date(a.dataPagamento)).map(c =>
             `<div class="payment-item">
                 <div>
                     <strong>${formatarMesAno(c.mesReferencia)}</strong>
@@ -795,7 +610,7 @@ function selecionarAssociado() {
                     <br><small>${c.formaPagamento}</small>
                 </div>
             </div>`
-        ).join('') : 
+        ).join('') :
         '<p>Nenhuma contribuição</p>';
     document.getElementById('forma-pagamento-contrib').value = selectedAssociado.formaPagamento;
     associadoInfo.style.display = 'block';
@@ -831,7 +646,7 @@ function atualizarListaPendentes() {
     associadosPendentes = associados.filter(a => calcularStatusPagamento(a).mesesPendentes > 0);
     const div = document.getElementById('pendentes-list');
     if (div) {
-        div.innerHTML = associadosPendentes.length ? 
+        div.innerHTML = associadosPendentes.length ?
             associadosPendentes.map(a => {
                 const status = calcularStatusPagamento(a);
                 return `<div class="card" style="margin-bottom:10px;">
@@ -844,7 +659,7 @@ function atualizarListaPendentes() {
                         <button class="whatsapp-btn" onclick="enviarMensagemIndividual(${a.numero})">📱 Enviar</button>
                     </div>
                 </div>`;
-            }).join('') : 
+            }).join('') :
             '<p>✅ Todos os associados estão em dia!</p>';
     }
 }
@@ -858,9 +673,7 @@ function popularSelectMeses() {
     });
     const mesesOrdenados = Array.from(mesesSet).sort().reverse();
     let options = '<option value="">Todos os meses</option>';
-    mesesOrdenados.forEach(mes => {
-        options += `<option value="${mes}">${formatarMesAno(mes)}</option>`;
-    });
+    mesesOrdenados.forEach(mes => { options += `<option value="${mes}">${formatarMesAno(mes)}</option>`; });
     sel.innerHTML = options;
 }
 
@@ -880,20 +693,16 @@ function atualizarRelatorios() {
                 if (!formas[forma]) formas[forma] = { qtd: 0, valor: 0 };
                 formas[forma].qtd++;
                 formas[forma].valor += contrib.valor || 0;
-                if (!arrecadacaoPorMes.has(contrib.mesReferencia)) {
-                    arrecadacaoPorMes.set(contrib.mesReferencia, { total: 0, qtd: 0 });
-                }
-                const mesData = arrecadacaoPorMes.get(contrib.mesReferencia);
-                mesData.total += contrib.valor || 0;
-                mesData.qtd++;
+                if (!arrecadacaoPorMes.has(contrib.mesReferencia)) arrecadacaoPorMes.set(contrib.mesReferencia, { total: 0, qtd: 0 });
+                const m = arrecadacaoPorMes.get(contrib.mesReferencia);
+                m.total += contrib.valor || 0;
+                m.qtd++;
             }
         });
     });
     const mesesOrdenados = Array.from(arrecadacaoPorMes.keys()).sort().reverse();
     const arrecadacaoMeses = mesesOrdenados.map(mes => ({
-        mes: mes,
-        total: arrecadacaoPorMes.get(mes).total,
-        qtd: arrecadacaoPorMes.get(mes).qtd,
+        mes, total: arrecadacaoPorMes.get(mes).total, qtd: arrecadacaoPorMes.get(mes).qtd,
         media: arrecadacaoPorMes.get(mes).qtd > 0 ? arrecadacaoPorMes.get(mes).total / arrecadacaoPorMes.get(mes).qtd : 0
     }));
     document.getElementById('arrecadacao-mes').textContent = `R$ ${totalPeriodo.toFixed(2)}`;
@@ -901,16 +710,12 @@ function atualizarRelatorios() {
     document.getElementById('associados-ativos').textContent = associados.length;
     document.getElementById('pagamentos-mes').textContent = qtdPeriodo;
     const bodyFormas = document.getElementById('relatorio-formas-pagamento-body');
-    bodyFormas.innerHTML = Object.keys(formas).length ? 
-        Object.entries(formas).map(([f, d]) => 
-            `<tr><td>${f}</td><td>${d.qtd}</td><td>R$ ${d.valor.toFixed(2)}</td></tr>`
-        ).join('') : 
+    bodyFormas.innerHTML = Object.keys(formas).length ?
+        Object.entries(formas).map(([f, d]) => `<tr><td>${f}</td><td>${d.qtd}</td><td>R$ ${d.valor.toFixed(2)}</td></tr>`).join('') :
         '<tr><td colspan="3" style="text-align:center;">Sem dados</td></tr>';
     const bodyMeses = document.getElementById('relatorio-arrecadacao-meses-body');
-    bodyMeses.innerHTML = arrecadacaoMeses.length ? 
-        arrecadacaoMeses.map(m => 
-            `<tr><td>${formatarMesAno(m.mes)}</td><td>R$ ${m.total.toFixed(2)}</td><td>${m.qtd}</td><td>R$ ${m.media.toFixed(2)}</td></tr>`
-        ).join('') : 
+    bodyMeses.innerHTML = arrecadacaoMeses.length ?
+        arrecadacaoMeses.map(m => `<tr><td>${formatarMesAno(m.mes)}</td><td>R$ ${m.total.toFixed(2)}</td><td>${m.qtd}</td><td>R$ ${m.media.toFixed(2)}</td></tr>`).join('') :
         '<tr><td colspan="4" style="text-align:center;">Nenhuma contribuição no período</td></tr>';
 }
 
@@ -927,6 +732,7 @@ function irParaContribuicoes(num) {
     document.getElementById('data-pagamento').valueAsDate = hoje;
 }
 
+// ==================== EDIÇÃO E EXCLUSÃO (MELHORIA 3) ====================
 function editarAssociado(num) {
     associadoEditando = associados.find(a => a.numero === num);
     if (!associadoEditando) return;
@@ -934,15 +740,39 @@ function editarAssociado(num) {
     document.getElementById('editar-data-cadastro').value = associadoEditando.dataCadastro;
     document.getElementById('editar-forma-pagamento').value = associadoEditando.formaPagamento;
     document.getElementById('editar-telefone').value = associadoEditando.telefone;
-    contribuicoesLista.innerHTML = associadoEditando.contribuicoes?.length ? 
-        associadoEditando.contribuicoes.sort((a, b) => new Date(b.mesReferencia) - new Date(a.mesReferencia)).map((c, i) => 
-            `<div class="payment-item">
-                <input type="checkbox" class="contrib-checkbox" data-index="${i}">
-                ${formatarMesAno(c.mesReferencia)} - R$ ${c.valor.toFixed(2)}
-            </div>`
-        ).join('') : 
-        '<p>Nenhuma contribuição</p>';
+    atualizarListaContribuicoesEdicao();
     modalEditar.style.display = 'flex';
+}
+
+// ✅ MELHORIA 3: Checkbox visível com feedback visual
+function atualizarListaContribuicoesEdicao() {
+    if (!associadoEditando) return;
+    const contribs = (associadoEditando.contribuicoes || []).slice()
+        .sort((a, b) => (b.mesReferencia || '').localeCompare(a.mesReferencia || ''));
+    if (!contribs.length) {
+        contribuicoesLista.innerHTML = '<p>Nenhuma contribuição</p>';
+        return;
+    }
+    contribuicoesLista.innerHTML = contribs.map((c, i) => `
+        <div class="payment-item">
+            <label onclick="toggleMarcacaoExclusao(this, event)">
+                <input type="checkbox" class="contrib-checkbox" data-index="${i}">
+                <span>
+                    <strong>${formatarMesAno(c.mesReferencia)}</strong> — ${formatarValor(c.valor || 0)}
+                    <small style="color:#888; display:block;">Pago em ${formatarData(c.dataPagamento)} · ${c.formaPagamento || '-'}</small>
+                </span>
+            </label>
+        </div>
+    `).join('');
+}
+
+function toggleMarcacaoExclusao(labelEl, event) {
+    const checkbox = labelEl.querySelector('.contrib-checkbox');
+    const parent = labelEl.closest('.payment-item');
+    setTimeout(() => {
+        if (checkbox.checked) parent.classList.add('marcado-para-excluir');
+        else parent.classList.remove('marcado-para-excluir');
+    }, 10);
 }
 
 async function salvarEdicaoAssociado(e) {
@@ -992,22 +822,11 @@ async function adicionarNovaContribuicao(e) {
     }
 }
 
-function atualizarListaContribuicoesEdicao() {
-    contribuicoesLista.innerHTML = associadoEditando.contribuicoes?.length ? 
-        associadoEditando.contribuicoes.sort((a, b) => new Date(b.mesReferencia) - new Date(a.mesReferencia)).map((c, i) => 
-            `<div class="payment-item">
-                <input type="checkbox" class="contrib-checkbox" data-index="${i}">
-                ${formatarMesAno(c.mesReferencia)} - R$ ${c.valor.toFixed(2)}
-            </div>`
-        ).join('') : 
-        '<p>Nenhuma contribuição</p>';
-}
-
 async function removerContribuicoesSelecionadas() {
     if (!associadoEditando) return;
     const checkboxes = document.querySelectorAll('.contrib-checkbox:checked');
-    if (!checkboxes.length) return alert('Selecione contribuições');
-    if (!confirm(`Remover ${checkboxes.length} contribuições?`)) return;
+    if (!checkboxes.length) { alert('Selecione pelo menos uma contribuição para excluir.'); return; }
+    if (!confirm(`Remover ${checkboxes.length} contribuição(ões)? Esta ação não pode ser desfeita.`)) return;
     const indices = Array.from(checkboxes).map(cb => parseInt(cb.dataset.index)).sort((a, b) => b - a);
     indices.forEach(i => associadoEditando.contribuicoes.splice(i, 1));
     if (await salvarDados()) {
@@ -1017,21 +836,22 @@ async function removerContribuicoesSelecionadas() {
 }
 
 // ==================== RELATÓRIO DE PAGAMENTOS ====================
+// ✅ MELHORIA 5: Ordenado por número do associado
 function obterTodosPagamentos() {
     const pagamentos = [];
     associados.forEach(associado => {
         if (associado.contribuicoes && associado.contribuicoes.length) {
             associado.contribuicoes.forEach(contrib => {
                 const [ano, mes] = contrib.mesReferencia.split('-').map(Number);
+                const dataParts = String(contrib.dataPagamento).split('-');
+                const dia = dataParts.length === 3 ? parseInt(dataParts[2]) : new Date(contrib.dataPagamento).getDate();
                 pagamentos.push({
                     numero: associado.numero,
                     nome: associado.nome,
                     telefone: associado.telefone,
                     mesReferencia: contrib.mesReferencia,
                     dataPagamento: contrib.dataPagamento,
-                    dia: new Date(contrib.dataPagamento).getDate(),
-                    mes: mes,
-                    ano: ano,
+                    dia: dia, mes: mes, ano: ano,
                     valor: contrib.valor || 0,
                     formaPagamento: contrib.formaPagamento,
                     observacoes: contrib.observacoes || ''
@@ -1039,7 +859,10 @@ function obterTodosPagamentos() {
             });
         }
     });
-    return pagamentos.sort((a, b) => new Date(b.dataPagamento) - new Date(a.dataPagamento));
+    return pagamentos.sort((a, b) => {
+        if (a.numero !== b.numero) return a.numero - b.numero;
+        return a.mesReferencia.localeCompare(b.mesReferencia);
+    });
 }
 
 function filtrarPagamentos(pagamentos) {
@@ -1055,23 +878,19 @@ function filtrarPagamentos(pagamentos) {
 function popularFiltrosPagamentos() {
     const selAssoc = document.getElementById('filtro-associado-pag');
     if (selAssoc) {
-        selAssoc.innerHTML = '<option value="">Todos os associados</option>' + 
+        selAssoc.innerHTML = '<option value="">Todos os associados</option>' +
             associados.map(a => `<option value="${a.numero}">${a.numero} - ${a.nome}</option>`).join('');
     }
     const anos = new Set();
-    associados.forEach(a => {
-        a.contribuicoes?.forEach(c => {
-            const ano = c.mesReferencia.split('-')[0];
-            anos.add(ano);
-        });
-    });
+    associados.forEach(a => a.contribuicoes?.forEach(c => anos.add(c.mesReferencia.split('-')[0])));
     const selAno = document.getElementById('filtro-ano-pag');
     if (selAno) {
-        selAno.innerHTML = '<option value="">Todos os anos</option>' + 
+        selAno.innerHTML = '<option value="">Todos os anos</option>' +
             Array.from(anos).sort().reverse().map(ano => `<option value="${ano}">${ano}</option>`).join('');
     }
 }
 
+// ✅ MELHORIA 6: Tabela recolhível
 function atualizarTabelaPagamentos() {
     const todosPagamentos = obterTodosPagamentos();
     const pagamentosFiltrados = filtrarPagamentos(todosPagamentos);
@@ -1079,30 +898,60 @@ function atualizarTabelaPagamentos() {
     const totalCount = pagamentosFiltrados.length;
     const media = totalCount > 0 ? totalValor / totalCount : 0;
     const associadosUnicos = new Set(pagamentosFiltrados.map(p => p.numero)).size;
+
     document.getElementById('total-pagamentos-count').textContent = totalCount;
     document.getElementById('total-pagamentos-valor').textContent = formatarValor(totalValor);
     document.getElementById('media-pagamento').textContent = formatarValor(media);
     document.getElementById('associados-com-pagamentos').textContent = associadosUnicos;
+
     const tbody = document.getElementById('tabela-pagamentos-body');
     if (pagamentosFiltrados.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="11" style="text-align:center;">Nenhum pagamento encontrado com os filtros selecionados.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhum pagamento encontrado com os filtros selecionados.</td></tr>';
         return;
     }
-    tbody.innerHTML = pagamentosFiltrados.map(p => `
-        <tr>
-            <td>${p.numero}</td>
-            <td>${p.nome}</td>
-            <td>${p.telefone}</td>
-            <td>${formatarMesAno(p.mesReferencia)}</td>
-            <td>${formatarData(p.dataPagamento)}</td>
-            <td>${p.dia}</td>
-            <td>${p.mes}</td>
-            <td>${p.ano}</td>
-            <td>${formatarValor(p.valor)}</td>
-            <td>${p.formaPagamento}</td>
-            <td>${p.observacoes || '-'}</td>
-        </tr>
-    `).join('');
+
+    let html = '';
+    pagamentosFiltrados.forEach((p, idx) => {
+        html += `
+            <tr class="pagamento-row" data-idx="${idx}" onclick="toggleDetalhesPagamento(${idx})">
+                <td><button class="btn-expandir" type="button">▶</button></td>
+                <td><strong>${p.numero}</strong></td>
+                <td>${p.nome}</td>
+                <td>${formatarMesAno(p.mesReferencia)}</td>
+                <td>${formatarData(p.dataPagamento)}</td>
+                <td><strong>${formatarValor(p.valor)}</strong></td>
+                <td>${p.formaPagamento}</td>
+            </tr>
+            <tr class="pagamento-detalhes" id="detalhes-${idx}" style="display: none;">
+                <td colspan="7">
+                    <div class="detalhes-grid">
+                        <div class="detalhe-item"><span class="detalhe-label">Nº Associado</span><span class="detalhe-valor">${p.numero}</span></div>
+                        <div class="detalhe-item"><span class="detalhe-label">Nome Completo</span><span class="detalhe-valor">${p.nome}</span></div>
+                        <div class="detalhe-item"><span class="detalhe-label">Telefone</span><span class="detalhe-valor">${p.telefone}</span></div>
+                        <div class="detalhe-item"><span class="detalhe-label">Mês Referência</span><span class="detalhe-valor">${formatarMesAno(p.mesReferencia)}</span></div>
+                        <div class="detalhe-item"><span class="detalhe-label">Data Pagamento</span><span class="detalhe-valor">${formatarData(p.dataPagamento)} (dia ${p.dia})</span></div>
+                        <div class="detalhe-item"><span class="detalhe-label">Mês / Ano</span><span class="detalhe-valor">${p.mes} / ${p.ano}</span></div>
+                        <div class="detalhe-item destaque"><span class="detalhe-label">Valor</span><span class="detalhe-valor">${formatarValor(p.valor)}</span></div>
+                        <div class="detalhe-item"><span class="detalhe-label">Forma</span><span class="detalhe-valor">${p.formaPagamento}</span></div>
+                        <div class="detalhe-item" style="grid-column: 1 / -1;">
+                            <span class="detalhe-label">Observações</span>
+                            <span class="detalhe-valor">${p.observacoes || 'Sem observações'}</span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+    tbody.innerHTML = html;
+}
+
+function toggleDetalhesPagamento(idx) {
+    const detalhes = document.getElementById(`detalhes-${idx}`);
+    const row = document.querySelector(`.pagamento-row[data-idx="${idx}"]`);
+    if (!detalhes || !row) return;
+    const isVisible = detalhes.style.display !== 'none';
+    detalhes.style.display = isVisible ? 'none' : 'table-row';
+    row.classList.toggle('expandido', !isVisible);
 }
 
 function aplicarFiltros() {
@@ -1118,29 +967,19 @@ function limparFiltros() {
     document.getElementById('filtro-ano-pag').value = '';
     document.getElementById('filtro-mes-pag').value = '';
     document.getElementById('filtro-forma-pag').value = '';
-    filtroAssociadoPag = '';
-    filtroAnoPag = '';
-    filtroMesPag = '';
-    filtroFormaPag = '';
+    filtroAssociadoPag = ''; filtroAnoPag = ''; filtroMesPag = ''; filtroFormaPag = '';
     atualizarTabelaPagamentos();
 }
 
+// ==================== EXPORTAÇÕES ====================
 function exportarPagamentosPDF() {
     const htmlContent = gerarHtmlRelatorioPagamentos();
     const iframe = document.createElement('iframe');
-    iframe.style.position = 'absolute';
-    iframe.style.width = '0';
-    iframe.style.height = '0';
-    iframe.style.border = 'none';
+    iframe.style.cssText = 'position:absolute;width:0;height:0;border:none;';
     document.body.appendChild(iframe);
-    const iframeDoc = iframe.contentWindow.document;
-    iframeDoc.open();
-    iframeDoc.write(htmlContent);
-    iframeDoc.close();
-    iframe.onload = () => {
-        iframe.contentWindow.print();
-        setTimeout(() => document.body.removeChild(iframe), 1000);
-    };
+    const doc = iframe.contentWindow.document;
+    doc.open(); doc.write(htmlContent); doc.close();
+    iframe.onload = () => { iframe.contentWindow.print(); setTimeout(() => document.body.removeChild(iframe), 1000); };
 }
 
 function exportarPagamentosWord() {
@@ -1148,132 +987,15 @@ function exportarPagamentosWord() {
     const blob = new Blob([htmlContent], { type: 'application/msword' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `relatorio_pagamentos_${new Date().toISOString().slice(0, 19)}.doc`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    link.download = `relatorio_pagamentos_${new Date().toISOString().slice(0, 19).replace(/:/g,'-')}.doc`;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
     URL.revokeObjectURL(link.href);
     showToast('Relatório de pagamentos exportado para Word!');
 }
 
 function exportarPagamentosExcel() {
     const todosPagamentos = obterTodosPagamentos();
-    const pagamentosFiltrados = filtrarPagamentos(todosPagamentos);
-    let csv = "Nº;Associado;Telefone;Mês Referência;Data Pagamento;Dia;Mês;Ano;Valor (R$);Forma Pagamento;Observações\n";
-    pagamentosFiltrados.forEach(p => {
-        csv += `"${p.numero}";"${p.nome}";"${p.telefone}";"${formatarMesAno(p.mesReferencia)}";"${formatarData(p.dataPagamento)}";${p.dia};${p.mes};${p.ano};${p.valor.toFixed(2)};"${p.formaPagamento}";"${p.observacoes || ''}"\n`;
-    });
-    const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `relatorio_pagamentos_${new Date().toISOString().slice(0, 19)}.csv`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(link.href);
-    showToast('Relatório de pagamentos exportado para Excel!');
-}
-
-function gerarHtmlRelatorioPagamentos() {
-    const todosPagamentos = obterTodosPagamentos();
-    const pagamentosFiltrados = filtrarPagamentos(todosPagamentos);
-    const totalValor = pagamentosFiltrados.reduce((sum, p) => sum + p.valor, 0);
-    const totalCount = pagamentosFiltrados.length;
-    const media = totalCount > 0 ? totalValor / totalCount : 0;
-    const associadosUnicos = new Set(pagamentosFiltrados.map(p => p.numero)).size;
-    const dataGeracao = new Date().toLocaleString('pt-BR');
-    let tituloFiltros = '';
-    if (filtroAssociadoPag) {
-        const associado = associados.find(a => a.numero == filtroAssociadoPag);
-        tituloFiltros += `Associado: ${associado?.nome || filtroAssociadoPag} | `;
-    }
-    if (filtroAnoPag) tituloFiltros += `Ano: ${filtroAnoPag} | `;
-    if (filtroMesPag) tituloFiltros += `Mês: ${filtroMesPag} | `;
-    if (filtroFormaPag) tituloFiltros += `Forma: ${filtroFormaPag} | `;
-    if (!tituloFiltros) tituloFiltros = 'Todos os pagamentos';
-    else tituloFiltros = tituloFiltros.slice(0, -3);
-    let html = `
-        <!DOCTYPE html>
-        <html>
-        <head><meta charset="UTF-8"><title>Relatório de Pagamentos - ${tituloFiltros}</title>
-        <style>
-            body { font-family: Arial, sans-serif; margin: 40px; }
-            h1 { color: #2c3e50; text-align: center; }
-            .header { text-align: center; margin-bottom: 30px; }
-            .stats { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
-            .stat-box { background: #ecf0f1; padding: 15px; border-radius: 8px; flex: 1; text-align: center; }
-            .stat-value { font-size: 1.8rem; font-weight: bold; color: #2c3e50; }
-            table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-            th { background-color: #3498db; color: white; }
-            .total { font-weight: bold; font-size: 1.2em; margin-top: 20px; }
-        </style>
-        </head>
-        <body>
-        <div class="header"><h1>Relatório de Pagamentos - Mensalidades</h1><p>Gerado em: ${dataGeracao}</p><p><strong>Filtros:</strong> ${tituloFiltros}</p></div>
-        <div class="stats">
-            <div class="stat-box"><div class="stat-value">${totalCount}</div><div>Total de Pagamentos</div></div>
-            <div class="stat-box"><div class="stat-value">${formatarValor(totalValor)}</div><div>Valor Total Arrecadado</div></div>
-            <div class="stat-box"><div class="stat-value">${formatarValor(media)}</div><div>Valor Médio por Pagamento</div></div>
-            <div class="stat-box"><div class="stat-value">${associadosUnicos}</div><div>Associados que Pagaram</div></div>
-        </div>
-        <table>
-            <thead><tr><th>Nº</th><th>Associado</th><th>Telefone</th><th>Mês Referência</th><th>Data Pagamento</th><th>Dia</th><th>Mês</th><th>Ano</th><th>Valor</th><th>Forma Pagamento</th><th>Observações</th></tr></thead>
-            <tbody>
-                ${pagamentosFiltrados.length ? pagamentosFiltrados.map(p => `
-                    <tr>
-                        <td>${p.numero}</td>
-                        <td>${p.nome}</td>
-                        <td>${p.telefone}</td>
-                        <td>${formatarMesAno(p.mesReferencia)}</td>
-                        <td>${formatarData(p.dataPagamento)}</td>
-                        <td>${p.dia}</td>
-                        <td>${p.mes}</td>
-                        <td>${p.ano}</td>
-                        <td>${formatarValor(p.valor)}</td>
-                        <td>${p.formaPagamento}</td>
-                        <td>${p.observacoes || '-'}</td>
-                    </tr>
-                `).join('') : '<tr><td colspan="11" style="text-align:center;">Nenhum pagamento encontrado</td></tr>'}
-            </tbody>
-        </table>
-        <div class="total">Total de Registros: ${totalCount}</div>
-        </body></html>
-    `;
-    return html;
-}
-
-function exportarRelatorioPDF() {
-    const html = gerarHtmlRelatorioPagamentos();
-    const iframe = document.createElement('iframe');
-    iframe.style.position = 'absolute';
-    iframe.style.width = '0';
-    iframe.style.height = '0';
-    document.body.appendChild(iframe);
-    const doc = iframe.contentWindow.document;
-    doc.open();
-    doc.write(html);
-    doc.close();
-    iframe.onload = () => {
-        iframe.contentWindow.print();
-        setTimeout(() => document.body.removeChild(iframe), 1000);
-    };
-}
-
-function exportarRelatorioWord() {
-    const html = gerarHtmlRelatorioPagamentos();
-    const blob = new Blob([html], { type: 'application/msword' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'relatorio_pagamentos.doc';
-    link.click();
-    URL.revokeObjectURL(link.href);
-    showToast('Relatório exportado para Word!');
-}
-
-function exportarRelatorioExcel() {
-    const pagamentos = obterTodosPagamentos();
-    const filtrados = filtrarPagamentos(pagamentos);
+    const filtrados = filtrarPagamentos(todosPagamentos);
     let csv = "Nº;Associado;Telefone;Mês Referência;Data Pagamento;Dia;Mês;Ano;Valor (R$);Forma Pagamento;Observações\n";
     filtrados.forEach(p => {
         csv += `"${p.numero}";"${p.nome}";"${p.telefone}";"${formatarMesAno(p.mesReferencia)}";"${formatarData(p.dataPagamento)}";${p.dia};${p.mes};${p.ano};${p.valor.toFixed(2)};"${p.formaPagamento}";"${p.observacoes || ''}"\n`;
@@ -1281,28 +1003,165 @@ function exportarRelatorioExcel() {
     const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `relatorio_pagamentos.csv`;
-    link.click();
+    link.download = `relatorio_pagamentos_${new Date().toISOString().slice(0, 19).replace(/:/g,'-')}.csv`;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
     URL.revokeObjectURL(link.href);
-    showToast('Relatório exportado para Excel!');
+    showToast('Relatório de pagamentos exportado para Excel!');
 }
 
-// ==================== FUNÇÕES DE MENSAGENS AGENDADAS ====================
+function gerarHtmlRelatorioPagamentos() {
+    const todosPagamentos = obterTodosPagamentos();
+    const filtrados = filtrarPagamentos(todosPagamentos);
+    const totalValor = filtrados.reduce((sum, p) => sum + p.valor, 0);
+    const totalCount = filtrados.length;
+    const media = totalCount > 0 ? totalValor / totalCount : 0;
+    const associadosUnicos = new Set(filtrados.map(p => p.numero)).size;
+    const dataGeracao = new Date().toLocaleString('pt-BR');
+    let tituloFiltros = '';
+    if (filtroAssociadoPag) { const a = associados.find(x => x.numero == filtroAssociadoPag); tituloFiltros += `Associado: ${a?.nome || filtroAssociadoPag} | `; }
+    if (filtroAnoPag) tituloFiltros += `Ano: ${filtroAnoPag} | `;
+    if (filtroMesPag) tituloFiltros += `Mês: ${filtroMesPag} | `;
+    if (filtroFormaPag) tituloFiltros += `Forma: ${filtroFormaPag} | `;
+    tituloFiltros = tituloFiltros ? tituloFiltros.slice(0, -3) : 'Todos os pagamentos';
+
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatório de Pagamentos</title>
+<style>
+body{font-family:Arial,sans-serif;margin:40px;color:#333;}
+h1{color:#2c3e50;text-align:center;}
+.header{text-align:center;margin-bottom:30px;}
+.stats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px;}
+.stat-box{background:#ecf0f1;padding:15px;border-radius:8px;flex:1;text-align:center;min-width:150px;}
+.stat-value{font-size:1.6rem;font-weight:bold;color:#2c3e50;}
+table{width:100%;border-collapse:collapse;margin:20px 0;}
+th,td{border:1px solid #ddd;padding:10px;text-align:left;}
+th{background-color:#3498db;color:white;}
+.total{font-weight:bold;font-size:1.2em;margin-top:20px;text-align:right;}
+</style></head><body>
+<div class="header"><h1>Relatório de Pagamentos - Mensalidades</h1><p>Gerado em: ${dataGeracao}</p><p><strong>Filtros:</strong> ${tituloFiltros}</p></div>
+<div class="stats">
+<div class="stat-box"><div class="stat-value">${totalCount}</div><div>Total de Pagamentos</div></div>
+<div class="stat-box"><div class="stat-value">${formatarValor(totalValor)}</div><div>Valor Total</div></div>
+<div class="stat-box"><div class="stat-value">${formatarValor(media)}</div><div>Valor Médio</div></div>
+<div class="stat-box"><div class="stat-value">${associadosUnicos}</div><div>Associados</div></div>
+</div>
+<table><thead><tr><th>Nº</th><th>Associado</th><th>Telefone</th><th>Mês Referência</th><th>Data Pagamento</th><th>Dia</th><th>Mês</th><th>Ano</th><th>Valor</th><th>Forma</th><th>Obs</th></tr></thead><tbody>
+${filtrados.length ? filtrados.map(p => `<tr><td>${p.numero}</td><td>${p.nome}</td><td>${p.telefone}</td><td>${formatarMesAno(p.mesReferencia)}</td><td>${formatarData(p.dataPagamento)}</td><td>${p.dia}</td><td>${p.mes}</td><td>${p.ano}</td><td>${formatarValor(p.valor)}</td><td>${p.formaPagamento}</td><td>${p.observacoes || '-'}</td></tr>`).join('') : '<tr><td colspan="11" style="text-align:center;">Nenhum pagamento encontrado</td></tr>'}
+</tbody></table><div class="total">Total: ${formatarValor(totalValor)}</div>
+</body></html>`;
+}
+
+// ✅ MELHORIA 4: Exportação de arrecadação respeitando filtro de mês
+function gerarHtmlRelatorioArrecadacao() {
+    const mesFiltro = document.getElementById('mes-relatorio').value;
+    let totalPeriodo = 0, qtdPeriodo = 0;
+    const formas = {};
+    const arrecadacaoPorMes = new Map();
+    let totalGeral = 0;
+    associados.forEach(associado => {
+        associado.contribuicoes?.forEach(contrib => {
+            totalGeral += contrib.valor || 0;
+            if (!mesFiltro || contrib.mesReferencia === mesFiltro) {
+                totalPeriodo += contrib.valor || 0;
+                qtdPeriodo++;
+                const forma = contrib.formaPagamento;
+                if (!formas[forma]) formas[forma] = { qtd: 0, valor: 0 };
+                formas[forma].qtd++; formas[forma].valor += contrib.valor || 0;
+                if (!arrecadacaoPorMes.has(contrib.mesReferencia)) arrecadacaoPorMes.set(contrib.mesReferencia, { total: 0, qtd: 0 });
+                const m = arrecadacaoPorMes.get(contrib.mesReferencia);
+                m.total += contrib.valor || 0; m.qtd++;
+            }
+        });
+    });
+    const mesesOrdenados = Array.from(arrecadacaoPorMes.keys()).sort().reverse();
+    const tituloFiltro = mesFiltro ? `Mês: ${formatarMesAno(mesFiltro)}` : 'Todos os meses';
+    const dataGeracao = new Date().toLocaleString('pt-BR');
+
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Relatório de Arrecadação</title>
+<style>
+body{font-family:Arial,sans-serif;margin:40px;color:#333;}
+h1{color:#2c3e50;text-align:center;}
+h2{color:#2c3e50;margin-top:25px;border-bottom:2px solid #3498db;padding-bottom:5px;}
+.header{text-align:center;margin-bottom:30px;}
+.stats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px;}
+.stat-box{background:#ecf0f1;padding:15px;border-radius:8px;flex:1;text-align:center;min-width:150px;}
+.stat-value{font-size:1.6rem;font-weight:bold;color:#2c3e50;}
+table{width:100%;border-collapse:collapse;margin:15px 0;}
+th,td{border:1px solid #ddd;padding:10px;text-align:left;}
+th{background-color:#3498db;color:white;}
+.total{font-weight:bold;font-size:1.1em;margin-top:20px;text-align:right;}
+</style></head><body>
+<div class="header"><h1>Relatório de Arrecadação</h1><p>Gerado em: ${dataGeracao}</p><p><strong>Filtro:</strong> ${tituloFiltro}</p></div>
+<div class="stats">
+<div class="stat-box"><div class="stat-value">${formatarValor(totalPeriodo)}</div><div>Arrecadação do Período</div></div>
+<div class="stat-box"><div class="stat-value">${formatarValor(totalGeral)}</div><div>Arrecadação Total</div></div>
+<div class="stat-box"><div class="stat-value">${associados.length}</div><div>Associados Ativos</div></div>
+<div class="stat-box"><div class="stat-value">${qtdPeriodo}</div><div>Pagamentos no Período</div></div>
+</div>
+<h2>Detalhamento por Forma de Pagamento</h2>
+<table><thead><tr><th>Forma</th><th>Quantidade</th><th>Valor Total</th></tr></thead><tbody>
+${Object.keys(formas).length ? Object.entries(formas).map(([f, d]) => `<tr><td>${f}</td><td>${d.qtd}</td><td>${formatarValor(d.valor)}</td></tr>`).join('') : '<tr><td colspan="3" style="text-align:center;">Sem dados</td></tr>'}
+</tbody></table>
+<h2>Arrecadação por Mês</h2>
+<table><thead><tr><th>Mês/Ano</th><th>Total</th><th>Quantidade</th><th>Média</th></tr></thead><tbody>
+${mesesOrdenados.length ? mesesOrdenados.map(m => { const d = arrecadacaoPorMes.get(m); return `<tr><td>${formatarMesAno(m)}</td><td>${formatarValor(d.total)}</td><td>${d.qtd}</td><td>${formatarValor(d.qtd ? d.total / d.qtd : 0)}</td></tr>`; }).join('') : '<tr><td colspan="4" style="text-align:center;">Sem dados</td></tr>'}
+</tbody></table>
+<div class="total">Total de Pagamentos: ${qtdPeriodo}</div>
+</body></html>`;
+}
+
+function exportarRelatorioPDF() {
+    const html = gerarHtmlRelatorioArrecadacao();
+    const iframe = document.createElement('iframe');
+    iframe.style.cssText = 'position:absolute;width:0;height:0;border:none;';
+    document.body.appendChild(iframe);
+    const doc = iframe.contentWindow.document;
+    doc.open(); doc.write(html); doc.close();
+    iframe.onload = () => { iframe.contentWindow.print(); setTimeout(() => document.body.removeChild(iframe), 1000); };
+}
+
+function exportarRelatorioWord() {
+    const html = gerarHtmlRelatorioArrecadacao();
+    const blob = new Blob([html], { type: 'application/msword' });
+    const link = document.createElement('a');
+    const mesFiltro = document.getElementById('mes-relatorio').value;
+    const sufixo = mesFiltro ? `_${mesFiltro}` : '_todos';
+    link.href = URL.createObjectURL(blob);
+    link.download = `relatorio_arrecadacao${sufixo}.doc`;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+    showToast('Relatório de arrecadação exportado para Word!');
+}
+
+function exportarRelatorioExcel() {
+    const mesFiltro = document.getElementById('mes-relatorio').value;
+    let csv = "Mês/Ano;Total Arrecadado;Quantidade;Média por Pagamento\n";
+    const linhas = document.querySelectorAll('#relatorio-arrecadacao-meses-body tr');
+    linhas.forEach(tr => {
+        const tds = tr.querySelectorAll('td');
+        if (tds.length >= 4 && !tr.querySelector('td[colspan]')) {
+            csv += `${tds[0].innerText};${tds[1].innerText};${tds[2].innerText};${tds[3].innerText}\n`;
+        }
+    });
+    const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const sufixo = mesFiltro ? `_${mesFiltro}` : '_todos';
+    link.href = URL.createObjectURL(blob);
+    link.download = `arrecadacao${sufixo}.csv`;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+    showToast('Relatório de arrecadação exportado para Excel!');
+}
+
+// ==================== MENSAGENS AGENDADAS ====================
 function atualizarListaMensagensAgendadas() {
     const container = document.getElementById('mensagens-agendadas-container');
     const lista = document.getElementById('lista-mensagens-agendadas');
     if (!lista) return;
-    if (!scheduledMessages.length) {
-        container.style.display = 'none';
-        return;
-    }
+    if (!scheduledMessages.length) { container.style.display = 'none'; return; }
     container.style.display = 'block';
     lista.innerHTML = scheduledMessages.map((m, i) => `
         <div class="mensagem-agendada" style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid #ddd;">
-            <div>
-                <strong>${formatarDataHora(m.data)}</strong>
-                <br><small>${m.associados.length} associados</small>
-            </div>
+            <div><strong>${formatarDataHora(m.data)}</strong><br><small>${m.associados.length} associados</small></div>
             <button class="btn-danger" onclick="cancelarMensagemAgendada(${i})">❌</button>
         </div>
     `).join('');
@@ -1311,10 +1170,7 @@ function atualizarListaMensagensAgendadas() {
 async function cancelarMensagemAgendada(index) {
     if (!confirm('Cancelar esta mensagem?')) return;
     scheduledMessages.splice(index, 1);
-    if (await salvarDados()) {
-        atualizarListaMensagensAgendadas();
-        showToast('Mensagem cancelada');
-    }
+    if (await salvarDados()) { atualizarListaMensagensAgendadas(); showToast('Mensagem cancelada'); }
 }
 
 async function verificarMensagensAgendadas() {
@@ -1329,9 +1185,7 @@ async function verificarMensagensAgendadas() {
                 const enviar = () => {
                     if (idx >= associadosEnviar.length) return;
                     const a = associadosEnviar[idx];
-                    const msgPersonalizada = m.mensagem
-                        .replace(/\[NOME\]/g, a.nome)
-                        .replace(/\[NUMERO\]/g, a.numero.toString());
+                    const msgPersonalizada = m.mensagem.replace(/\[NOME\]/g, a.nome).replace(/\[NUMERO\]/g, a.numero.toString());
                     window.open(gerarLinkWhatsApp(a.telefone, msgPersonalizada, a.nome, a.numero.toString()), '_blank');
                     idx++;
                     if (idx < associadosEnviar.length) setTimeout(enviar, 5000);
@@ -1342,10 +1196,7 @@ async function verificarMensagensAgendadas() {
             enviadas = true;
         }
     }
-    if (enviadas) {
-        await salvarDados();
-        atualizarListaMensagensAgendadas();
-    }
+    if (enviadas) { await salvarDados(); atualizarListaMensagensAgendadas(); }
 }
 
 function iniciarVerificacaoMensagensAgendadas() {
@@ -1355,7 +1206,7 @@ function iniciarVerificacaoMensagensAgendadas() {
 
 function gerarListaNumeros() {
     if (!associadosPendentes.length) return alert('Sem pendentes');
-    document.getElementById('numeros-list').innerHTML = associadosPendentes.map(a => 
+    document.getElementById('numeros-list').innerHTML = associadosPendentes.map(a =>
         `<div class="numero-item">${a.nome} (Nº ${a.numero}) - ${a.telefone}</div>`
     ).join('');
     document.getElementById('numeros-container').style.display = 'block';
@@ -1371,9 +1222,7 @@ function copiarNumeros() {
 function gerarLinks() {
     if (!associadosPendentes.length) return alert('Sem pendentes');
     document.getElementById('links-list').innerHTML = associadosPendentes.map(a => {
-        const msgPersonalizada = mensagemTemplate.value
-            .replace(/\[NOME\]/g, a.nome)
-            .replace(/\[NUMERO\]/g, a.numero.toString());
+        const msgPersonalizada = mensagemTemplate.value.replace(/\[NOME\]/g, a.nome).replace(/\[NUMERO\]/g, a.numero.toString());
         const link = gerarLinkWhatsApp(a.telefone, msgPersonalizada, a.nome, a.numero.toString());
         return `<div class="numero-item"><a href="${link}" target="_blank" style="word-break:break-all;">${a.nome} (Nº ${a.numero}): ${link}</a></div>`;
     }).join('');
@@ -1388,26 +1237,20 @@ async function loginAssociadoSubmit(e) {
     const telefone = document.getElementById('telefone-login').value.replace(/\D/g, '');
     const associado = associados.find(a => a.numero === numero && a.telefone.replace(/\D/g, '') === telefone);
     if (associado) {
-        currentUser = associado;
-        isAdmin = false;
+        currentUser = associado; isAdmin = false;
         showMainSystem();
         showToast('Login realizado com sucesso!');
-    } else {
-        showToast('Associado não encontrado.', 'error');
-    }
+    } else showToast('Associado não encontrado.', 'error');
 }
 
 async function loginAdminSubmit(e) {
     e.preventDefault();
     await carregarDados();
     if (document.getElementById('senha-admin').value === 'associacao2024') {
-        currentUser = { nome: 'Administrador' };
-        isAdmin = true;
+        currentUser = { nome: 'Administrador' }; isAdmin = true;
         showMainSystem();
         showToast('Login administrativo realizado!');
-    } else {
-        showToast('Senha incorreta.', 'error');
-    }
+    } else showToast('Senha incorreta.', 'error');
 }
 
 function showMainSystem() {
@@ -1448,14 +1291,13 @@ function showMainSystem() {
         `;
         const status = calcularStatusPagamento(currentUser);
         document.getElementById('associado-info-detail').innerHTML += `<p><strong>Status:</strong> <span class="${status.classe}">${status.texto}</span></p>`;
-        statusDetalhes.innerHTML = '<div class="status-item"><div class="status-valor">0</div><div class="status-label">Carregando...</div></div>';
-        const contribuicoesHTML = currentUser.contribuicoes?.length ? 
-            currentUser.contribuicoes.sort((a, b) => new Date(b.dataPagamento) - new Date(a.dataPagamento)).map(contrib => 
+        const contribuicoesHTML = currentUser.contribuicoes?.length ?
+            currentUser.contribuicoes.sort((a, b) => new Date(b.dataPagamento) - new Date(a.dataPagamento)).map(contrib =>
                 `<div class="payment-item">
                     <div><strong>${formatarMesAno(contrib.mesReferencia)}</strong><br><small>Pago: ${formatarData(contrib.dataPagamento)}</small></div>
                     <div><strong>R$ ${contrib.valor?.toFixed(2) || '0,00'}</strong><br><small>${contrib.formaPagamento}</small></div>
                 </div>`
-            ).join('') : 
+            ).join('') :
             '<p>Nenhuma contribuição registrada.</p>';
         document.getElementById('minhas-contribuicoes-list').innerHTML = contribuicoesHTML;
         atualizarGradeMesesCompleta(currentUser);
@@ -1468,14 +1310,12 @@ function atualizarGradeMesesCompleta(associado) {
     const hoje = new Date();
     const anoAtual = hoje.getFullYear();
     const mesAtual = hoje.getMonth() + 1;
-    const dataCadastro = new Date(associado.dataCadastro + 'T12:00:00');
+    const dataCadastro = parseDateLocal(associado.dataCadastro);
     const anoCadastro = dataCadastro.getFullYear();
     const mesCadastro = dataCadastro.getMonth() + 1;
-    const anoInicio = anoCadastro;
-    const anoFim = anoAtual + 1;
     const anos = [];
-    for (let ano = anoFim; ano >= anoInicio; ano--) anos.push(ano);
-    const mesesAbreviados = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    for (let ano = anoAtual + 1; ano >= anoCadastro; ano--) anos.push(ano);
+    const mesesAbreviados = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
     anos.forEach(ano => {
         const yearSection = document.createElement('div');
         yearSection.className = 'year-section';
@@ -1502,8 +1342,7 @@ function atualizarGradeMesesCompleta(associado) {
 }
 
 function logout() {
-    currentUser = null;
-    isAdmin = false;
+    currentUser = null; isAdmin = false;
     localStorage.removeItem('currentUser');
     localStorage.removeItem('isAdmin');
     mainSystem.style.display = 'none';
@@ -1532,7 +1371,6 @@ const modalContribuicao = document.getElementById('modal-contribuicao');
 const formNovaContribuicao = document.getElementById('form-nova-contribuicao');
 const statusDetalhes = document.getElementById('status-detalhes');
 
-// Elementos de áudio
 const btnAutorizarWhatsapp = document.getElementById('btn-autorizar-whatsapp');
 const authStatusBadge = document.getElementById('auth-status-badge');
 const btnRecordAudio = document.getElementById('btn-record-audio');
@@ -1555,25 +1393,39 @@ const contadorTexto = document.getElementById('contador-texto');
 document.addEventListener('DOMContentLoaded', async function() {
     await carregarDados();
     carregarAutorizacao();
-    
+
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
         isAdmin = localStorage.getItem('isAdmin') === 'true';
         showMainSystem();
     }
-    
-    if (document.getElementById('data-cadastro')) {
-        document.getElementById('data-cadastro').valueAsDate = new Date();
-    }
+
+    if (document.getElementById('data-cadastro')) document.getElementById('data-cadastro').valueAsDate = new Date();
     if (dataProgramada) {
         const amanha = new Date();
         amanha.setDate(amanha.getDate() + 1);
         amanha.setHours(9, 0, 0, 0);
         dataProgramada.value = amanha.toISOString().slice(0, 16);
     }
-    
-    // Eventos de login
+
+    // ✅ MELHORIA 1: Toggle de visibilidade da senha
+    const toggleSenhaBtn = document.getElementById('toggle-senha-admin');
+    if (toggleSenhaBtn) {
+        toggleSenhaBtn.addEventListener('click', function() {
+            const input = document.getElementById('senha-admin');
+            if (input.type === 'password') {
+                input.type = 'text';
+                this.textContent = '🙈';
+                this.title = 'Ocultar senha';
+            } else {
+                input.type = 'password';
+                this.textContent = '👁️';
+                this.title = 'Mostrar senha';
+            }
+        });
+    }
+
     document.getElementById('btn-acesso-associado').addEventListener('click', () => {
         document.getElementById('login-associado').style.display = 'block';
         document.getElementById('login-admin').style.display = 'none';
@@ -1585,8 +1437,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('login-form-associado').addEventListener('submit', loginAssociadoSubmit);
     document.getElementById('login-form-admin').addEventListener('submit', loginAdminSubmit);
     logoutBtn.addEventListener('click', logout);
-    
-    // Formatação de telefone
+
     document.querySelectorAll('input[type="tel"]').forEach(input => {
         input.addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
@@ -1598,9 +1449,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             e.target.value = value;
         });
     });
-    
-    // Tabs
-    document.querySelectorAll('.tab').forEach((tab) => {
+
+    document.querySelectorAll('.tab').forEach(tab => {
         tab.addEventListener('click', function() {
             if (this.classList.contains('active')) return;
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -1608,31 +1458,19 @@ document.addEventListener('DOMContentLoaded', async function() {
             this.classList.add('active');
             const tabId = this.getAttribute('data-tab') + '-tab';
             document.getElementById(tabId).classList.add('active');
-            if (this.getAttribute('data-tab') === 'contribuicoes') atualizarSeletorAssociados();
-            else if (this.getAttribute('data-tab') === 'consulta') atualizarListaAssociados();
-            else if (this.getAttribute('data-tab') === 'mensagens') {
-                atualizarListaPendentes();
-                setTimeout(initMediaFunctions, 100);
-            } else if (this.getAttribute('data-tab') === 'pagamentos') {
-                popularFiltrosPagamentos();
-                atualizarTabelaPagamentos();
-            } else if (this.getAttribute('data-tab') === 'minhas-contribuicoes' && currentUser && !isAdmin) {
-                atualizarGradeMesesCompleta(currentUser);
-            } else if (this.getAttribute('data-tab') === 'relatorios') {
-                popularSelectMeses();
-                atualizarRelatorios();
-            }
+            const tabName = this.getAttribute('data-tab');
+            if (tabName === 'contribuicoes') atualizarSeletorAssociados();
+            else if (tabName === 'consulta') atualizarListaAssociados();
+            else if (tabName === 'mensagens') { atualizarListaPendentes(); setTimeout(initMediaFunctions, 100); }
+            else if (tabName === 'pagamentos') { popularFiltrosPagamentos(); atualizarTabelaPagamentos(); }
+            else if (tabName === 'minhas-contribuicoes' && currentUser && !isAdmin) atualizarGradeMesesCompleta(currentUser);
+            else if (tabName === 'relatorios') { popularSelectMeses(); atualizarRelatorios(); }
         });
     });
-    
-    // Eventos do formulário de cadastro
+
     document.getElementById('cadastro-form').addEventListener('submit', cadastrarAssociado);
-    document.getElementById('search-input').addEventListener('input', () => {
-        currentPage = 1;
-        atualizarListaAssociados();
-    });
-    
-    // Eventos de mensagens
+    document.getElementById('search-input').addEventListener('input', () => { currentPage = 1; atualizarListaAssociados(); });
+
     document.getElementById('gerar-lista-btn').addEventListener('click', gerarListaNumeros);
     document.getElementById('copiar-numeros-btn').addEventListener('click', copiarNumeros);
     document.getElementById('gerar-links-btn').addEventListener('click', gerarLinks);
@@ -1640,36 +1478,31 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (isMobile) window.location.href = 'https://wa.me';
         else window.open('https://web.whatsapp.com', '_blank');
     });
-    
+
     document.getElementById('enviar-todos-btn').addEventListener('click', () => {
         if (associadosPendentes.length) {
             associadosPendentes.forEach((a, i) => {
                 setTimeout(() => {
-                    const msgPersonalizada = mensagemTemplate.value
-                        .replace(/\[NOME\]/g, a.nome)
-                        .replace(/\[NUMERO\]/g, a.numero.toString());
+                    const msgPersonalizada = mensagemTemplate.value.replace(/\[NOME\]/g, a.nome).replace(/\[NUMERO\]/g, a.numero.toString());
                     enviarWhatsAppUniversal(a.telefone, msgPersonalizada, a.nome, a.numero.toString());
                 }, i * 2000);
             });
             showToast('Iniciando envio manual...');
         }
     });
-    
+
     document.getElementById('enviar-audio-btn').addEventListener('click', () => {
         if (associadosPendentes.length) {
             associadosPendentes.forEach((a, i) => {
                 setTimeout(() => {
-                    const msgPersonalizada = mensagemTemplate.value
-                        .replace(/\[NOME\]/g, a.nome)
-                        .replace(/\[NUMERO\]/g, a.numero.toString());
+                    const msgPersonalizada = mensagemTemplate.value.replace(/\[NOME\]/g, a.nome).replace(/\[NUMERO\]/g, a.numero.toString());
                     enviarWhatsAppUniversal(a.telefone, msgPersonalizada, a.nome, a.numero.toString());
                 }, i * 2000);
             });
             showToast('Enviando mensagens...');
         }
     });
-    
-    // Eventos de contribuições
+
     associadoSelect.addEventListener('change', selecionarAssociado);
     contribuicaoForm.addEventListener('submit', registrarContribuicao);
     formEditar.addEventListener('submit', salvarEdicaoAssociado);
@@ -1678,36 +1511,19 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('btn-remover-contribuicao').addEventListener('click', removerContribuicoesSelecionadas);
     formNovaContribuicao.addEventListener('submit', adicionarNovaContribuicao);
     document.getElementById('btn-cancelar-contribuicao').addEventListener('click', () => modalContribuicao.style.display = 'none');
-    
-    // Eventos de relatórios
+
     document.getElementById('mes-relatorio').addEventListener('change', atualizarRelatorios);
     document.getElementById('btn-exportar-pdf').addEventListener('click', exportarRelatorioPDF);
     document.getElementById('btn-exportar-word').addEventListener('click', exportarRelatorioWord);
-    document.getElementById('btn-exportar-excel').addEventListener('click', () => {
-        const pagamentos = obterTodosPagamentos();
-        const filtrados = filtrarPagamentos(pagamentos);
-        let csv = "Mês/Ano;Total;Quantidade;Média\n";
-        const meses = document.querySelectorAll('#relatorio-arrecadacao-meses-body tr');
-        meses.forEach(tr => {
-            const tds = tr.querySelectorAll('td');
-            if (tds.length) csv += `${tds[0].innerText};${tds[1].innerText};${tds[2].innerText};${tds[3].innerText}\n`;
-        });
-        const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'arrecadacao.csv';
-        link.click();
-    });
-    
-    // Eventos de tipo de envio
+    document.getElementById('btn-exportar-excel').addEventListener('click', exportarRelatorioExcel);
+
     document.querySelectorAll('input[name="tipo-envio"]').forEach(option => {
         option.addEventListener('change', function() {
             document.getElementById('info-manual').style.display = this.value === 'manual' ? 'block' : 'none';
             document.getElementById('info-automatico').style.display = this.value === 'automatico' ? 'block' : 'none';
         });
     });
-    
-    // Eventos de áudio
+
     btnAutorizarWhatsapp.addEventListener('click', autorizarWhatsapp);
     btnRecordAudio.addEventListener('click', iniciarGravacao);
     btnStopRecording.addEventListener('click', pararGravacao);
@@ -1715,30 +1531,25 @@ document.addEventListener('DOMContentLoaded', async function() {
     btnSendAudioRecorded.addEventListener('click', enviarAudioGravadoParaPendentes);
     enviarAutomaticoBtn.addEventListener('click', iniciarEnvioAutomatico);
     pararEnvioBtn.addEventListener('click', pararEnvio);
-    
-    // Eventos de mídia
+
     const btnUpload = document.getElementById('btn-upload-media');
     const btnClear = document.getElementById('btn-clear-media');
     const btnSend = document.getElementById('btn-send-media');
     if (btnUpload) btnUpload.addEventListener('click', uploadMediaFiles);
     if (btnClear) btnClear.addEventListener('click', limparArquivos);
     if (btnSend) btnSend.addEventListener('click', enviarMidiaParaPendentes);
-    
-    // Eventos de pagamentos
+
     document.getElementById('aplicar-filtros-pag').addEventListener('click', aplicarFiltros);
     document.getElementById('limpar-filtros-pag').addEventListener('click', limparFiltros);
     document.getElementById('btn-exportar-pagamentos-pdf').addEventListener('click', exportarPagamentosPDF);
     document.getElementById('btn-exportar-pagamentos-word').addEventListener('click', exportarPagamentosWord);
     document.getElementById('btn-exportar-pagamentos-excel').addEventListener('click', exportarPagamentosExcel);
-    
-    // FAB WhatsApp
-    if (document.getElementById('fab-whatsapp') && isMobile) {
-        document.getElementById('fab-whatsapp').style.display = 'flex';
-    }
+
+    if (document.getElementById('fab-whatsapp') && isMobile) document.getElementById('fab-whatsapp').style.display = 'flex';
     document.getElementById('fab-whatsapp')?.addEventListener('click', () => {
         document.querySelector('.tab[data-tab="mensagens"]')?.click();
     });
-    
+
     iniciarVerificacaoMensagensAgendadas();
     verificarMensagensAgendadas();
 });
